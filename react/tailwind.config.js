@@ -1,5 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 
+const generateColorClass = (variable) => {
+  return ({ opacityValue }) =>
+    opacityValue
+      ? `rgba(var(--${variable}), ${opacityValue})`
+      : `rgb(var(--${variable}))`
+}
+
 module.exports = {
 
   content: [
@@ -8,6 +15,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        'color-base': generateColorClass('color-base'),
+        'base-contrast': generateColorClass('color-base-contrast'),
+        'bg': generateColorClass('color-bg'),
+        'bg-contrast': generateColorClass('color-bg-contrast'),
+        'button': generateColorClass('color-button'),
+        'button-contrast': generateColorClass('color-button-contrast'),
+        'button-base': generateColorClass('color-button-base'),       
         primary: '#1E1E1E',
         secondary: '#F2F2F2',
         accent: '#FFC107',

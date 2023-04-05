@@ -9,6 +9,53 @@
   text-align: center;
 } */
 
+.default {
+  --color-base: 131,145,178;
+  --color-base-contrast:32, 30, 60;
+	--color-bg: 10,10,26;
+	--color-bg-contrast: 13,12,30;
+	--color-button: 41,182,126;
+	--color-button-contrast: 249,100,83;
+	--color-button-base: 217, 216, 218;
+}
+
+.light {
+	--color-base: 78, 81, 95;
+	--color-base-contrast: hsl(227, 32%, 30%);
+	--color-bg: hsl(270, 3%, 85%);
+	--color-bg-contrast: hsl(9, 5%, 70%);
+	--color-button: hsl(199, 59%, 47%);
+	--color-button-contrast: hsl(199, 59%, 46%);
+	--color-button-base: hsl(270, 3%, 85%);
+}
+.dark {
+	--color-base: hsl(207, 7%, 50%);
+	--color-base-contrast: hsl(270, 3%, 85%);
+	--color-bg: hsl(0, 2%, 10%);
+	--color-bg-contrast: hsl(300, 1%, 18%);
+	--color-button: hsl(300, 1%, 18%);
+	--color-button-contrast: hsl(210, 5%, 42%);
+	--color-button-base: hsl(270, 3%, 85%);
+}
+.purple-void {
+	--color-base: hsl(331, 75%, 68%);
+	--color-base-contrast: hsl(334, 81%, 74%);
+	--color-bg: hsl(318, 34%, 13%);
+	--color-bg-contrast: hsl(315, 49%, 18%);
+	--color-button: hsl(322, 44%, 32%);
+	--color-button-contrast: hsl(331, 75%, 68%);
+	--color-button-base: hsl(0, 0%, 100%);
+}
+.creamy-coffee {
+	--color-base: #926337;
+	--color-base-contrast: #653b17;
+	--color-bg: #ddd2bc;
+	--color-bg-contrast: #d0c2a7;
+	--color-button: #b59671;
+	--color-button-contrast: #b59671;
+	--color-button-base: hsl(0, 0%, 100%);
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

@@ -21,7 +21,7 @@ const Sidebar = () => {
 					<Link className="text-center" to="/">
 						<IoMailOutline className="text-white" />
 					</Link>
-					<Link className="text-center" to="/">
+					<Link className="text-center" to="/playground">
 						<IoFileTrayFullOutline className="text-white" />
 					</Link>
 					<Link className="text-center" to="/notes">

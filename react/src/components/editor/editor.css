@@ -1,0 +1,86 @@
+.milkdown {
+	max-width: 1200px;
+	margin: 5em auto;
+	flex-direction: column;
+	justify-items: flex-start;
+	display: contents;
+	/* width: 60vw; */
+
+}
+@media (max-width: 1200px) {
+	.milkdown {
+		padding: 0 1em;
+	}
+}
+
+.milkdown .editor {
+
+	white-space: pre-wrap;
+	position: top;
+	outline: white solid 1px;
+}
+.milkdown .editor:focus {
+	outline: none;
+}
+
+.milkdown .editor h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	color: var(--color-base-contrast);
+}
+.milkdown .editor .milkdown-placeholder {
+	opacity: 0.5;
+	z-index: 0;
+	pointer-events: none;
+}
+.milkdown .editor .emoji {
+	width: 1.25em;
+	height: 1.25em;
+}
+.milkdown .editor p {
+	line-height: 1.5;
+}
+
+.milkdown .editor li p {
+	margin: 0;
+}
+.milkdown .editor li p::marker {
+	color: var(--color-base);
+}
+
+.milkdown .editor a {
+	color: var(--color-base);
+}
+.milkdown .editor a:hover {
+	color: var(--color-base-contrast);
+}
+.milkdown .editor code {
+	padding: 0.2em 0.4em;
+	border-radius: 0.2em;
+	font-size: 0.9em;
+	background: var(--color-bg-contrast);
+}
+.milkdown .editor pre {
+	padding: 0.2em 0.4em;
+	border-radius: 0.2em;
+	border: 1px solid var(--color-bg-contrast);
+	min-height: 3em;
+	overflow: auto;
+}
+.milkdown .editor pre code {
+	padding: 0;
+	border-radius: 0;
+	background: transparent;
+}
+
+.milkdown .editor pre hr {
+	border: 0;
+	border-top: 1px solid var(--color-base);
+}
+.milkdown .editor pre em {
+	font-style: italic;
+	color: var(--color-base);
+}
