@@ -1,0 +1,78 @@
+.milkdown-theme-kazi blockquote {
+  @apply not-italic font-serif border-l-4 border-color-base pl-4;
+}
+
+.milkdown-theme-kazi code {
+  @apply text-color-base font-mono font-normal;
+}
+
+.milkdown-theme-kazi pre code {
+  @apply text-inherit;
+}
+
+.milkdown-theme-kazi img {
+  @apply max-w-full !my-0 inline-block;
+}
+
+.milkdown-theme-kazi.prose :where(blockquote):not(:where([class~="not-prose"] *)) {
+  @apply font-normal;
+}
+
+.milkdown-theme-kazi.prose :where(ol > li):not(:where([class~="not-prose"] *))::marker,
+.milkdown-theme-kazi.prose :where(ul > li):not(:where([class~="not-prose"] *))::marker {
+  @apply text-color-base;
+}
+
+
+.milkdown-theme-kazi.prose :where(blockquote p:first-of-type):not(:where([class~="not-prose"] *))::before,
+.milkdown-theme-kazi.prose :where(blockquote p:first-of-type):not(:where([class~="not-prose"] *))::after {
+  content: '';
+}
+
+.milkdown-theme-kazi.prose :where(code):not(:where([class~="not-prose"] *))::before,
+.milkdown-theme-kazi.prose :where(code):not(:where([class~="not-prose"] *))::after {
+  content: '';
+}
+
+.milkdown-theme-kazi.prose .tableWrapper {
+  @apply mb-2 overflow-x-auto relative;
+}
+
+
+.milkdown-theme-kazi.prose table {
+  @apply text-sm w-[95%] shadow-md sm:rounded-lg !overflow-visible !m-4;
+}
+
+.milkdown-theme-kazi.prose col {
+  @apply border border-gray-200 dark:border-gray-600;
+}
+
+.milkdown-theme-kazi.prose td, th {
+  @apply !py-3 !px-3;
+}
+
+.milkdown-theme-kazi.prose th {
+  @apply bg-color-base text-bg;
+}
+
+.milkdown-theme-kazi.prose tr {
+  @apply border border-gray-200 dark:border-gray-600;
+}
+
+.milkdown-theme-kazi.prose :where(td, th) p {
+  @apply !m-0;
+}
+
+.milkdown-theme-kazi.prose :where(td, th):nth-child(odd) {
+  /* @apply bg-gray-50 dark:bg-gray-900; */
+}
+
+.milkdown-theme-kazi.prose.ProseMirror .selectedCell:after {
+  @apply bg-button;
+}
+
+/* A little workaround to turn the element into a space */
+.milkdown-theme-kazi.prose br[data-is-inline="true"],
+.milkdown-theme-kazi.prose br[data-is-inline="true"]::after {
+  content: ' '
+}

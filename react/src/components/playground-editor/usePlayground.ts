@@ -67,6 +67,7 @@ import { useSetShare } from "./ShareProvider";
 import { useToast } from "../toast";
 import { useFeatureToggle } from "./FeatureToggleProvider";
 import { useSetProseState } from "./ProseStateProvider";
+import { kaziTheme } from "../kaziTheme";
 
 const slash = slashFactory("MILKDOWN");
 
@@ -199,7 +200,7 @@ export const usePlayground = (
             }),
           });
         })
-        .config(nord)
+        .config(kaziTheme)
         .use(commonmark)
         .use(linkPlugin(widgetViewFactory))
         .use(listener)

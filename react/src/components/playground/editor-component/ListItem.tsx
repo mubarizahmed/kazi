@@ -22,9 +22,9 @@ export const ListItem: FC = () => {
             checked={checked}
           />
         ) : isBullet ? (
-          <span className="h-2 w-2 rounded-full bg-nord8 dark:bg-nord9" />
+          <span className="h-2 w-2 rounded-full bg-color-base" />
         ) : (
-          <span className="text-nord8">{attrs?.label}</span>
+          <span className="text-color-base">{attrs?.label}</span>
         )}
       </span>
       <div className="min-w-0" ref={contentRef} />

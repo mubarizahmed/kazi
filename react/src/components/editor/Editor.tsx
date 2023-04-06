@@ -17,8 +17,12 @@ import { ShareProvider } from '../playground-editor/ShareProvider';
 import { compose } from '../../utils/compose';
 import { decode } from '../../utils/share';
 
-// import './editor.css';
-// import './prism.css';
+
+
+// import '@milkdown/theme-nord/style.css';
+
+import './editor.css';
+import './prism.css';
 
 const Provider = compose(
 	FeatureToggleProvider,
@@ -74,7 +78,7 @@ export default function Editor({ template }: { template: string }) {
 
 	return (
 		<Provider>
-			<div className="h-[calc(50vh-2rem)] w-full overflow-auto overscroll-none md:h-screen">
+			<div className="h-full w-full overflow-auto overscroll-none md:h-screen text-color-base">
 				<PlaygroundMilkdown
 					milkdownRef={milkdownRef}
 					content={content}

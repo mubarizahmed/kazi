@@ -21,7 +21,9 @@ module.exports = {
         'bg-contrast': generateColorClass('color-bg-contrast'),
         'button': generateColorClass('color-button'),
         'button-contrast': generateColorClass('color-button-contrast'),
-        'button-base': generateColorClass('color-button-base'),       
+        'button-base': generateColorClass('color-button-base'),
+        'nord8': '#0084F5ff',
+        'nord9': '#0084F5ff',
         primary: '#1E1E1E',
         secondary: '#F2F2F2',
         accent: '#FFC107',
@@ -50,14 +52,15 @@ module.exports = {
         'gradient-2': 'bg-gradient-to-b from-gray-900 via-purple-900 to-violet-600'
       },
       fontFamily: {
-        sans: ['Inter','Montserrat', 'sans-serif'],
+        sans: ['Roboto','Inter','Montserrat', 'sans-serif'],
+        serif: ['Libre Baskerville', 'serif'],
       }
     }
   },
   purge: {
     // content: ['./src/**/*.html'],
     options: {
-      safelist: ['bg-todoist-1', 'bg-todoist-2', 'bg-todoist-3', 'bg-todoist-4', 'border-todoist-1', 'border-todoist-2', 'border-todoist-3', 'border-todoist-4', 'gradient-1'],
+      safelist: ['bg-todoist-1', 'bg-todoist-2', 'bg-todoist-3', 'bg-todoist-4', 'border-todoist-1', 'border-todoist-2','bg-nord8', 'border-todoist-3', 'border-todoist-4', 'gradient-1'],
     },
   },
 
