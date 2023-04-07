@@ -55,7 +55,7 @@ h6 {
 }
 
 .milkdown .editor a {
-	color: var(--color-base);
+	@apply text-kaccent1;
 }
 .milkdown .editor a:hover {
 	color: var(--color-base-contrast);
