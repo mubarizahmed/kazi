@@ -80,6 +80,7 @@ export const PlaygroundMilkdown: FC<MilkdownProps> = ({ content, onChange, milkd
 				<Button icon="format_list_bulleted" onClick={() => call(wrapInBulletListCommand.key)} />
 				<Button icon="format_list_numbered" onClick={() => call(wrapInOrderedListCommand.key)} />
 				<Button icon="format_quote" onClick={() => call(wrapInBlockquoteCommand.key)} />
+        <Button icon="print" />
 
 				<div />
 			</div>

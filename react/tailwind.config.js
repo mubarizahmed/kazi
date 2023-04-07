@@ -15,6 +15,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        'kdark' : generateColorClass('color-kdark'),
+        'kdarker' : generateColorClass('color-kdarker'),
+        'kmedium' : generateColorClass('color-kmedium'),
+        'klight' : generateColorClass('color-klight'),
+        'klighter' : generateColorClass('color-klighter'),
+        'kaccent1' : generateColorClass('color-kaccent1'),
+        'kaccent2' : generateColorClass('color-kaccent2'),
+        
         'color-base': generateColorClass('color-base'),
         'base-contrast': generateColorClass('color-base-contrast'),
         'bg': generateColorClass('color-bg'),

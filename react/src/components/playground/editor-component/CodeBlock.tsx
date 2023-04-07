@@ -2,7 +2,7 @@ import { useNodeViewContext } from '@prosemirror-adapter/react';
 import clsx from 'clsx';
 import type { FC } from 'react';
 
-const langs = ['text', 'typescript', 'javascript', 'html', 'css', 'json', 'markdown'];
+const langs = ['text', 'js','ts', 'html', 'css', 'json', 'markdown','java','c'];
 
 export const CodeBlock: FC = () => {
 	const { contentRef, selected, node, setAttrs } = useNodeViewContext();

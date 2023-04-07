@@ -10,6 +10,16 @@
 } */
 
 .default {
+	--color-klighter: 217, 216, 218;
+	--color-klight: 131,145,178;
+	--color-kmedium: 32, 30, 60;
+	--color-kdark: 13,12,30;
+	--color-kdarker: 10,10,26;
+
+
+	--color-kaccent1: 41,182,126;
+	--color-kaccent2: 249,100,83;
+
   --color-base: 131,145,178;
   --color-base-contrast:32, 30, 60;
 	--color-bg: 10,10,26;
