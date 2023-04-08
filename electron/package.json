@@ -10,5 +10,8 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^24.0.0"
+  },
+  "dependencies": {
+    "directory-tree": "^3.5.1"
   }
 }

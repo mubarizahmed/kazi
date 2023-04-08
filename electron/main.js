@@ -1,8 +1,9 @@
 // main.js
 
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
+const dirTree = require("directory-tree");
 
 const createWindow = () => {
   // Create the browser window.
@@ -32,6 +33,8 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  ipcMain.handle('load-fileTree', loadFileTree);
+
   createWindow()
 
   app.on('activate', () => {
@@ -39,6 +42,7 @@ app.whenReady().then(() => {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -50,3 +54,10 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+
+const loadFileTree = () => {
+  const fileTree = dirTree("/home/mebza/kazi/", { extensions: /\.md$/ , attributes:['type']})
+  console.log(fileTree);
+  return fileTree;
+}

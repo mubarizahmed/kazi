@@ -67,7 +67,7 @@ export const PlaygroundMilkdown: FC<MilkdownProps> = ({ content, onChange, milkd
 
 	return (
 		<div className="relative h-full pt-16">
-			<div className="divide-nord4 border-nord4 absolute inset-x-0 top-0 flex h-10 pl-8 pr-8 dark:divide-gray-600 dark:border-gray-600">
+			<div className="divide-nord4 z-30 border-nord4 absolute inset-x-0 top-0 flex h-10 pl-8 pr-8 dark:divide-gray-600 dark:border-gray-600">
 				<h1 className="w-full text-3xl font-semibold tracking-wider text-color-base">
 					Test
 				</h1>
