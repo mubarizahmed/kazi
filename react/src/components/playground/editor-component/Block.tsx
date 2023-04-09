@@ -43,7 +43,7 @@ export const Block = () => {
     <div className="hidden">
       <div
         className={clsx(
-          "relative cursor-grab rounded-full border-2 bg-gray-50 dark:border-gray-900 dark:bg-gray-900",
+          "relative cursor-grab rounded-full bg-kmedium ",
           showMenu ? "ring-2 ring-offset-2" : ""
         )}
         ref={setElement}

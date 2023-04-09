@@ -44,6 +44,8 @@ export async function getStaticProps() {
 
 export default function Editor({ template }: { template: string }) {
 	const [content, setContent] = useState(template);
+
+	console.log('editor redraw', template);
 	// const router = useRouter();
 	// const path = router.asPath;
 
@@ -75,6 +77,10 @@ export default function Editor({ template }: { template: string }) {
 		const value = getCode();
 		current.update(value);
 	}, []);
+
+	useEffect(() => {
+		setContent(template);
+	}, [template]);
 
 	return (
 		<Provider>

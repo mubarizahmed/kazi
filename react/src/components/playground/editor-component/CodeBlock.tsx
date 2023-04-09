@@ -10,7 +10,7 @@ export const CodeBlock: FC = () => {
 		<div
 			className={clsx(
 				selected ? 'ProseMirror-selectednode' : '',
-				'not-prose my-4 rounded bg-gray-200 p-4 shadow dark:bg-black'
+				'not-prose my-4 rounded  p-4 shadow bg-black'
 			)}
 		>
 			<div
@@ -19,7 +19,7 @@ export const CodeBlock: FC = () => {
 				className="mb-2 flex justify-between"
 			>
 				<select
-					className="!focus:shadow-none cursor-pointer rounded !border-0 bg-white p-2 font-mono text-xs uppercase shadow-sm focus:ring-2 focus:ring-offset-2 dark:bg-bg"
+					className="!focus:shadow-none cursor-pointer rounded !border-0 p-2 font-mono text-xs uppercase shadow-sm focus:ring-2 focus:ring-offset-2 bg-kdark"
 					value={node.attrs.language || 'text'}
 					onChange={(e) => {
 						setAttrs({ language: e.target.value });
@@ -33,13 +33,13 @@ export const CodeBlock: FC = () => {
 				</select>
 
 				<button
-					className="inline-flex items-center justify-center rounded border bg-white w-4 leading-6 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 dark:bg-black"
+					className="inline-flex items-center justify-center rounded border  w-4 leading-6 shadow-sm hover:bg-gray-50 focus:ring-2 !ring-kdark focus:ring-offset-2 bg-black"
 					onClick={(e) => {
 						e.preventDefault();
 						navigator.clipboard.writeText(node.textContent);
 					}}
 				>
-					<span className="material-symbols-outlined text-xs text-color-base">content_copy</span>
+					<span className="material-symbols-outlined text-xs text-klight">content_copy</span>
 				</button>
 			</div>
 			<pre spellCheck={false} className="!m-0 ">

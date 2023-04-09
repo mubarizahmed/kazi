@@ -18,10 +18,24 @@ const Notes = () => {
 		setFileTree(await window.electronAPI.loadFileTree());
 	};
 
+	const loadFile = async () => {
+		// const file = await window.electronAPI.loadFile(editorFilePath);
+		// console.log('loaded file', file);
+		setEditorFile(await window.electronAPI.loadFile(editorFilePath));
+	};
+
+	
+
 	useEffect(() => {
-		load();
-		console.log(fileTree);
-	}, []);
+		if (editorFilePath) {
+			loadFile();
+		}
+	}, [editorFilePath]);
+
+	useEffect(() => {
+		console.log("Loaded file from" + editorFilePath)
+		console.log(editorFile);
+	}, [editorFile]);
 
 	return (
 		<div className="grid h-screen w-full grid-cols-7 flex-row items-center justify-start ">
@@ -39,7 +53,7 @@ const Notes = () => {
 				</button>
 			</div>
 			<div className="col-span-5 flex h-screen flex-col items-center justify-start border-r-2 border-space-cadet bg-rich-black pb-8 pt-8">
-				<Editor template="testing" />
+				<Editor template={editorFile} />
 			</div>
 		</div>
 	);

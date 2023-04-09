@@ -4,6 +4,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const dirTree = require("directory-tree");
+const fs = require('fs');
 
 const createWindow = () => {
   // Create the browser window.
@@ -19,9 +20,9 @@ const createWindow = () => {
   })
 
   // and load the index.html of the app.
-  if(app.isPackaged) {
+  if (app.isPackaged) {
     mainWindow.loadFile('index.html'); // prod
-  }else{
+  } else {
     mainWindow.loadURL('http://localhost:5173'); // dev
   }
 
@@ -34,6 +35,7 @@ const createWindow = () => {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   ipcMain.handle('load-fileTree', loadFileTree);
+  ipcMain.handle('load-file', loadFile);
 
   createWindow()
 
@@ -57,7 +59,15 @@ app.on('window-all-closed', () => {
 
 
 const loadFileTree = () => {
-  const fileTree = dirTree("/home/mebza/kazi/", { extensions: /\.md$/ , attributes:['type']})
+  const fileTree = dirTree("/home/mebza/kazi/", { extensions: /\.md$/, attributes: ['type'] })
   console.log(fileTree);
   return fileTree;
+}
+
+function loadFile(event, filePath) {
+  console.log("loadFile");
+  console.log(filePath);
+  var res;
+  res = fs.readFileSync(filePath,{encoding: 'utf-8'}).toString();
+  return res;
 }
