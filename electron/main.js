@@ -58,10 +58,28 @@ app.on('window-all-closed', () => {
 // code. You can also put them in separate files and require them here.
 
 
+const directorySort = (a, b) => {
+  if (a.type === 'directory' && b.type === 'file') {
+    return -1;
+  } else if (a.type === 'file' && b.type === 'directory') {
+    return 1;
+  } else {
+    return a.name.localeCompare(b.name);
+  }
+};
+
+const treeSort = (tree) => {
+  if (tree.children) {
+    tree.children.sort(directorySort).forEach(treeSort);
+  }
+  return tree;
+};
+
 const loadFileTree = () => {
-  const fileTree = dirTree("/home/mebza/kazi/", { extensions: /\.md$/, attributes: ['type'] })
+  const fileTree = dirTree("/home/mebza/kazi/", { extensions: /\.md$/, attributes: ['type'] });
   console.log(fileTree);
-  return fileTree;
+  
+  return treeSort(fileTree);
 }
 
 function loadFile(event, filePath) {
