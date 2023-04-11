@@ -23,7 +23,7 @@ const Button: FC<{ icon: string; onClick?: () => void }> = ({ icon, onClick }) =
 	return (
 		<div
 			className={clsx(
-				'flex w-16 cursor-pointer items-center justify-center',
+				'flex h-6 w-6 cursor-pointer items-center justify-center rounded',
 				linkClass(false)
 			)}
 			onClick={onClick}
@@ -37,13 +37,14 @@ interface MilkdownProps {
 	content: string;
 	onChange: (markdown: string) => void;
 	milkdownRef: RefObject<MilkdownRef>;
+	path: string;
 }
 
 export interface MilkdownRef {
 	update: (markdown: string) => void;
 }
 
-export const PlaygroundMilkdown: FC<MilkdownProps> = ({ content, onChange, milkdownRef }) => {
+export const PlaygroundMilkdown: FC<MilkdownProps> = ({ path, content, onChange, milkdownRef }) => {
 	const { loading, get } = usePlayground(content, onChange);
 
 	useImperativeHandle(milkdownRef, () => ({
@@ -66,25 +67,23 @@ export const PlaygroundMilkdown: FC<MilkdownProps> = ({ content, onChange, milkd
 	}
 
 	return (
-		<div className="relative h-full pt-16">
-			<div className="divide-nord4 z-30 border-nord4 absolute inset-x-0 top-0 flex h-10 pl-8 pr-8 dark:divide-gray-600 dark:border-gray-600">
-				<h1 className="w-full text-3xl font-semibold tracking-wider text-color-base">
-					Test
-				</h1>
-				<Button icon="undo" onClick={() => call(undoCommand.key)} />
-				<Button icon="redo" onClick={() => call(redoCommand.key)} />
-				<Button icon="format_bold" onClick={() => call(toggleStrongCommand.key)} />
-				<Button icon="format_italic" onClick={() => call(toggleEmphasisCommand.key)} />
-				<Button icon="format_strikethrough" onClick={() => call(toggleStrikethroughCommand.key)} />
-				<Button icon="table" onClick={() => call(insertTableCommand.key)} />
-				<Button icon="format_list_bulleted" onClick={() => call(wrapInBulletListCommand.key)} />
-				<Button icon="format_list_numbered" onClick={() => call(wrapInOrderedListCommand.key)} />
-				<Button icon="format_quote" onClick={() => call(wrapInBlockquoteCommand.key)} />
-        <Button icon="print" />
+		<div className="flex h-full w-full flex-col ">
+			<div className="z-50 flex h-12 items-center justify-between bg-kdark p-4 pt-2 ">
+				<div className="flex gap-1">
+					<Button icon="arrow_back" onClick={() => call(undoCommand.key)} />
+					<Button icon="arrow_forward" onClick={() => call(redoCommand.key)} />
+				</div>
+				<p className="font-mono text-xs tracking-wider text-color-base">{path}</p>
+				<div className="flex gap-1">
 
-				<div />
+					<Button icon="table" onClick={() => call(insertTableCommand.key)} />
+					<Button icon="format_list_bulleted" onClick={() => call(wrapInBulletListCommand.key)} />
+					<Button icon="format_list_numbered" onClick={() => call(wrapInOrderedListCommand.key)} />
+					<Button icon="format_quote" onClick={() => call(wrapInBlockquoteCommand.key)} />
+					<Button icon="print" />
+				</div>
 			</div>
-			<div className="pl-10 pr-10 h-full overflow-auto overscroll-none">
+			<div className="h-full overflow-auto overscroll-none pl-10 pr-10 ">
 				<Editor />
 			</div>
 		</div>

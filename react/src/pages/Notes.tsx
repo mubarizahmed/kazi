@@ -24,8 +24,6 @@ const Notes = () => {
 		setEditorFile(await window.electronAPI.loadFile(editorFilePath));
 	};
 
-	
-
 	useEffect(() => {
 		if (editorFilePath) {
 			loadFile();
@@ -33,15 +31,19 @@ const Notes = () => {
 	}, [editorFilePath]);
 
 	useEffect(() => {
-		console.log("Loaded file from" + editorFilePath)
+		console.log('Loaded file from' + editorFilePath);
 		console.log(editorFile);
 	}, [editorFile]);
 
+	useEffect(() => {
+		load();
+	}, []);
+
 	return (
 		<div className="grid h-screen w-full grid-cols-7 flex-row items-center justify-start ">
-			<div className="col-span-2 flex h-screen flex-col items-center justify-start gap-8 border-r-2 border-space-cadet bg-rich-black p-8">
+			<div className="col-span-2 flex h-screen flex-col items-center justify-start gap-8 border-r-2 border-kmedium bg-kdark p-8">
 				<h1 className="w-full text-2xl tracking-wider text-color-base">NOTES</h1>
-				<FileTree tree={fileTree} selectedCallback={selectFile} editorFilePath={editorFilePath}/>
+				<FileTree tree={fileTree} selectedCallback={selectFile} editorFilePath={editorFilePath} />
 				{/* refresh button */}
 				<button
 					className="h-8 w-8 rounded-full bg-color-base"
@@ -52,8 +54,8 @@ const Notes = () => {
 					<span className="material-symbols-outlined">refresh</span>
 				</button>
 			</div>
-			<div className="col-span-5 flex h-screen flex-col items-center justify-start border-r-2 border-space-cadet bg-rich-black pb-8 pt-8">
-				<Editor template={editorFile} />
+			<div className="col-span-5 flex h-screen flex-col items-center justify-start border-r-2 border-kmedium bg-kdark pb-8">
+				<Editor template={editorFile} path={editorFilePath.slice(17)} />
 			</div>
 		</div>
 	);

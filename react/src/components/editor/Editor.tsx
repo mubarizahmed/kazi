@@ -37,12 +37,13 @@ export async function getStaticProps() {
 	// const template = await getPlaygroundTemplate();
 	return {
 		props: {
-			template: ''
+			template: '',
+			path: '',
 		}
 	};
 }
 
-export default function Editor({ template }: { template: string }) {
+export default function Editor({ template, path }: { template: string, path: string}) {
 	const [content, setContent] = useState(template);
 
 	console.log('editor redraw', template);
@@ -63,6 +64,8 @@ export default function Editor({ template }: { template: string }) {
 	const codemirrorRef = useRef<CodemirrorRef>(null);
 
 	const onMilkdownChange = useCallback((markdown: string) => {
+
+		console.log(markdown);
 		const lock = lockCodemirror.current;
 		if (lock) return;
 
@@ -84,11 +87,12 @@ export default function Editor({ template }: { template: string }) {
 
 	return (
 		<Provider>
-			<div className="h-full w-full overflow-auto overscroll-none md:h-screen text-color-base">
+			<div className="h-full w-full overflow-hidden overscroll-none md:h-screen text-color-base">
 				<PlaygroundMilkdown
 					milkdownRef={milkdownRef}
 					content={content}
 					onChange={onMilkdownChange}
+					path={path}
 				/>
 			</div>
 		</Provider>

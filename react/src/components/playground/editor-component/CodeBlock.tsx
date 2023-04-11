@@ -16,10 +16,10 @@ export const CodeBlock: FC = () => {
 			<div
 				contentEditable="false"
 				suppressContentEditableWarning
-				className="mb-2 flex justify-between"
+				className="mb-2 flex justify-between items-center"
 			>
 				<select
-					className="!focus:shadow-none cursor-pointer rounded !border-0 p-2 font-mono text-xs uppercase shadow-sm focus:ring-2 focus:ring-offset-2 bg-kdark"
+					className="!focus:shadow-none cursor-pointer align-bottom rounded !border-0 p-2 font-mono  text-xs uppercase shadow-sm focus:ring-2 focus:ring-offset-2 bg-kdark"
 					value={node.attrs.language || 'text'}
 					onChange={(e) => {
 						setAttrs({ language: e.target.value });
