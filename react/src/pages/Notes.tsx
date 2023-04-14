@@ -41,20 +41,23 @@ const Notes = () => {
 
 	return (
 		<div className="grid h-screen w-full grid-cols-7 flex-row items-center justify-start ">
-			<div className="col-span-2 flex h-screen flex-col items-center justify-start gap-8 border-r-2 border-kmedium bg-kdark p-8">
-				<h1 className="w-full text-2xl tracking-wider text-color-base">NOTES</h1>
-				<FileTree tree={fileTree} selectedCallback={selectFile} editorFilePath={editorFilePath} />
-				{/* refresh button */}
+			<div className="col-span-2 flex h-screen flex-col items-center justify-start gap-8 border-r-2 border-kmedium bg-kdark pr-6 pl-6 pt-4 ">
+				<div className="w-full flex items-center justify-between">
+				<h1 className=" text-2xl tracking-wider text-color-base">NOTES</h1>
 				<button
-					className="h-8 w-8 rounded-full bg-color-base"
+					className="h-6 w-6 bg-transparent rounded-full p-0 hover:bg-kaccent1 flex items-center justify-center"
 					onClick={() => {
 						load();
 					}}
 				>
-					<span className="material-symbols-outlined">refresh</span>
+					<span className="material-symbols-outlined text-klight text-base hover:text-white">refresh</span>
 				</button>
+				</div>
+				<FileTree tree={fileTree} selectedCallback={selectFile} editorFilePath={editorFilePath} />
+				{/* refresh button */}
+
 			</div>
-			<div className="col-span-5 flex h-screen flex-col items-center justify-start border-r-2 border-kmedium bg-kdark pb-8">
+			<div className="col-span-5 flex h-screen flex-col items-center justify-start border-r-2 border-kmedium bg-kdark">
 				<Editor template={editorFile} path={editorFilePath.slice(17)} />
 			</div>
 		</div>

@@ -68,7 +68,7 @@ export const PlaygroundMilkdown: FC<MilkdownProps> = ({ path, content, onChange,
 
 	return (
 		<div className="flex h-full w-full flex-col ">
-			<div className="z-50 flex h-12 items-center justify-between bg-kdark p-4 pt-2 ">
+			<div className="z-50 flex h-12 items-center justify-between bg-kdark p-4 pt-4 ">
 				<div className="flex gap-1">
 					<Button icon="arrow_back" onClick={() => call(undoCommand.key)} />
 					<Button icon="arrow_forward" onClick={() => call(redoCommand.key)} />
