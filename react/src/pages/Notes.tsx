@@ -5,7 +5,6 @@ import { Editor, FileTree } from '../components';
 
 const Notes = () => {
 	const [fileTree, setFileTree] = useState([]);
-	const [editorFile, setEditorFile] = useState('');
 	const [editorFilePath, setEditorFilePath] = useState('');
 
 	const selectFile = (path: string) => {
@@ -18,22 +17,6 @@ const Notes = () => {
 		setFileTree(await window.electronAPI.loadFileTree());
 	};
 
-	const loadFile = async () => {
-		// const file = await window.electronAPI.loadFile(editorFilePath);
-		// console.log('loaded file', file);
-		setEditorFile(await window.electronAPI.loadFile(editorFilePath));
-	};
-
-	useEffect(() => {
-		if (editorFilePath) {
-			loadFile();
-		}
-	}, [editorFilePath]);
-
-	useEffect(() => {
-		console.log('Loaded file from' + editorFilePath);
-		console.log(editorFile);
-	}, [editorFile]);
 
 	useEffect(() => {
 		load();
@@ -58,7 +41,15 @@ const Notes = () => {
 
 			</div>
 			<div className="col-span-5 flex h-screen flex-col items-center justify-start border-r-2 border-kmedium bg-kdark">
-				<Editor template={editorFile} path={editorFilePath.slice(17)} />
+				{(editorFilePath) ?
+					<Editor path={editorFilePath} template='' />
+				:
+					<div className="flex flex-col items-center justify-center h-full w-full">
+						<h1 className="text-3xl text-color-base">Select a file to edit</h1>
+					</div>
+
+				}
+				
 			</div>
 		</div>
 	);

@@ -17,8 +17,6 @@ import { ShareProvider } from '../playground-editor/ShareProvider';
 import { compose } from '../../utils/compose';
 import { decode } from '../../utils/share';
 
-
-
 // import '@milkdown/theme-nord/style.css';
 
 import './editor.css';
@@ -38,15 +36,19 @@ export async function getStaticProps() {
 	return {
 		props: {
 			template: '',
-			path: '',
+			path: ''
 		}
 	};
 }
 
-export default function Editor({ template, path }: { template: string, path: string}) {
+export default function Editor({ path, template }: { path: string, template: string }) {
 	const [content, setContent] = useState(template);
-
-	console.log('editor redraw', template);
+	const [filePath, setFilePath] = useState(path);
+	const [loaded, setLoaded] = useState(false);
+	// if (path !== '') {
+	// 	setFilePath(path);
+	// }
+	console.log('editor redraw', path);
 	// const router = useRouter();
 	// const path = router.asPath;
 
@@ -63,16 +65,19 @@ export default function Editor({ template, path }: { template: string, path: str
 	const milkdownRef = useRef<MilkdownRef>(null);
 	const codemirrorRef = useRef<CodemirrorRef>(null);
 
-	const onMilkdownChange = useCallback((markdown: string) => {
+	const onMilkdownChange = useCallback(
+		(markdown: string) => {
+			const lock = lockCodemirror.current;
+			if (lock) return;
 
-		console.log(markdown);
-		const lock = lockCodemirror.current;
-		if (lock) return;
+			saveFile(markdown);
 
-		const codemirror = codemirrorRef.current;
-		if (!codemirror) return;
-		codemirror.update(markdown);
-	}, []);
+			const codemirror = codemirrorRef.current;
+			if (!codemirror) return;
+			codemirror.update(markdown);
+		},
+		[path, loaded]
+	);
 
 	const onCodemirrorChange = useCallback((getCode: () => string) => {
 		const { current } = milkdownRef;
@@ -82,12 +87,40 @@ export default function Editor({ template, path }: { template: string, path: str
 	}, []);
 
 	useEffect(() => {
-		setContent(template);
-	}, [template]);
+		setLoaded(false);
+		setContent('');
+		setFilePath(path);
+		loadFile();
+	}, [path]);
 
-	return (
+	useEffect(() => {
+		setFilePath(path);
+	}, []);
+
+	useEffect(() => {
+		console.log('content', content);
+	}, [content]);
+
+	const loadFile = async () => {
+		// const file = await window.electronAPI.loadFile(editorFilePath);
+		// console.log('loaded file', file);
+		setLoaded(false);
+		setContent('');
+		window.electronAPI.loadFile(path).then((file) => {
+			setContent(file);
+			setLoaded(true);
+		});
+	};
+
+	const saveFile = async (fileContent: string) => {
+		if (loaded) {
+			console.log('saving file', path, fileContent);
+			await window.electronAPI.saveFile(path, fileContent);
+		}
+	};
+	return loaded ? (
 		<Provider>
-			<div className="h-full w-full overflow-hidden overscroll-none md:h-screen text-color-base">
+			<div className="h-full w-full overflow-hidden overscroll-none text-color-base md:h-screen">
 				<PlaygroundMilkdown
 					milkdownRef={milkdownRef}
 					content={content}
@@ -96,5 +129,7 @@ export default function Editor({ template, path }: { template: string, path: str
 				/>
 			</div>
 		</Provider>
+	) : (
+		<Loading />
 	);
 }

@@ -36,6 +36,7 @@ const createWindow = () => {
 app.whenReady().then(() => {
   ipcMain.handle('load-fileTree', loadFileTree);
   ipcMain.handle('load-file', loadFile);
+  ipcMain.handle('save-file', saveFile);
 
   createWindow()
 
@@ -88,4 +89,14 @@ function loadFile(event, filePath) {
   var res;
   res = fs.readFileSync(filePath,{encoding: 'utf-8'}).toString();
   return res;
+}
+
+function saveFile(event, filePath, content) {
+  console.log("saveFile");
+  console.log(filePath);
+  console.log(content);
+  fs.writeFileSync(filePath,content, function (err) {
+    if (err) return console.log(err);
+  }
+  );
 }
