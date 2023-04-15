@@ -15,19 +15,20 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      allowRunningInsecureContent: true,
     }
   })
 
   // and load the index.html of the app.
-  if (app.isPackaged) {
-    mainWindow.loadFile('index.html'); // prod
-  } else {
-    mainWindow.loadURL('http://localhost:5173'); // dev
-  }
+  // if (app.isPackaged) {
+    mainWindow.loadFile('dist/index.html'); // prod
+  // } else {
+    // mainWindow.loadURL('http://localhost:5173'); // dev
+  // }
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished
@@ -44,6 +45,14 @@ app.whenReady().then(() => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  })
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': ['']
+      }
+    })
   })
 
 })
@@ -100,3 +109,6 @@ function saveFile(event, filePath, content) {
   }
   );
 }
+
+const { session } = require('electron')
+

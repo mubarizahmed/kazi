@@ -1,10 +1,11 @@
 import React from 'react';
 import { FolderCollapsible, FileTreeItem } from '../';
+import type { FileTreeType } from '../../types';
 
-const FileTree = (props) => {
-	function renderTree(tree: Object[]) {
+const FileTree = (props: { editorFilePath: string; selectedCallback: Function; tree: FileTreeType; }) => {
+	function renderTree(tree: FileTreeType) {
 		// console.log(tree);
-		var res = [];
+		var res: JSX.Element[] = [];
 		if (tree.children) {
 			tree.children.forEach((item) => {
 				// console.log(item);

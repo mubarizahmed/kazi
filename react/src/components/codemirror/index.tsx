@@ -1,4 +1,4 @@
-import { useDarkMode } from "@/providers";
+// import { useDarkMode } from "@/providers";
 import type { MutableRefObject } from "react";
 import {
   forwardRef,
@@ -21,7 +21,7 @@ export const Codemirror = forwardRef<CodemirrorRef, CodemirrorProps>(
   ({ content, onChange, lock }, ref) => {
     const divRef = useRef<HTMLDivElement>(null);
     const editorRef = useRef<ReturnType<typeof createCodeMirrorView>>();
-    const dark = useDarkMode();
+    const dark = true;
 
     useEffect(() => {
       if (!divRef.current) return;

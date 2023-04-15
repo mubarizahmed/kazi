@@ -4,14 +4,23 @@
   "description": "App that helps you work! With task-management, notes, scheduling, timers in one app.",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "electron": "electron ."
   },
   "author": "Mubariz Ahmed",
   "license": "ISC",
   "devDependencies": {
+    "@electron-forge/cli": "^6.1.1",
+    "@electron-forge/maker-deb": "^6.1.1",
+    "@electron-forge/maker-rpm": "^6.1.1",
+    "@electron-forge/maker-squirrel": "^6.1.1",
+    "@electron-forge/maker-zip": "^6.1.1",
     "electron": "^24.0.0"
   },
   "dependencies": {
-    "directory-tree": "^3.5.1"
+    "directory-tree": "^3.5.1",
+    "electron-squirrel-startup": "^1.0.0"
   }
 }

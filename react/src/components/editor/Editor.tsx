@@ -3,7 +3,7 @@ import { ProsemirrorAdapterProvider } from '@prosemirror-adapter/react';
 // import dynamic from "next/dynamic";
 // import Head from "next/head";
 // import { useRouter } from "next/router";
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 
 import { CodemirrorRef } from '../codemirror';
 import Loading from '../loading';
@@ -21,6 +21,8 @@ import { decode } from '../../utils/share';
 
 import './editor.css';
 import './prism.css';
+
+// const electronAPI = require('window.electronAPI');
 
 const Provider = compose(
 	FeatureToggleProvider,
@@ -95,7 +97,7 @@ export default function Editor({ path, template }: { path: string; template: str
 		// console.log('loaded file', file);
 		setLoaded(false);
 		setContent('');
-		window.electronAPI.loadFile(path).then((file) => {
+		window.electronAPI.loadFile(path).then((file: string) => {
 			setContent(file);
 			console.log('loaded file', file);
 			setLoaded(true);

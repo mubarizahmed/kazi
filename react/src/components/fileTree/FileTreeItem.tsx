@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { FileTreeType } from '../../types';
 
-const FileTreeItem = (props) => {
+const FileTreeItem = (props: {item: FileTreeType, editorFilePath: string, selectedCallback: Function }) => {
 	const [selected, setSelected] = useState(props.editorFilePath == props.item.path);
 
 	const toggleSelected = () => {

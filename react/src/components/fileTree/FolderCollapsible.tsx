@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const FolderCollapsible = (props) => {
+const FolderCollapsible = (props: {children: JSX.Element | JSX.Element[], name: string}) => {
 	const [collapsed, setCollapsed] = useState(true);
 
 	const toggleCollapsed = () => {
