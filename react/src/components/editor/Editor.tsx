@@ -41,14 +41,14 @@ export async function getStaticProps() {
 	};
 }
 
-export default function Editor({ path, template }: { path: string, template: string }) {
+export default function Editor({ path, template }: { path: string; template: string }) {
 	const [content, setContent] = useState(template);
 	const [filePath, setFilePath] = useState(path);
 	const [loaded, setLoaded] = useState(false);
 	// if (path !== '') {
 	// 	setFilePath(path);
 	// }
-	console.log('editor redraw', path);
+	// console.log('editor redraw', path, loaded);
 	// const router = useRouter();
 	// const path = router.asPath;
 
@@ -87,19 +87,8 @@ export default function Editor({ path, template }: { path: string, template: str
 	}, []);
 
 	useEffect(() => {
-		setLoaded(false);
-		setContent('');
-		setFilePath(path);
 		loadFile();
 	}, [path]);
-
-	useEffect(() => {
-		setFilePath(path);
-	}, []);
-
-	useEffect(() => {
-		console.log('content', content);
-	}, [content]);
 
 	const loadFile = async () => {
 		// const file = await window.electronAPI.loadFile(editorFilePath);
@@ -108,12 +97,14 @@ export default function Editor({ path, template }: { path: string, template: str
 		setContent('');
 		window.electronAPI.loadFile(path).then((file) => {
 			setContent(file);
+			console.log('loaded file', file);
 			setLoaded(true);
+			setFilePath(path);
 		});
 	};
 
 	const saveFile = async (fileContent: string) => {
-		if (loaded) {
+		if (loaded && filePath == path) {
 			console.log('saving file', path, fileContent);
 			await window.electronAPI.saveFile(path, fileContent);
 		}
