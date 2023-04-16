@@ -13,13 +13,13 @@ declare global {
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-  <BrowserRouter>
+  <HashRouter>
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<Home />} />
           <Route path="notes" element={<Notes />} />
         </Route>
       </Routes>
-  </BrowserRouter>
+  </HashRouter>
   </React.StrictMode>,
 )
