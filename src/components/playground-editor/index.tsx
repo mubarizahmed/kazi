@@ -73,7 +73,7 @@ export const PlaygroundMilkdown: FC<MilkdownProps> = ({ path, content, onChange,
 					<Button icon="arrow_back" onClick={() => call(undoCommand.key)} />
 					<Button icon="arrow_forward" onClick={() => call(redoCommand.key)} />
 				</div>
-				<p className="font-mono text-xs tracking-wider text-color-base">{path}</p>
+				<p className="font-mono text-xs tracking-wider text-color-base">{path.slice(17)}</p>
 				<div className="flex gap-1">
 
 					<Button icon="table" onClick={() => call(insertTableCommand.key)} />
