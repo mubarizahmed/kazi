@@ -1,7 +1,14 @@
-import React, { useState } from 'react';
+import { FileTreeType } from '@/types';
+import React, { useState, useEffect } from 'react';
 
-const FolderCollapsible = (props: {children: JSX.Element | JSX.Element[], name: string}) => {
+const FolderCollapsible = (props: {children: JSX.Element | JSX.Element[], item: FileTreeType, editorFilePath:string}) => {
 	const [collapsed, setCollapsed] = useState(true);
+	const [selected, setSelected] = useState(props.editorFilePath.includes(props.item.path));
+
+	useEffect(() => {
+    console.log(props.editorFilePath);
+		setSelected(props.editorFilePath.includes(props.item.path));
+	}, [props.editorFilePath]);
 
 	const toggleCollapsed = () => {
 		setCollapsed(!collapsed);
@@ -14,9 +21,9 @@ const FolderCollapsible = (props: {children: JSX.Element | JSX.Element[], name: 
 				className="flex w-full cursor-pointer  items-center justify-between"
 				onClick={toggleCollapsed}
 			>
-				<div className="flex items-center gap-2">
+				<div className={selected ? 'flex items-center gap-2 text-kaccent1' : 'flex items-center gap-2'}>
 					<span className="material-symbols-outlined text-base">folder</span>
-					{props.name}
+					{props.item.name}
 				</div>
 
 				<span className="material-symbols-outlined">

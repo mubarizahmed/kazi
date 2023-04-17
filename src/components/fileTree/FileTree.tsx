@@ -16,7 +16,7 @@ const FileTree = (props: { editorFilePath: string; selectedCallback: Function; t
 					);
 				} else {
 					// console.log('folder');
-					res.push(<FolderCollapsible name={item.name}>{renderTree(item)}</FolderCollapsible>);
+					res.push(<FolderCollapsible item={item} editorFilePath={props.editorFilePath}>{renderTree(item)}</FolderCollapsible>);
 				}
 			});
 		} else {
