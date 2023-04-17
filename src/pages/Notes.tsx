@@ -24,9 +24,9 @@ const Notes = () => {
 	}, []);
 
 	return (
-		<div className="grid h-screen w-full grid-cols-7 flex-row items-center justify-start ">
-			<div className="col-span-2 flex h-screen flex-col items-center justify-start gap-8 border-r-2 border-kmedium bg-kdark pl-6 pr-6 pt-4 ">
-				<div className="flex w-full items-center justify-between">
+		<div className="grid h-screen w-full grid-cols-7 !gap-0 items-center justify-start ">
+			<div className="col-span-2 flex h-screen flex-col items-center justify-start gap-8 border-r-2 border-kmedium  bg-kdark p-0 pt-4">
+				<div className="flex w-full items-center justify-between pl-6 pr-6">
 					<h1 className=" text-2xl tracking-wider text-color-base">NOTES</h1>
 					<button
 						className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-kaccent1"
@@ -39,11 +39,17 @@ const Notes = () => {
 						</span>
 					</button>
 				</div>
-				{fileTree ? (
-					<FileTree tree={fileTree} selectedCallback={selectFile} editorFilePath={editorFilePath} />
-				) : (
-					''
-				)}
+				<div className="w-full overflow-y-scroll pl-4 pr-3">
+					{fileTree ? (
+						<FileTree
+							tree={fileTree}
+							selectedCallback={selectFile}
+							editorFilePath={editorFilePath}
+						/>
+					) : (
+						''
+					)}
+				</div>
 				{/* refresh button */}
 			</div>
 			<div className="col-span-5 flex h-screen flex-col items-center justify-start border-r-2 border-kmedium bg-kdark">

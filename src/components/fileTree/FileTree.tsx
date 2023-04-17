@@ -26,7 +26,7 @@ const FileTree = (props: { editorFilePath: string; selectedCallback: Function; t
 	}
 
 	return (
-		<div className="flex w-full flex-col items-start justify-start gap-1 text-klight">
+		<div className="flex w-full flex-col items-start justify-start gap-1 text-klight ">
 			{renderTree(props.tree)}
 		</div>
 	);

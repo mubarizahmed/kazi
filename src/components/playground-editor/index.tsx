@@ -83,7 +83,7 @@ export const PlaygroundMilkdown: FC<MilkdownProps> = ({ path, content, onChange,
 					<Button icon="print" />
 				</div>
 			</div>
-			<div className="h-full overflow-auto overscroll-none pl-10 pr-10 ">
+			<div className="h-full overflow-y-scroll overflow-x-hidden pl-10 pr-10 ">
 				<Editor />
 			</div>
 		</div>

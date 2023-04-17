@@ -7,7 +7,7 @@ function App() {
   const [count, setCount] = useState(0);
 
   return (
-    <div className="flex flex-row w-screen default">
+    <div className="flex flex-row w-screen overflow-x-hidden default">
       <Sidebar />
       <Outlet />
     </div>
