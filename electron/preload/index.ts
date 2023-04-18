@@ -4,6 +4,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   loadFileTree: () => ipcRenderer.invoke('load-fileTree'),
   loadFile: (filePath:string) => ipcRenderer.invoke('load-file', filePath),
   saveFile: (filePath: string, content: string) => ipcRenderer.invoke('save-file', filePath, content),
+  loadSettings: () => ipcRenderer.invoke('load-settings'),
+  saveSettings: (settings: any) => ipcRenderer.invoke('save-settings', settings),
+  changeUserDirectory: () => ipcRenderer.invoke('change-user-directory'),
 },)
 
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
 import { release } from 'node:os';
 import { join } from 'node:path';
 import { update } from './update';
@@ -58,6 +58,22 @@ const store = new Store({
 		zoomFactor: 1
 	}
 });
+
+function loadSettings() {
+	return store.store;
+}
+
+function changeUserDirectory(){
+	dialog.showOpenDialog(win, {
+		properties: ['openDirectory']
+	}).then(result => {
+		if (!result.canceled) {
+			console.log(result.filePaths[0]);
+			store.set('userDirectory', result.filePaths[0]);
+		}
+	});
+	return store.store;
+}
 
 async function createWindow() {
 	win = new BrowserWindow({
@@ -119,6 +135,8 @@ app.whenReady().then(() => {
 	ipcMain.handle('load-fileTree', loadFileTree);
 	ipcMain.handle('load-file', loadFile);
 	ipcMain.handle('save-file', saveFile);
+	ipcMain.handle('load-settings', loadSettings);
+	ipcMain.handle('change-user-directory', changeUserDirectory);
 
 	createWindow();
 });
@@ -206,5 +224,7 @@ function saveFile(_event: any, filePath: string, content: string) {
 		if (err) return console.log(err);
 	});
 }
+
+
 
 const { session } = require('electron');

@@ -22,7 +22,7 @@ const FolderCollapsible = (props: {children: JSX.Element | JSX.Element[], item: 
 				onClick={toggleCollapsed}
 			>
 				<div className={selected ? 'flex items-center gap-2 text-kaccent1' : 'flex items-center gap-2'}>
-					<span className="material-symbols-outlined text-base">folder</span>
+					<span className="material-symbols-outlined text-base">{collapsed ? 'folder' : 'folder_open'}</span>
 					{props.item.name}
 				</div>
 
