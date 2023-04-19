@@ -87,6 +87,12 @@ h6 {
   margin-bottom: 1em;
 }
 
+ hr{
+	margin-top: 1em;
+	margin-bottom: 1em;
+	@apply border-0 border-t-2 border-color-base w-full;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;

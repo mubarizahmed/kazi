@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const Settings = () => {
 	const [selectedTab, setSelectedTab] = useState(0);
-	const [settingValues, setSettingValues] = useState( window.electronAPI.loadSettings());
+	const [settingValues, setSettingValues] = useState(window.electronAPI.loadSettings());
 
 	const load = async () => {
 		console.log('loaded');
@@ -14,15 +14,13 @@ const Settings = () => {
 		load();
 	}, []);
 
-
-
 	const settings = [
 		{
 			name: 'General',
 			icon: 'settings',
 			content: (
-				<div className="flex w-full flex-col items-start justify-start">
-					<div className="flex w-full justify-between pl-6 pr-6">
+				<div className="flex w-full flex-col items-start justify-start divide-x-0 pl-6 pr-6">
+					<div className="flex w-full justify-between ">
 						<div className="flex-col">
 							<div className="text-xl">Kazi Workspace Directory</div>
 							<div className="text-sm text-klight">
@@ -30,10 +28,32 @@ const Settings = () => {
 							</div>
 							<span className="text-sm text-klight">Current: {settingValues.userDirectory}</span>
 						</div>
-						<button 
-							className="bg-kaccent1 text-kdark rounded-md h-8 px-2 py-1"
-							onClick={async () => {setSettingValues(await window.electronAPI.changeUserDirectory())}}
-						>Change</button>
+						<button
+							className="h-8 rounded-md bg-kaccent1 px-2 py-1 text-kdark"
+							onClick={async () => {
+								setSettingValues(await window.electronAPI.changeUserDirectory());
+							}}
+						>
+							Change
+						</button>
+					</div>
+					<hr />
+					<div className="flex w-full justify-between ">
+						<div className="flex-col">
+							<div className="text-xl">Kazi Workspace Directory</div>
+							<div className="text-sm text-klight">
+								The directory where all your projects will be stored
+							</div>
+							<span className="text-sm text-klight">Current: {settingValues.userDirectory}</span>
+						</div>
+						<button
+							className="h-8 rounded-md bg-kaccent1 px-2 py-1 text-kdark"
+							onClick={async () => {
+								setSettingValues(await window.electronAPI.changeUserDirectory());
+							}}
+						>
+							Change
+						</button>
 					</div>
 					<hr />
 				</div>
@@ -43,8 +63,8 @@ const Settings = () => {
 			name: 'Appearance',
 			icon: 'palette',
 			content: (
-				<div className="flex w-full flex-col items-start justify-start">
-					<div className="flex w-full pl-6 pr-6">
+				<div className="flex w-full flex-col items-start justify-start divide-x-2 pl-6 pr-6">
+					<div className="flex w-full ">
 						<div className="flex-col">
 							<span className="text-xl">Kazi Workspace Directory</span>
 							<span className="text-sm text-klight">
@@ -52,7 +72,6 @@ const Settings = () => {
 							</span>
 							<span className="text-sm text-klight">Current: </span>
 						</div>
-
 					</div>
 					<hr />
 				</div>
@@ -120,9 +139,7 @@ const Settings = () => {
 					<div className="flex w-full pl-6 pr-6">
 						<div className="flex-col">
 							<span className="text-xl">Kazi Workspace Directory</span>
-							<span className="text-sm ">
-								The directory where all your projects will be stored
-							</span>
+							<span className="text-sm ">The directory where all your projects will be stored</span>
 							<span className="text-sm ">Current: </span>
 						</div>
 					</div>
@@ -178,8 +195,10 @@ const Settings = () => {
 					))}
 				</div>
 			</div>
-			<div className="col-span-5 flex h-screen text-klight flex-col items-center justify-start border-r-2
-		 py-4 border-kmedium bg-kdark">
+			<div
+				className="col-span-5 flex h-screen flex-col items-center justify-start border-r-2 border-kmedium
+		 bg-kdark py-4 pt-20 text-klight"
+			>
 				{settings[selectedTab].content}
 			</div>
 		</div>
