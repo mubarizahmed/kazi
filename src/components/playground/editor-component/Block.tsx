@@ -1,3 +1,4 @@
+import { deleteGroupForward } from "@codemirror/commands";
 import { commandsCtx } from "@milkdown/core";
 import { blockConfig, BlockProvider } from "@milkdown/plugin-block";
 import {
@@ -5,6 +6,8 @@ import {
   wrapInHeadingCommand,
 } from "@milkdown/preset-commonmark";
 import { useInstance } from "@milkdown/react";
+import { $command } from "@milkdown/utils";
+import { deleteSelection, selectNodeForward } from '@milkdown/prose/commands'
 import { usePluginViewContext } from "@prosemirror-adapter/react";
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
@@ -65,7 +68,7 @@ export const Block = () => {
           </svg>
         </div>
         {showMenu && (
-          <div className="absolute top-full mt-2 w-60 cursor-pointer rounded border-2 bg-gray-50 shadow dark:border-gray-900 dark:bg-gray-900">
+          <div className="absolute top-full mt-2 w-60 cursor-pointer rounded border-2 border-kdark bg-kmedium shadow text-klight">
             <div
               onClick={() => {
                 if (loading) return;
@@ -73,7 +76,7 @@ export const Block = () => {
                 const commands = get().ctx.get(commandsCtx);
                 commands.call(wrapInHeadingCommand.key, 1);
               }}
-              className="px-6 py-3 hover:bg-gray-200 dark:hover:bg-gray-700"
+              className="px-6 py-3 hover:bg-kdark"
             >
               Heading 1
             </div>
@@ -84,7 +87,7 @@ export const Block = () => {
                 const commands = get().ctx.get(commandsCtx);
                 commands.call(wrapInHeadingCommand.key, 2);
               }}
-              className="px-6 py-3 hover:bg-gray-200 dark:hover:bg-gray-700"
+              className="px-6 py-3 hover:bg-kdark"
             >
               Heading 2
             </div>
@@ -95,7 +98,7 @@ export const Block = () => {
                 const commands = get().ctx.get(commandsCtx);
                 commands.call(wrapInHeadingCommand.key, 3);
               }}
-              className="px-6 py-3 hover:bg-gray-200 dark:hover:bg-gray-700"
+              className="px-6 py-3 hover:bg-kdark"
             >
               Heading 3
             </div>
@@ -106,9 +109,26 @@ export const Block = () => {
                 const commands = get().ctx.get(commandsCtx);
                 commands.call(turnIntoTextCommand.key);
               }}
-              className="px-6 py-3 hover:bg-gray-200 dark:hover:bg-gray-700"
+              className="px-6 py-3 hover:bg-kdark"
             >
               Text
+            </div>
+            {/* delete block */}
+            <div
+              onClick={() => {
+                if (loading) return;
+                const selectBlockCommand = $command('DeleteBlock', (ctx) => () => selectNodeForward);
+                const deleteBlockCommand = $command('DeleteBlock', (ctx) => () => deleteSelection);
+                const commands = get().ctx.get(commandsCtx);
+                commands.call(selectBlockCommand.key);
+                commands.call(deleteBlockCommand.key);
+                
+                
+                // blockProvider.current?.destroy();
+              }}
+              className="px-6 py-3 hover:bg-kdark"
+            >
+              Delete
             </div>
           </div>
         )}

@@ -48,10 +48,10 @@ const Home = () => {
             <div className="text-base">Mail [coming soon]</div>
           </button>
         </Link>
-        <Link to="/" className="text-klight ">
+        <Link to="/tasks" className="text-klight ">
           <button className="flex w-full h-20 items-center justify-start gap-2 rounded bg-kdark p-4 text-klight hover:border-kaccent1">
             <IoFileTrayFullOutline className="text-3xl" />
-            <div className="text-base">File manager [coming soon]</div>
+            <div className="text-base">Task manager</div>
           </button>
         </Link>
 				<Link to="/notes" className="text-klight ">

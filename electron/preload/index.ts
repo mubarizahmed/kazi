@@ -7,6 +7,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   loadSettings: () => ipcRenderer.invoke('load-settings'),
   saveSettings: (settings: any) => ipcRenderer.invoke('save-settings', settings),
   changeUserDirectory: () => ipcRenderer.invoke('change-user-directory'),
+  startTaskScan: () => ipcRenderer.invoke('start-task-scan'),
 },)
 
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {

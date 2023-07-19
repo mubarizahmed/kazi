@@ -4,3 +4,14 @@ export type FileTreeType = {
   path: string;
   children?: FileTreeType[];
 }
+
+export type Task = {
+	label: string;
+	checked: boolean;
+	children: Task[];
+}
+
+export type Project = {
+  label: string;
+  children: Task[];
+}

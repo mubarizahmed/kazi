@@ -3,6 +3,7 @@ import { release } from 'node:os';
 import { join } from 'node:path';
 import { update } from './update';
 import { FileTreeType } from '@/types';
+import {startTaskScan} from './taskScanner';
 const path = require('path');
 const dirTree = require('directory-tree');
 const fs = require('fs');
@@ -137,6 +138,7 @@ app.whenReady().then(() => {
 	ipcMain.handle('save-file', saveFile);
 	ipcMain.handle('load-settings', loadSettings);
 	ipcMain.handle('change-user-directory', changeUserDirectory);
+	ipcMain.handle('start-task-scan', startTaskScan);
 
 	createWindow();
 });
@@ -224,6 +226,7 @@ function saveFile(_event: any, filePath: string, content: string) {
 		if (err) return console.log(err);
 	});
 }
+
 
 
 
