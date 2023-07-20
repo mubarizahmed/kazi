@@ -6,6 +6,7 @@ export type FileTreeType = {
 }
 
 export type Task = {
+  key: string;
 	label: string;
 	checked: boolean;
 	children: Task[];

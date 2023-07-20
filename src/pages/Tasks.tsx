@@ -23,6 +23,10 @@ const Tasks = (props: Props) => {
 		load();
 	}, []);
 
+	useEffect(() => {
+		console.log(projects);
+	}, [projects]);
+
 	var projectTrees = () => {
 		var res: ReactNode[] = [];
 		if (projects.length > 0) {

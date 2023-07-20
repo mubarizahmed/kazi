@@ -39,18 +39,25 @@ function scanMarkdownFile(filePath: string): Task[] {
 	// 		}
 	// 	});
 
-	return filterTokens(tokens);
+	return filterTokens(tokens, '-0');
 }
 
-const filterTokens = (tokens: marked.Token[]) => {
+const filterTokens = (tokens: marked.Token[], key: string) => {
 	const tasks: Task[] = [];
 	tokens.forEach((token: marked.Token) => {
+		console.log(key);
 		// if list go down one level
 		if (token.type === 'list' && token.items.length > 0) {
 			console.log(token.items);
-			tasks.push(...filterTokens(token.items));
+			tasks.push(...filterTokens(token.items, key));
+			console.log((parseInt(tasks.slice(-1)[0]?.key.split('-')[1]) + 1).toString());
+			key = '-'+(parseInt(tasks.slice(-1)[0]?.key.split('-')[1]) + 1).toString();
+
+			// comes back 
+
 			// if list item check if it matches case
-		} else if (token.type === 'list_item' && token.tokens.length > 0) {
+		}
+		if (token.type === 'list_item' && token.tokens.length > 0) {
 			console.log(token.tokens);
 			const match = token.text.match(/\[([x ])\]/);
 			// if task then push to tasks
@@ -64,12 +71,16 @@ const filterTokens = (tokens: marked.Token[]) => {
 				// if has sub items then recursevile get them
 				if (token.tokens.length > 0) {
 					console.log(token.tokens);
-					subtasks = filterTokens(token.tokens);
+					subtasks = filterTokens(token.tokens, key + '-0');
 				}
-				tasks.push({ label: taskName,checked: status,children: subtasks });
+				tasks.push({ label: taskName, checked: status, children: subtasks, key: key });
+				console.log(key.substring(key.lastIndexOf('-') + 1, key.length));
+				key =
+					key.substring(0, key.lastIndexOf('-') + 1) +
+					(parseInt(key.substring(key.lastIndexOf('-') + 1, key.length)) + 1).toString();
 				// if not task then recursevily check sub items
 			} else {
-				tasks.push(...filterTokens(token.tokens));
+				tasks.push(...filterTokens(token.tokens, key));
 			}
 
 			// if paragraph check if matches case
@@ -79,7 +90,10 @@ const filterTokens = (tokens: marked.Token[]) => {
 			if (match) {
 				const status = match[1] === 'x';
 				const taskName = token.text.replace(/\[([x ])\]/, '').trim();
-				tasks.push({ label: taskName,checked: status,children: subtasks });
+				tasks.push({ label: taskName, checked: status, children: subtasks, key });
+				key =
+					key.substring(0, key.lastIndexOf('-') + 1) +
+					(parseInt(key.substring(key.lastIndexOf('-') + 1, key.length)) + 1).toString();
 			}
 		}
 	});
