@@ -2,6 +2,11 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { Tree } from 'primereact/tree';
 
 import 'primeicons/primeicons.css';
+//theme
+import "primereact/resources/themes/lara-light-indigo/theme.css";     
+    
+//core
+import "primereact/resources/primereact.min.css";      
 
 import { Project } from '../types';
 
@@ -39,6 +44,10 @@ const Tasks = (props: Props) => {
 		return res;
 	};
 
+	var updateChecked = (event: any) => {
+		console.log(event);
+	}
+
 	useEffect(() => {
 		console.log(projects);
 	}, [projects]);
@@ -58,10 +67,11 @@ const Tasks = (props: Props) => {
 				</button>
 			</div>
 			<div className="w-full overflow-y-scroll pl-4 pr-3">
-				<div className="card flex justify-content-center">
+				<div className="card flex justify-center">
 					{/* {projectTrees} */}
 					{projects.length > 0 ? (
-						<Tree value={projects[0].children} className="md:w-30rem w-full" />
+						<Tree value={projects[0].children} selectionMode="checkbox" 
+						onSelectionChange={updateChecked} className="md:w-30rem w-full" />
 					) : (
 						<p>Test</p>
 					)}

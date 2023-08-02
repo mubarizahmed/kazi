@@ -9,7 +9,7 @@ export type Task = {
   key: string;
 	label: string;
 	checked: boolean;
-	children: Task[];
+	children?: Task[];
 }
 
 export type Project = {
