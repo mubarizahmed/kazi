@@ -8,6 +8,7 @@ export type FileTreeType = {
 export type Task = {
 	key: string;
 	label: string;
+  date?: Date;
 	checked: boolean;
 	children?: Task[];
 };

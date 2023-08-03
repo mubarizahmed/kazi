@@ -42,6 +42,21 @@ function scanMarkdownFile(filePath: string) {
 	return filterTokens(tokens, '-0');
 }
 
+const parseTask = (taskText: string) => {
+
+	let task = taskText
+		.replace(/\[([x ])\]/, '')
+		.trim()
+		.split('\n')[0].split('-');
+	const taskName = task[0];
+
+	if (task.length > 1) {
+		let [d, m, y] = task[1].trim().split('.');
+		return {taskName, date: new Date(+y,+m-1,+d)};
+	}
+	return {taskName};
+}
+
 const filterTokens = (tokens: marked.Token[], key: string) => {
 	const tasks: Task[] = [];
 	var checkedTasks: CheckedTasks = {};
@@ -66,20 +81,18 @@ const filterTokens = (tokens: marked.Token[], key: string) => {
 			if (match) {
 				var subtasks: Task[] = [];
 				const status = match[1] === 'x';
-				const taskName = token.text
-					.replace(/\[([x ])\]/, '')
-					.trim()
-					.split('\n')[0];
+				let {taskName, date} = parseTask(token.text);
+		
 				// if has sub items then recursevily get them
 				if (token.tokens.length > 1) {
 					console.log(token.tokens);
 					let {tasks: newTasks, checkedTasks: newCheckedTasks} = filterTokens(token.tokens, key + '-0');
 					subtasks = newTasks;
 					checkedTasks = {...checkedTasks, ...newCheckedTasks};
-					tasks.push({ label: taskName, checked: status, children: subtasks, key: key });
+					tasks.push({ label: taskName, checked: status, date: date, children: subtasks, key: key });
 					checkedTasks[key] = {checked: status, partialChecked: false};
 				} else {
-					tasks.push({ label: taskName, checked: status, key: key });
+					tasks.push({ label: taskName, checked: status, date: date, key: key });
 					checkedTasks[key] = {checked: status, partialChecked: false};
 				}
 				console.log(key.substring(key.lastIndexOf('-') + 1, key.length));
@@ -99,8 +112,8 @@ const filterTokens = (tokens: marked.Token[], key: string) => {
 			var subtasks: Task[] = [];
 			if (match) {
 				const status = match[1] === 'x';
-				const taskName = token.text.replace(/\[([x ])\]/, '').trim();
-				tasks.push({ label: taskName, checked: status, key });
+				let {taskName, date} = parseTask(token.text);
+				tasks.push({ label: taskName, checked: status, date: date, key: key });
 				checkedTasks[key] = {checked: status, partialChecked: false};
 				key =
 					key.substring(0, key.lastIndexOf('-') + 1) +

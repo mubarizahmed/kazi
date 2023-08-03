@@ -3,10 +3,10 @@ import { Tree } from 'primereact/tree';
 
 import 'primeicons/primeicons.css';
 //theme
-import "primereact/resources/themes/lara-light-indigo/theme.css";     
-    
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
+
 //core
-import "primereact/resources/primereact.min.css";      
+import 'primereact/resources/primereact.min.css';
 
 import { Project } from '../types';
 
@@ -46,11 +46,31 @@ const Tasks = (props: Props) => {
 
 	var updateChecked = (event: any) => {
 		console.log(event);
-	}
+	};
 
 	useEffect(() => {
 		console.log(projects);
 	}, [projects]);
+
+	const nodeTemplate = (node: any, options: any) => {
+		if (node.date) {
+			return (
+				<div className="flex flex-row justify-start gap-2 align-middle ">
+					<span className={options.className}>{node.label}</span>
+					<div className="bg-slate-500 flex items-center justify-center p-1 rounded">
+						<span className="text-xs text-white">{new Date(node.date).toDateString().slice(4, 10)}</span>
+					</div>
+				</div>
+			);
+		}
+
+		return (
+			<div className="flex flex-row justify-start gap-1 align-middle">
+				<span className={options.className}>{node.label}</span>
+			</div>
+		);
+	};
+
 	return (
 		<div className="flex h-screen w-full flex-col  bg-kdark p-4">
 			<div className="flex w-full items-center justify-between pl-4 pr-6">
@@ -70,9 +90,14 @@ const Tasks = (props: Props) => {
 				<div className="card flex justify-center">
 					{/* {projectTrees} */}
 					{projects.length > 0 ? (
-						<Tree value={projects[0].children} selectionMode="checkbox" 
-						onSelectionChange={updateChecked} className="md:w-30rem w-full" 
-						selectionKeys={projects[0].checkedTasks}/>
+						<Tree
+							value={projects[0].children}
+							selectionMode="checkbox"
+							onSelectionChange={updateChecked}
+							className="md:w-30rem w-full"
+							selectionKeys={projects[0].checkedTasks}
+							nodeTemplate={nodeTemplate}
+						/>
 					) : (
 						<p>Test</p>
 					)}
