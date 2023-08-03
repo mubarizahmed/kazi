@@ -71,7 +71,8 @@ const Tasks = (props: Props) => {
 					{/* {projectTrees} */}
 					{projects.length > 0 ? (
 						<Tree value={projects[0].children} selectionMode="checkbox" 
-						onSelectionChange={updateChecked} className="md:w-30rem w-full" />
+						onSelectionChange={updateChecked} className="md:w-30rem w-full" 
+						selectionKeys={projects[0].checkedTasks}/>
 					) : (
 						<p>Test</p>
 					)}
