@@ -4,10 +4,22 @@ import { Editor, FileTree } from '../components';
 import { FileTreeType } from '../types';
 // const { ipcRenderer } = require('electron');
 // const electronAPI = require('window.electronAPI');
+import { Tree, TreeNodeTemplateOptions, TreeTogglerTemplateOptions } from 'primereact/tree';
+import { TreeNode } from 'primereact/treenode';
+import 'primeicons/primeicons.css';
+//theme
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
+
+//core
+import 'primereact/resources/primereact.min.css';
+
+import '../tree.css';
 
 const Notes = () => {
 	const [fileTree, setFileTree] = useState<FileTreeType>();
+	
 	const [editorFilePath, setEditorFilePath] = useState('');
+
 
 	const selectFile = (path: string) => {
 		console.log(path);
@@ -24,8 +36,8 @@ const Notes = () => {
 	}, []);
 
 	return (
-		<div className="grid h-screen w-full grid-cols-7 !gap-0 items-center justify-start ">
-			<div className="col-span-2 flex h-screen flex-col items-center justify-start gap-8 border-r-2 border-kmedium  bg-kdark p-0 pt-4">
+		<div className="grid h-screen w-full grid-cols-7 items-center justify-start !gap-0 ">
+			<div className="col-span-2 flex h-screen flex-col items-center justify-start gap-2 border-r-2 border-kmedium  bg-kdark p-0 pt-4">
 				<div className="flex w-full items-center justify-between pl-4 pr-6">
 					<span className=" text-2xl tracking-wider text-klight">NOTES</span>
 					<button
@@ -40,11 +52,14 @@ const Notes = () => {
 					</button>
 				</div>
 				<div className="w-full overflow-y-scroll pl-4 pr-3">
-					{fileTree ? (
-						<FileTree
-							tree={fileTree}
-							selectedCallback={selectFile}
-							editorFilePath={editorFilePath}
+					{fileTree?.children ? (
+						<Tree
+							value={fileTree.children}
+							className="md:w-30rem w-full"
+							selectionMode="single"
+							selectionKeys={editorFilePath}
+							onSelectionChange={(e) => selectFile(e.value)}
+							filter filterMode="strict"
 						/>
 					) : (
 						''

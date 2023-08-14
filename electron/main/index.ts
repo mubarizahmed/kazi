@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { update } from './update';
 import { FileTreeType } from '@/types';
 import {startTaskScan} from './taskScanner';
+import {updateFileTree, loadFile, saveFile} from './fileScanner';
 const path = require('path');
 const dirTree = require('directory-tree');
 const fs = require('fs');
@@ -182,51 +183,10 @@ ipcMain.handle('open-win', (_, arg) => {
 	}
 });
 
-const directorySort = (a: FileTreeType, b: FileTreeType) => {
-	if (a.type === 'directory' && b.type === 'file') {
-		return -1;
-	} else if (a.type === 'file' && b.type === 'directory') {
-		return 1;
-	} else {
-		return a.name.localeCompare(b.name);
-	}
-};
-
-const treeSort = (tree: FileTreeType) => {
-	if (tree.children) {
-		tree.children.sort(directorySort).forEach(treeSort);
-	}
-	return tree;
-};
 
 const loadFileTree = () => {
-  fs.access(store.get('userDirectory'), (err: string) => {
-    console.log(err ? 'no dir' : 'dir exists');
-    fs.mkdirSync(store.get('userDirectory'), { recursive: true });
-  });
-	const fileTree = dirTree(store.get('userDirectory'), { extensions: /\.md$/, attributes: ['type'] });
-	console.log(fileTree);
-
-	return treeSort(fileTree);
-};
-
-function loadFile(_event: any, filePath: string) {
-	console.log('loadFile');
-	console.log(filePath);
-	var res;
-	res = fs.readFileSync(filePath, { encoding: 'utf-8' }).toString();
-	return res;
+	return updateFileTree(store.get('userDirectory'))
 }
-
-function saveFile(_event: any, filePath: string, content: string) {
-	console.log('saveFile');
-	console.log(filePath);
-	console.log(content);
-	fs.writeFileSync(filePath, content, function (err: any) {
-		if (err) return console.log(err);
-	});
-}
-
 
 
 

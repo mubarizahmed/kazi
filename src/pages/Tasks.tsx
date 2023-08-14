@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
-import { Tree } from 'primereact/tree';
-
+import { Tree, TreeNodeTemplateOptions, TreeTogglerTemplateOptions } from 'primereact/tree';
+import { TreeNode } from 'primereact/treenode';
 import 'primeicons/primeicons.css';
 //theme
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
@@ -52,7 +52,7 @@ const Tasks = (props: Props) => {
 		console.log(projects);
 	}, [projects]);
 
-	const nodeTemplate = (node: any, options: any) => {
+	const nodeTemplate = (node: TreeNode, options: TreeNodeTemplateOptions) => {
 		if (node.date) {
 			return (
 				<div className="flex flex-row justify-start gap-2 align-middle ">
