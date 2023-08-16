@@ -55,7 +55,7 @@ const Tasks = (props: Props) => {
 	const nodeTemplate = (node: TreeNode, options: TreeNodeTemplateOptions) => {
 		if (node.date) {
 			return (
-				<div className="flex flex-row justify-start gap-2 align-middle ">
+				<div className="flex flex-row justify-start gap-2 items-center ">
 					<span className={options.className}>{node.label}</span>
 					<div className="bg-slate-500 flex items-center justify-center p-1 rounded">
 						<span className="text-xs text-white">{new Date(node.date).toDateString().slice(4, 10)}</span>
@@ -65,7 +65,7 @@ const Tasks = (props: Props) => {
 		}
 
 		return (
-			<div className="flex flex-row justify-start gap-1 align-middle">
+			<div className="flex flex-row justify-start gap-1 items-center">
 				<span className={options.className}>{node.label}</span>
 			</div>
 		);

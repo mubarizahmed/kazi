@@ -11,6 +11,15 @@ export function loadFile(_event: any, filePath: string) {
 	return res;
 };
 
+export function createFile(_event: any, filePath: string){
+	console.log('createFile');
+	console.log(filePath);
+	let content = '# ' + filePath.split('/').slice(-1)[0].slice(0, -3);
+	fs.writeFileSync(filePath, content, function (err: any) {
+		if (err) return console.log(err);
+	});
+}
+
 export function saveFile(_event: any, filePath: string, content: string) {
 	console.log('saveFile');
 	console.log(filePath);
@@ -42,6 +51,7 @@ const transformNode = (tree: FileTreeType) => {
   node.id = tree.path;
   node.key = tree.path;
   node.label = tree.name;
+	node.type = tree.type;
 
   if (tree.type === 'directory') {
     node.icon = "pi pi-fw pi-folder";

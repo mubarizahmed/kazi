@@ -6,6 +6,10 @@ import { FileTreeType } from '../types';
 // const electronAPI = require('window.electronAPI');
 import { Tree, TreeNodeTemplateOptions, TreeTogglerTemplateOptions } from 'primereact/tree';
 import { TreeNode } from 'primereact/treenode';
+import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+
 import 'primeicons/primeicons.css';
 //theme
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
@@ -16,14 +20,60 @@ import 'primereact/resources/primereact.min.css';
 import '../tree.css';
 
 const Notes = () => {
-	const [fileTree, setFileTree] = useState<FileTreeType>();
-	
+	const [fileTree, setFileTree] = useState<TreeNode>();
+
 	const [editorFilePath, setEditorFilePath] = useState('');
 
+	const [fileCreate, setFileCreate] = useState<TreeNode>();
+	const [newFileName, setNewFileName] = useState('');
+
+	const addFile = (node: TreeNode, name: string) => {
+		console.log(node);
+		let filePath = node.key + '/' + name + '.md';
+
+		node.children?.push({
+			key: filePath,
+			path: filePath,
+			label: name + '.md',
+			type: 'file',
+			icon: 'pi pi-fw pi-file',
+			selectable: true
+		} as TreeNode);
+		setFileTree({ ...fileTree });
+		setFileCreate(undefined);
+		setNewFileName(''); //
+		window.electronAPI.createFile(filePath).then(() => {
+			setEditorFilePath(filePath);
+		});
+
+	};
 
 	const selectFile = (path: string) => {
 		console.log(path);
 		setEditorFilePath(path);
+	};
+
+	const nodeTemplate = (node: TreeNode, options: TreeNodeTemplateOptions) => {
+		if (node.type === 'directory') {
+			return (
+				<div className="group flex w-full min-w-0 flex-row items-center justify-between  gap-1">
+					<div className={options.className + ' cursor-default'}>{node.label}</div>
+					<div
+						className="pi pi-plus h-fit cursor-pointer opacity-0 hover:text-kaccent1 group-hover:opacity-100 "
+						onClick={() => {
+							console.log(node.key);
+							setFileCreate(node);
+						}}
+					></div>
+				</div>
+			);
+		}
+
+		return (
+			<div className="flex w-full min-w-0 flex-row items-center justify-start gap-1">
+				<span className={options.className}>{node.label}</span>
+			</div>
+		);
 	};
 
 	const load = async () => {
@@ -51,15 +101,17 @@ const Notes = () => {
 						</span>
 					</button>
 				</div>
-				<div className="w-full overflow-y-scroll pl-4 pr-3">
+				<div className="h-full w-full overflow-hidden">
 					{fileTree?.children ? (
 						<Tree
 							value={fileTree.children}
-							className="md:w-30rem w-full"
+							className="flex h-full w-full flex-col overflow-auto"
 							selectionMode="single"
 							selectionKeys={editorFilePath}
 							onSelectionChange={(e) => selectFile(e.value)}
-							filter filterMode="strict"
+							filter
+							filterMode="strict"
+							nodeTemplate={nodeTemplate}
 						/>
 					) : (
 						''
@@ -67,7 +119,7 @@ const Notes = () => {
 				</div>
 				{/* refresh button */}
 			</div>
-			<div className="col-span-5 flex h-screen flex-col items-center justify-start border-r-2 border-kmedium bg-kdark">
+			<div className="col-span-5 flex h-screen flex-col items-center justify-start border-kmedium bg-kdark">
 				{editorFilePath ? (
 					<Editor path={editorFilePath} template="" />
 				) : (
@@ -76,6 +128,28 @@ const Notes = () => {
 					</div>
 				)}
 			</div>
+			<Dialog
+				header="Create file"
+				visible={fileCreate}
+				style={{ width: '50vw' }}
+				onHide={() => {
+					setFileCreate(undefined);
+				}}
+			>
+				<span className="p-float-label">
+					<InputText
+						id="newFileName"
+						value={newFileName}
+						onKeyUp={(e) => {
+							if (e.key === 'Enter') {
+								addFile(fileCreate, newFileName);
+
+							}}}
+						onChange={(e) => setNewFileName(e.target.value)}
+					/>
+					<label htmlFor="newFileName">New File name</label>
+				</span>
+			</Dialog>
 		</div>
 	);
 };
