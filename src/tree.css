@@ -89,3 +89,38 @@
 .p-tree .p-tree-toggler-icon {
   font-size: 0.75rem;
 }
+
+.p-dialog {
+	@apply bg-kmedium opacity-100 text-klighter;
+}
+.p-dialog .p-dialog-header {
+	@apply bg-transparent text-klighter pb-0;
+}
+.p-dialog .p-dialog-header .p-dialog-header-icon {
+	@apply text-klighter hover:text-kaccent1 hover:bg-transparent;
+}
+.p-dialog .p-dialog-header .p-dialog-header-icon:enabled:hover {
+	@apply text-kaccent1 hover:bg-transparent;
+}
+.p-dialog .p-dialog-content {
+	@apply bg-transparent text-klighter pt-8 pb-0;
+}
+.p-dialog .p-dialog-content .p-inputtext {
+	box-shadow: none;
+	@apply bg-kdark text-klight w-full border-kdark border-solid;
+}
+.p-dialog .p-dialog-content  .p-invalid {
+	@apply border-red-500 border;
+}
+.p-dialog .p-dialog-footer {
+	@apply bg-transparent text-klighter;
+}
+.p-dialog .p-dialog-footer .p-button {
+	@apply bg-kaccent1 text-kdarker m-0 p-2;
+}
+.p-dialog .p-error-show {
+	@apply text-xs text-red-500 opacity-100 pt-1 h-6;
+}
+.p-dialog .p-error-hidden {
+	@apply text-xs opacity-0 h-6;
+}

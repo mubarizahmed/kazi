@@ -119,6 +119,7 @@ export default function Editor({ path, template }: { path: string; template: str
 					content={content}
 					onChange={onMilkdownChange}
 					path={path}
+					
 				/>
 			</div>
 		</Provider>

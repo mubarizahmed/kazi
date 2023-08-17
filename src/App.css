@@ -9,7 +9,7 @@
   text-align: center;
 } */
 
-.default {
+:root {
 	--color-klighter: 217, 216, 218;
 	--color-klight: 131,145,178;
 	--color-kmedium: 32, 30, 60;

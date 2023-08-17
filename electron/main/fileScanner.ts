@@ -20,6 +20,14 @@ export function createFile(_event: any, filePath: string){
 	});
 }
 
+export function deleteFile(_event: any, filePath: string){
+	console.log('deleteFile');
+	console.log(filePath);
+	// fs.rmSync(filePath, { recursive: true, force: true }, function (err: any) {
+	// 	if (err) return console.log(err);
+	// });
+}
+
 export function saveFile(_event: any, filePath: string, content: string) {
 	console.log('saveFile');
 	console.log(filePath);

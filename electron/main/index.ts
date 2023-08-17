@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { update } from './update';
 import { FileTreeType } from '@/types';
 import {startTaskScan} from './taskScanner';
-import {updateFileTree, loadFile, saveFile, createFile} from './fileScanner';
+import {updateFileTree, loadFile, saveFile, createFile, deleteFile} from './fileScanner';
 const path = require('path');
 const dirTree = require('directory-tree');
 const fs = require('fs');
@@ -138,6 +138,7 @@ app.whenReady().then(() => {
 	ipcMain.handle('load-file', loadFile);
 	ipcMain.handle('save-file', saveFile);
 	ipcMain.handle('create-file', createFile);
+	ipcMain.handle('delete-file', deleteFile);
 	ipcMain.handle('load-settings', loadSettings);
 	ipcMain.handle('change-user-directory', changeUserDirectory);
 	ipcMain.handle('start-task-scan', startTaskScan);

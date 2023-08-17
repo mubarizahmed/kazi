@@ -12,6 +12,7 @@ module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
+  important: '#root',
   theme: {
     extend: {
       colors: {
@@ -68,7 +69,7 @@ module.exports = {
   purge: {
     // content: ['./src/**/*.html'],
     options: {
-      safelist: ['bg-todoist-1', 'bg-todoist-2', 'bg-todoist-3', 'bg-todoist-4', 'border-todoist-1', 'border-todoist-2','bg-nord8', 'border-todoist-3', 'border-todoist-4', 'gradient-1'],
+      safelist: ['bg-todoist-1', 'bg-todoist-2', 'bg-todoist-3', 'bg-todoist-4', 'border-todoist-1', 'border-todoist-2','bg-nord8', 'border-todoist-3', 'border-todoist-4', 'gradient-1', 'bg-klighter'],
     },
   },
 
