@@ -13,7 +13,6 @@ import { ContextMenu } from 'primereact/contextmenu';
 import { MenuItem } from 'primereact/menuitem';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Splitter, SplitterPanel } from 'primereact/splitter';
-        
 
 import 'primeicons/primeicons.css';
 //theme
@@ -51,7 +50,7 @@ const Notes = () => {
 					accept: () => {
 						window.electronAPI.deleteFile(treeMenuSelectedKey.key).then(() => {
 							// delete from the tree
-							let paths = treeMenuSelectedKey.key.slice(fileTree.key.length+1, -1).split('/');
+							let paths = treeMenuSelectedKey.key.slice(fileTree.key.length + 1, -1).split('/');
 
 							let searchPath = fileTree.key;
 							let searchObject = fileTree;
@@ -65,10 +64,12 @@ const Notes = () => {
 										searchObject = node;
 										break;
 									}
-								};
+								}
 							}
 							console.log(searchObject);
-							searchObject.children = searchObject.children.filter((node: TreeNode) => node.key !== treeMenuSelectedKey.key);
+							searchObject.children = searchObject.children.filter(
+								(node: TreeNode) => node.key !== treeMenuSelectedKey.key
+							);
 
 							setFileTree({ ...fileTree });
 						});
@@ -196,57 +197,64 @@ const Notes = () => {
 	}, []);
 
 	return (
-		<>
-		 <div className="h-screen w-screen bg-kdark">
-		<Splitter style={{width: '100%', height: '100%'}} className='bg-kdark'>
-			{/* <div className="col-span-2 flex h-screen flex-col items-center justify-start gap-2 border-r-2 border-kmedium  bg-kdark p-0 pt-4"> */}
-			<SplitterPanel size={2/7} minSize={15} className="flex h-full flex-col items-center justify-start gap-2  border-kmedium  bg-kdark p-0 pt-4 overflow-clip">
-				<div className="flex w-full items-center justify-between pl-4 pr-6">
-					<span className=" text-2xl tracking-wider text-klight">NOTES</span>
-					<button
-						className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-kaccent1"
-						onClick={() => {
-							load();
-						}}
-					>
-						<span className="material-symbols-outlined text-base text-klight hover:text-white">
-							refresh
-						</span>
-					</button>
-				</div>
-				<ContextMenu model={treeMenuItems} ref={tm} breakpoint="767px" />
-				<div className="h-full w-full overflow-hidden">
-					{fileTree?.children ? (
-						<Tree
-							value={fileTree.children}
-							className="flex h-full w-full flex-col overflow-auto"
-							selectionMode="single"
-							selectionKeys={editorFilePath}
-							onSelectionChange={(e) => selectFile(e.value)}
-							filter
-							filterMode="strict"
-							nodeTemplate={nodeTemplate}
-							// contextMenuSelectionKey={treeMenuSelectedKey}
-							// onContextMenuSelectionChange={(e) => setTreeMenuSelectedKey(e.value)}
-							// onContextMenu={(e) => tm.current.show(e.originalEvent)}
-						/>
-					) : (
-						''
-					)}
-				</div>
-				{/* refresh button */}
-				</SplitterPanel>
-			{/* </div> */}
-			{/* <div className="col-span-5 flex h-screen flex-col items-center justify-start border-kmedium bg-kdark"> */}
-			<SplitterPanel size={5/7} minSize={15} className="flex h-full flex-col items-center justify-start border-kmedium bg-kdark overflow-clip">
-				{editorFilePath ? (
-					<Editor path={editorFilePath} template="" />
-				) : (
-					<div className="flex h-full w-full flex-col items-center justify-center">
-						<h1 className="text-3xl text-color-base">Select a file to edit</h1>
+		<div className="h-screen w-[calc(100vw-4rem)] bg-kdark">
+			<Splitter style={{ width: '100%', height: '100%' }} className="bg-kdark">
+				{/* <div className="col-span-2 flex h-screen flex-col items-center justify-start gap-2 border-r-2 border-kmedium  bg-kdark p-0 pt-4"> */}
+				<SplitterPanel
+					size={2 / 7}
+					minSize={15}
+					className="flex h-full flex-col items-center justify-start gap-2  overflow-clip  border-kmedium bg-kdark p-0 pt-4"
+				>
+					<div className="flex w-full items-center justify-between pl-4 pr-6">
+						<span className=" text-2xl tracking-wider text-klight">NOTES</span>
+						<button
+							className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-kaccent1"
+							onClick={() => {
+								load();
+							}}
+						>
+							<span className="material-symbols-outlined text-base text-klight hover:text-white">
+								refresh
+							</span>
+						</button>
 					</div>
-				)}
-			</SplitterPanel>
+					<ContextMenu model={treeMenuItems} ref={tm} breakpoint="767px" />
+					<div className="h-full w-full overflow-hidden">
+						{fileTree?.children ? (
+							<Tree
+								value={fileTree.children}
+								className="flex h-full w-full flex-col overflow-auto"
+								selectionMode="single"
+								selectionKeys={editorFilePath}
+								onSelectionChange={(e) => selectFile(e.value)}
+								filter
+								filterMode="strict"
+								nodeTemplate={nodeTemplate}
+								// contextMenuSelectionKey={treeMenuSelectedKey}
+								// onContextMenuSelectionChange={(e) => setTreeMenuSelectedKey(e.value)}
+								// onContextMenu={(e) => tm.current.show(e.originalEvent)}
+							/>
+						) : (
+							''
+						)}
+					</div>
+					{/* refresh button */}
+				</SplitterPanel>
+				{/* </div> */}
+				{/* <div className="col-span-5 flex h-screen flex-col items-center justify-start border-kmedium bg-kdark"> */}
+				<SplitterPanel
+					size={5 / 7}
+					minSize={15}
+					className="flex h-full w-full min-w-0 flex-col items-center justify-start overflow-clip border-kmedium bg-kdark"
+				>
+					{editorFilePath ? (
+						<Editor path={editorFilePath} template="" />
+					) : (
+						<div className="flex h-full w-full flex-col items-center justify-center">
+							<h1 className="text-3xl text-color-base">Select a file to edit</h1>
+						</div>
+					)}
+				</SplitterPanel>
 			</Splitter>
 			{/* </div> */}
 			<Dialog
@@ -283,9 +291,7 @@ const Notes = () => {
 				</div>
 			</Dialog>
 			<ConfirmDialog />
-			</div>
-			</>
-
+		</div>
 	);
 };
 

@@ -132,7 +132,7 @@
 }
 
 .p-splitter .p-splitter-gutter {
-	@apply border-0 bg-kmedium;
+	@apply border-0 bg-kmedium !w-0.5;
 }
 
 .p-splitter .p-splitter-gutter .p-splitter-gutter-handle {
