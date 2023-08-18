@@ -83,7 +83,9 @@
 }
 
 .p-tree .p-treenode-children {
-	padding: 0 0 0 0.25rem;
+	margin: 0 0 0 0.5rem;
+	padding: 0;
+	@apply border-l-2 border-transparent hover:border-kmedium;
 }
 
 .p-tree .p-tree-toggler-icon {
