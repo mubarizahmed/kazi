@@ -124,3 +124,15 @@
 .p-dialog .p-error-hidden {
 	@apply text-xs opacity-0 h-6;
 }
+
+.p-splitter{
+	@apply border-0 bg-kdark;
+}
+
+.p-splitter .p-splitter-gutter {
+	@apply border-0 bg-kmedium;
+}
+
+.p-splitter .p-splitter-gutter .p-splitter-gutter-handle {
+	@apply border-0 bg-klight;
+}

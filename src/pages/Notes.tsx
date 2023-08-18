@@ -12,6 +12,8 @@ import { InputText } from 'primereact/inputtext';
 import { ContextMenu } from 'primereact/contextmenu';
 import { MenuItem } from 'primereact/menuitem';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Splitter, SplitterPanel } from 'primereact/splitter';
+        
 
 import 'primeicons/primeicons.css';
 //theme
@@ -194,8 +196,11 @@ const Notes = () => {
 	}, []);
 
 	return (
-		<div className="grid h-screen w-full grid-cols-7 items-center justify-start !gap-0 ">
-			<div className="col-span-2 flex h-screen flex-col items-center justify-start gap-2 border-r-2 border-kmedium  bg-kdark p-0 pt-4">
+		<>
+		 <div className="h-screen w-screen bg-kdark">
+		<Splitter style={{width: '100%', height: '100%'}} className='bg-kdark'>
+			{/* <div className="col-span-2 flex h-screen flex-col items-center justify-start gap-2 border-r-2 border-kmedium  bg-kdark p-0 pt-4"> */}
+			<SplitterPanel size={2/7} minSize={15} className="flex h-full flex-col items-center justify-start gap-2  border-kmedium  bg-kdark p-0 pt-4 overflow-clip">
 				<div className="flex w-full items-center justify-between pl-4 pr-6">
 					<span className=" text-2xl tracking-wider text-klight">NOTES</span>
 					<button
@@ -230,8 +235,10 @@ const Notes = () => {
 					)}
 				</div>
 				{/* refresh button */}
-			</div>
-			<div className="col-span-5 flex h-screen flex-col items-center justify-start border-kmedium bg-kdark">
+				</SplitterPanel>
+			{/* </div> */}
+			{/* <div className="col-span-5 flex h-screen flex-col items-center justify-start border-kmedium bg-kdark"> */}
+			<SplitterPanel size={5/7} minSize={15} className="flex h-full flex-col items-center justify-start border-kmedium bg-kdark overflow-clip">
 				{editorFilePath ? (
 					<Editor path={editorFilePath} template="" />
 				) : (
@@ -239,7 +246,9 @@ const Notes = () => {
 						<h1 className="text-3xl text-color-base">Select a file to edit</h1>
 					</div>
 				)}
-			</div>
+			</SplitterPanel>
+			</Splitter>
+			{/* </div> */}
 			<Dialog
 				visible={fileCreate}
 				style={{ width: '35vw' }}
@@ -274,7 +283,9 @@ const Notes = () => {
 				</div>
 			</Dialog>
 			<ConfirmDialog />
-		</div>
+			</div>
+			</>
+
 	);
 };
 

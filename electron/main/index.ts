@@ -107,6 +107,7 @@ async function createWindow() {
 		win.webContents.openDevTools();
 	} else {
 		win.loadFile(indexHtml);
+		win.webContents.openDevTools();
 	}
 
 	// Test actively push message to the Electron-Renderer
@@ -119,6 +120,8 @@ async function createWindow() {
 		if (url.startsWith('https:')) shell.openExternal(url);
 		return { action: 'deny' };
 	});
+
+	app.commandLine.appendSwitch("--remote-debugging-port", "9222");
 
 	// Apply electron-updater
 	update(win);
