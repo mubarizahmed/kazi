@@ -1,6 +1,11 @@
 name: Build/release
 
-on: [workflow_dispatch]
+on: 
+  push:
+    branches:
+      - master
+    tags:
+      - v*
 
 jobs:
   release:
