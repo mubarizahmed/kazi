@@ -76,7 +76,8 @@ const Notes = () => {
 					},
 					reject: () => {
 						setTreeMenuSelectedKey(undefined);
-					}
+					},
+					className: 'tree-delete-dialog'
 				});
 			}
 		}
@@ -193,15 +194,36 @@ const Notes = () => {
 	};
 
 	useEffect(() => {
+		let fp = sessionStorage.getItem('kazi-editor-file-path');
+		if (fp !== null && fp !== '') setEditorFilePath(fp);
+
+		let ft = sessionStorage.getItem('kazi-file-tree');
+		if (ft !== null && ft !== 'undefined') {setFileTree(JSON.parse(ft))};
+
+		console.log('loaded');
+
 		load();
 	}, []);
 
+	useEffect(() => {
+		if (fileTree !== null && fileTree !== 'undefined') sessionStorage.setItem('kazi-file-tree', JSON.stringify(fileTree));
+	}, [fileTree]);
+
+	useEffect(() => {
+		sessionStorage.setItem('kazi-editor-file-path', editorFilePath);
+	}, [editorFilePath]);
+
 	return (
 		<div className="h-screen w-[calc(100vw-4rem)] bg-kdark">
-			<Splitter style={{ width: '100%', height: '100%' }} className="bg-kdark">
+			<Splitter
+				style={{ width: '100%', height: '100%' }}
+				className="bg-kdark"
+				stateStorage="session"
+				stateKey="kazi-notes-splitter"
+			>
 				{/* <div className="col-span-2 flex h-screen flex-col items-center justify-start gap-2 border-r-2 border-kmedium  bg-kdark p-0 pt-4"> */}
 				<SplitterPanel
-					size={2 / 7}
+					size={200 / 7}
 					minSize={15}
 					className="flex h-full flex-col items-center justify-start gap-2  overflow-clip  border-kmedium bg-kdark p-0 pt-4"
 				>
@@ -243,7 +265,7 @@ const Notes = () => {
 				{/* </div> */}
 				{/* <div className="col-span-5 flex h-screen flex-col items-center justify-start border-kmedium bg-kdark"> */}
 				<SplitterPanel
-					size={5 / 7}
+					size={500 / 7}
 					minSize={15}
 					className="flex h-full w-full min-w-0 flex-col items-center justify-start overflow-clip border-kmedium bg-kdark"
 				>
@@ -261,6 +283,7 @@ const Notes = () => {
 				visible={fileCreate}
 				style={{ width: '35vw' }}
 				header="Create new file"
+				contentClassName="tree-add-dialog"
 				onHide={() => {
 					setFileCreate(undefined);
 					setNewFileName(''); //

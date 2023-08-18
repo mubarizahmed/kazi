@@ -105,8 +105,16 @@
 	@apply text-kaccent1 hover:bg-transparent;
 }
 .p-dialog .p-dialog-content {
-	@apply bg-transparent text-klighter pt-8 pb-0;
+	@apply bg-transparent text-klighter pt-4 pb-4;
 }
+.tree-add-dialog{
+	@apply bg-transparent text-klighter !pt-8 !pb-0;
+}
+
+.p-delete-dialog .p-dialog-content {
+	@apply bg-transparent text-klighter pt-4 pb-4;
+}
+
 .p-dialog .p-dialog-content .p-inputtext {
 	box-shadow: none;
 	@apply bg-kdark text-klight w-full border-kdark border-solid;
@@ -118,7 +126,13 @@
 	@apply bg-transparent text-klighter;
 }
 .p-dialog .p-dialog-footer .p-button {
-	@apply bg-kaccent1 text-kdarker m-0 p-2;
+	@apply bg-kaccent1 text-kdarker m-0 ml-2 p-2 min-w-[4rem];
+}
+.p-button.p-button-text:enabled:hover, .p-button.p-button-text:not(button):not(a):not(.p-disabled):hover{
+	@apply bg-kaccent1 text-klighter;
+}
+.p-button.p-button-danger{
+	@apply !bg-red-500 text-kdarker;
 }
 .p-dialog .p-error-show {
 	@apply text-xs text-red-500 opacity-100 pt-1 h-6;
@@ -126,7 +140,34 @@
 .p-dialog .p-error-hidden {
 	@apply text-xs opacity-0 h-6;
 }
+.p-contextmenu{
+	@apply bg-kmedium w-fit min-w-[8rem];
+}
+.p-contextmenu .p-menuitem.p-menuitem-active > .p-menuitem-link {
+	@apply bg-kmedium text-klight hover:text-kaccent2;
+}
+.p-contextmenu .p-menuitem-link {
+	@apply text-klight hover:text-kaccent2 p-2 align-middle flex justify-start items-center;
+}
+.p-contextmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-text {
+	@apply text-inherit ;
+}
 
+.p-contextmenu .p-menuitem-link .p-menuitem-text{
+	@apply text-inherit text-base leading-4;
+}
+
+.p-contextmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-icon, .p-contextmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon {
+	@apply text-inherit;
+}
+
+.p-contextmenu .p-menuitem-link .p-menuitem-icon{
+	@apply text-inherit;
+}
+
+.p-component{
+	font:var(--font-family);
+}
 .p-splitter{
 	@apply border-0 bg-kdark;
 }
