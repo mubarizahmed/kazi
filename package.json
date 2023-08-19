@@ -1,6 +1,6 @@
 {
   "name": "kazi",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "App that helps you work! With task-management, notes, scheduling, timers in one app.",
   "main": "dist-electron/main/index.js",
   "author": "Mubariz Ahmed",
@@ -17,7 +17,8 @@
     "preview": "vite preview",
     "pree2e": "vite build --mode=test",
     "e2e": "playwright test",
-    "electron": "electron-builder --win portable --x64"
+    "electron": "electron-builder --win portable --x64",
+    "release" : "electron-builder --win --publish always"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.5.1",

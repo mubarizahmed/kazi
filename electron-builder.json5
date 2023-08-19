@@ -2,7 +2,7 @@
  * @see https://www.electron.build/configuration/configuration
  */
 {
-  "appId": "YourAppID",
+  "appId": "com.mubariz.kazi",
   "asar": true,
   "directories": {
     "output": "release/${version}"
@@ -27,7 +27,7 @@
         ]
       }
     ],
-    "artifactName": "${productName}_${version}.${ext}"
+    "artifactName": "${productName}_${version}.${ext}",
   },
   "nsis": {
     "oneClick": false,
@@ -36,8 +36,10 @@
     "deleteAppDataOnUninstall": false
   },
   "publish": {
-    "provider": "generic",
-    "channel": "latest",
-    "url": "https://github.com/electron-vite/electron-vite-react/releases/download/v0.9.9/"
+    "provider": "github",
+    "releaseType" : "draft",
+    "vPrefixedTagName" : "true",
+    "host" : "github.com",
+
   }
 }
