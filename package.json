@@ -17,7 +17,8 @@
     "preview": "vite preview",
     "pree2e": "vite build --mode=test",
     "e2e": "playwright test",
-    "electron": "electron-builder --win portable --x64"
+    "electron": "electron-builder --win portable --x64",
+    "release" : "electron-builder --win --publish always"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.5.1",
