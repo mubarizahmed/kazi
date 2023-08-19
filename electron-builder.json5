@@ -39,7 +39,6 @@
     "provider": "github",
     "releaseType" : "draft",
     "vPrefixedTagName" : "true",
-    "host" : "github.com",
-
+    
   }
 }
