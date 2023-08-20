@@ -50,7 +50,7 @@ const Notes = () => {
 					accept: () => {
 						window.electronAPI.deleteFile(treeMenuSelectedKey.key).then(() => {
 							// delete from the tree
-							let paths = treeMenuSelectedKey.key.slice(fileTree.key.length + 1, -1).split('/');
+							let paths = treeMenuSelectedKey.key.slice(fileTree.key.length + 1).split('/');
 
 							let searchPath = fileTree.key;
 							let searchObject = fileTree;
@@ -154,13 +154,13 @@ const Notes = () => {
 		if (node.type === 'directory') {
 			return (
 				<>
-					<ContextMenu model={treeMenuItems} ref={tm} breakpoint="767px" />
+					{/* <ContextMenu model={treeMenuItems} ref={tm} breakpoint="767px" /> */}
 					<div
 						className="group flex w-full min-w-0 flex-row items-center justify-between  gap-1"
-						onContextMenu={(e) => {
-							setTreeMenuSelectedKey(node);
-							tm.current.show(e);
-						}}
+						// onContextMenu={(e) => {
+						// 	setTreeMenuSelectedKey(node);
+						// 	tm.current.show(e);
+						// }}
 					>
 						<div className={options.className + ' cursor-default'}>{node.label}</div>
 						<div
@@ -178,15 +178,27 @@ const Notes = () => {
 		return (
 			<div
 				className="flex w-full min-w-0 flex-row items-center justify-start gap-1"
-				onContextMenu={(e) => {
-					setTreeMenuSelectedKey(node);
-					tm.current.show(e);
-				}}
+				// onContextMenu={(e) => {
+				// 	setTreeMenuSelectedKey(node);
+				// 	tm.current.show(e);
+				// }}
 			>
 				<span className={options.className}>{node.label}</span>
 			</div>
 		);
 	};
+
+	const treeFooter = (
+		<div className="flex h-8 w-full items-center justify-center">
+			<div
+				className="pi pi-plus h-fit cursor-pointer hover:text-kaccent1 "
+				onClick={() => {
+					console.log(fileTree.key);
+					setFileCreate(fileTree);
+				}}
+			></div>
+		</div>
+	);
 
 	const load = async () => {
 		console.log('loaded');
@@ -198,7 +210,9 @@ const Notes = () => {
 		if (fp !== null && fp !== '') setEditorFilePath(fp);
 
 		let ft = sessionStorage.getItem('kazi-file-tree');
-		if (ft !== null && ft !== 'undefined') {setFileTree(JSON.parse(ft))};
+		if (ft !== null && ft !== 'undefined') {
+			setFileTree(JSON.parse(ft));
+		}
 
 		console.log('loaded');
 
@@ -206,7 +220,8 @@ const Notes = () => {
 	}, []);
 
 	useEffect(() => {
-		if (fileTree !== null && fileTree !== 'undefined') sessionStorage.setItem('kazi-file-tree', JSON.stringify(fileTree));
+		if (fileTree !== null && fileTree !== 'undefined')
+			sessionStorage.setItem('kazi-file-tree', JSON.stringify(fileTree));
 	}, [fileTree]);
 
 	useEffect(() => {
@@ -229,16 +244,29 @@ const Notes = () => {
 				>
 					<div className="flex w-full items-center justify-between pl-4 pr-6">
 						<span className=" text-2xl tracking-wider text-klight">NOTES</span>
-						<button
-							className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-kaccent1"
-							onClick={() => {
-								load();
-							}}
-						>
-							<span className="material-symbols-outlined text-base text-klight hover:text-white">
-								refresh
-							</span>
-						</button>
+						<div className="flex h-full items-center gap-2">
+							<button
+								className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-kaccent1"
+								onClick={() => {
+									console.log(fileTree.key);
+									setFileCreate(fileTree);
+								}}
+							>
+								<span className="pi pi-plus text-base text-klight hover:text-white">
+									
+								</span>
+							</button>
+							<button
+								className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-kaccent1"
+								onClick={() => {
+									load();
+								}}
+							>
+								<span className="pi pi-refresh text-base text-klight hover:text-white">
+
+								</span>
+							</button>
+						</div>
 					</div>
 					<ContextMenu model={treeMenuItems} ref={tm} breakpoint="767px" />
 					<div className="h-full w-full overflow-hidden">
@@ -254,7 +282,10 @@ const Notes = () => {
 								nodeTemplate={nodeTemplate}
 								// contextMenuSelectionKey={treeMenuSelectedKey}
 								// onContextMenuSelectionChange={(e) => setTreeMenuSelectedKey(e.value)}
-								// onContextMenu={(e) => tm.current.show(e.originalEvent)}
+								onContextMenu={(e) => {
+									setTreeMenuSelectedKey(e.node);
+									tm.current.show(e.originalEvent);
+								}}
 							/>
 						) : (
 							''
@@ -270,7 +301,11 @@ const Notes = () => {
 					className="flex h-full w-full min-w-0 flex-col items-center justify-start overflow-clip border-kmedium bg-kdark"
 				>
 					{editorFilePath ? (
-						<Editor path={editorFilePath} template="" />
+						<Editor
+							path={editorFilePath}
+							relativePath={editorFilePath.slice(fileTree.key.length)}
+							template=""
+						/>
 					) : (
 						<div className="flex h-full w-full flex-col items-center justify-center">
 							<h1 className="text-3xl text-color-base">Select a file to edit</h1>

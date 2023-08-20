@@ -43,7 +43,7 @@ export async function getStaticProps() {
 	};
 }
 
-export default function Editor({ path, template }: { path: string; template: string }) {
+export default function Editor({ path, relativePath, template }: { path: string; relativePath:string; template: string }) {
 	const [content, setContent] = useState(template);
 	const [filePath, setFilePath] = useState(path);
 	const [loaded, setLoaded] = useState(false);
@@ -118,7 +118,7 @@ export default function Editor({ path, template }: { path: string; template: str
 					milkdownRef={milkdownRef}
 					content={content}
 					onChange={onMilkdownChange}
-					path={path}
+					path={relativePath}
 					
 				/>
 			</div>
