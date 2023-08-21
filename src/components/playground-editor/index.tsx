@@ -15,7 +15,7 @@ import { Milkdown as Editor } from '@milkdown/react';
 import { callCommand } from '@milkdown/utils';
 import clsx from 'clsx';
 import type { FC, RefObject } from 'react';
-import { useImperativeHandle } from 'react';
+import { memo, useImperativeHandle } from 'react';
 import { usePlayground } from './usePlayground';
 
 const Button: FC<{ icon: string; onClick?: () => void }> = ({ icon, onClick }) => {
@@ -44,7 +44,7 @@ export interface MilkdownRef {
 	update: (markdown: string) => void;
 }
 
-export const PlaygroundMilkdown: FC<MilkdownProps> = ({ path, content, onChange, milkdownRef }) => {
+const PM: FC<MilkdownProps> = ({ path, content, onChange, milkdownRef }) => {
 	const { loading, get } = usePlayground(content, onChange);
 
 	useImperativeHandle(milkdownRef, () => ({
@@ -89,3 +89,5 @@ export const PlaygroundMilkdown: FC<MilkdownProps> = ({ path, content, onChange,
 		</div>
 	);
 };
+
+export const PlaygroundMilkdown = memo(PM);

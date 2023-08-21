@@ -43,13 +43,22 @@ export async function getStaticProps() {
 	};
 }
 
-export default function Editor({ path, relativePath, template }: { path: string; relativePath:string; template: string }) {
-	const [content, setContent] = useState(template);
-	const [filePath, setFilePath] = useState(path);
+export default function Editor({
+	path,
+	relativePath,
+	template
+}: {
+	path: string;
+	relativePath: string;
+	template: string;
+}) {
+	const [content, setContent] = useState('');
+	// const [editorContent, setEditorContent] = useState('');
+	const [filePath, setFilePath] = useState('');
 	const [loaded, setLoaded] = useState(false);
-	// if (path !== '') {
-	// 	setFilePath(path);
-	// }
+
+	var editorContent = useRef('');
+
 	// console.log('editor redraw', path, loaded);
 	// const router = useRouter();
 	// const path = router.asPath;
@@ -71,9 +80,13 @@ export default function Editor({ path, relativePath, template }: { path: string;
 		(markdown: string) => {
 			const lock = lockCodemirror.current;
 			if (lock) return;
+			console.log('milkdown change 1', markdown);
 
-			saveFile(markdown);
-
+			if (path === filePath) {
+			editorContent.current = markdown;
+			// setEditorContent(markdown);
+			}
+			console.log('milkdown change 2', markdown);
 			const codemirror = codemirrorRef.current;
 			if (!codemirror) return;
 			codemirror.update(markdown);
@@ -88,29 +101,52 @@ export default function Editor({ path, relativePath, template }: { path: string;
 		current.update(value);
 	}, []);
 
-	useEffect(() => {
-		loadFile();
-	}, [path]);
-
-	const loadFile = async () => {
+	const loadFile = async (p: string) => {
 		// const file = await window.electronAPI.loadFile(editorFilePath);
 		// console.log('loaded file', file);
 		setLoaded(false);
 		setContent('');
-		window.electronAPI.loadFile(path).then((file: string) => {
+		window.electronAPI.loadFile(p).then((file: string) => {
 			setContent(file);
 			console.log('loaded file', file);
 			setLoaded(true);
-			setFilePath(path);
 		});
 	};
 
-	const saveFile = async (fileContent: string) => {
-		if (loaded && filePath == path) {
-			console.log('saving file', path, fileContent);
-			await window.electronAPI.saveFile(path, fileContent);
-		}
+	const saveFile = async () => {
+		console.log('saving file', filePath, editorContent);
+		await window.electronAPI.saveFile(filePath, editorContent.current);
 	};
+
+	useEffect(() => {
+		console.log('editor path changed', path, filePath);
+		if (path !== '') {
+			if (filePath !== path && filePath !== '') {
+				console.log(content)
+				saveFile().then(() => {
+					setFilePath(path);
+					loadFile(path);
+				});
+			} else {
+				setFilePath(path);
+				loadFile(path);
+			}
+		} else {
+			setFilePath(path);
+			setContent(template);
+			setLoaded(true);
+		}
+	}, [path]);
+
+	useEffect(() => {
+		return () => {
+			if (filePath !== '') {
+				console.log(content)
+				saveFile();
+			}
+		};
+	}, []);
+
 	return loaded ? (
 		<Provider>
 			<div className="h-full w-full overflow-hidden overscroll-none text-color-base md:h-screen">
@@ -119,7 +155,6 @@ export default function Editor({ path, relativePath, template }: { path: string;
 					content={content}
 					onChange={onMilkdownChange}
 					path={relativePath}
-					
 				/>
 			</div>
 		</Provider>
