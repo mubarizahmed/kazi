@@ -16,6 +16,8 @@ import { ShareProvider } from '../playground-editor/ShareProvider';
 // import { getPlaygroundTemplate } from "../pages/api/playground";
 import { compose } from '../../utils/compose';
 import { decode } from '../../utils/share';
+import { useHotkeys, HotkeysProvider } from 'react-hotkeys-hook';
+import { Toast } from 'primereact/toast';
 
 // import '@milkdown/theme-nord/style.css';
 
@@ -58,7 +60,7 @@ export default function Editor({
 	const [loaded, setLoaded] = useState(false);
 
 	var editorContent = useRef('');
-
+	const toast = useRef<Toast>(null);
 	// console.log('editor redraw', path, loaded);
 	// const router = useRouter();
 	// const path = router.asPath;
@@ -83,8 +85,8 @@ export default function Editor({
 			console.log('milkdown change 1', markdown);
 
 			if (path === filePath) {
-			editorContent.current = markdown;
-			// setEditorContent(markdown);
+				editorContent.current = markdown;
+				// setEditorContent(markdown);
 			}
 			console.log('milkdown change 2', markdown);
 			const codemirror = codemirrorRef.current;
@@ -115,14 +117,18 @@ export default function Editor({
 
 	const saveFile = async () => {
 		console.log('saving file', filePath, editorContent);
-		await window.electronAPI.saveFile(filePath, editorContent.current);
+		await window.electronAPI.saveFile(filePath, editorContent.current).then(() => {
+			toast.current?.show({ severity: 'success', detail: 'File saved', life: 1000 });
+		});
 	};
+
+	const ref = useHotkeys('ctrl+s', () => saveFile(), { scopes: ['editor'] });
 
 	useEffect(() => {
 		console.log('editor path changed', path, filePath);
 		if (path !== '') {
 			if (filePath !== path && filePath !== '') {
-				console.log(content)
+				console.log(content);
 				saveFile().then(() => {
 					setFilePath(path);
 					loadFile(path);
@@ -141,23 +147,30 @@ export default function Editor({
 	useEffect(() => {
 		return () => {
 			if (filePath !== '') {
-				console.log(content)
+				console.log(content);
 				saveFile();
 			}
 		};
 	}, []);
 
 	return loaded ? (
-		<Provider>
-			<div className="h-full w-full overflow-hidden overscroll-none text-color-base md:h-screen">
-				<PlaygroundMilkdown
-					milkdownRef={milkdownRef}
-					content={content}
-					onChange={onMilkdownChange}
-					path={relativePath}
-				/>
-			</div>
-		</Provider>
+		<HotkeysProvider initiallyActiveScopes={['editor']}>
+			<Toast ref={toast} />
+			<Provider>
+				<div
+					className="h-full w-full overflow-hidden overscroll-none text-color-base md:h-screen"
+					tabIndex={-1}
+				>
+					<PlaygroundMilkdown
+						milkdownRef={milkdownRef}
+						content={content}
+						onChange={onMilkdownChange}
+						path={relativePath}
+						onSave={saveFile}
+					/>
+				</div>
+			</Provider>
+		</HotkeysProvider>
 	) : (
 		<Loading />
 	);

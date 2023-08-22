@@ -179,3 +179,27 @@
 .p-splitter .p-splitter-gutter .p-splitter-gutter-handle {
 	@apply border-0 bg-klight;
 }
+
+.p-toast{
+	@apply w-fit;
+}
+.p-toast-top-right{
+	@apply top-12 right-5;
+}
+.p-toast .p-toast-message.p-toast-message-success{
+	@apply bg-kmedium border-kaccent1 text-kaccent1
+}
+
+.p-toast .p-toast-message .p-toast-message-content{
+	@apply border-0 flex items-center justify-between;
+}
+.p-toast .p-toast-message.p-toast-message-success .p-toast-message-icon{
+	@apply !text-kaccent1 !text-[1.5rem];
+}
+.p-toast .p-toast-message .p-toast-message-content .p-toast-message-text{
+	@apply align-middle h-full mr-4;
+}
+
+.p-toast .p-toast-message.p-toast-message-success .p-toast-message-icon, .p-toast .p-toast-message.p-toast-message-success .p-toast-icon-close{
+	@apply text-klight;
+}

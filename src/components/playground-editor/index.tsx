@@ -38,14 +38,15 @@ interface MilkdownProps {
 	onChange: (markdown: string) => void;
 	milkdownRef: RefObject<MilkdownRef>;
 	path: string;
+	onSave: () => void;
 }
 
 export interface MilkdownRef {
 	update: (markdown: string) => void;
 }
 
-const PM: FC<MilkdownProps> = ({ path, content, onChange, milkdownRef }) => {
-	const { loading, get } = usePlayground(content, onChange);
+const PM: FC<MilkdownProps> = ({ path, content, onChange, onSave, milkdownRef }) => {
+	const { loading, get } = usePlayground(content, onChange, onSave);
 
 	useImperativeHandle(milkdownRef, () => ({
 		update: (markdown: string) => {
