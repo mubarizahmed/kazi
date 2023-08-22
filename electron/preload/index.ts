@@ -10,6 +10,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   saveSettings: (settings: any) => ipcRenderer.invoke('save-settings', settings),
   changeUserDirectory: () => ipcRenderer.invoke('change-user-directory'),
   startTaskScan: () => ipcRenderer.invoke('start-task-scan'),
+  printFile: (filePath:string, content:string) => ipcRenderer.invoke('print-file', filePath, content),
 },)
 
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {

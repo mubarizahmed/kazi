@@ -43,10 +43,13 @@ if (!app.requestSingleInstanceLock()) {
 // process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 
 let win: BrowserWindow | null = null;
+let workerWindow: BrowserWindow | null = null;
+
 // Here, you can also use other preload
 const preload = join(__dirname, '../preload/index.js');
 const url = process.env.VITE_DEV_SERVER_URL;
 const indexHtml = join(process.env.DIST, 'index.html');
+const printHTML = join(process.env.DIST, 'print.html');
 
 // store stuff
 const store = new Store({
@@ -107,7 +110,7 @@ async function createWindow() {
 		win.webContents.openDevTools();
 	} else {
 		win.loadFile(indexHtml);
-		win.webContents.openDevTools();
+		// win.webContents.openDevTools();
 	}
 
 	// Test actively push message to the Electron-Renderer
@@ -134,6 +137,20 @@ async function createWindow() {
       store.set('zoomFactor', win.webContents.getZoomFactor());
 		}
 	});
+
+	workerWindow = new BrowserWindow({
+		webPreferences: {
+			webSecurity: false,
+			nodeIntegration: true,
+			contextIsolation: false,
+		}
+	});
+	workerWindow.loadURL("file://" + printHTML);
+	workerWindow.hide();
+	workerWindow.webContents.openDevTools();
+	workerWindow.on("closed", () => {
+			workerWindow = null;
+	});
 }
 
 app.whenReady().then(() => {
@@ -145,7 +162,14 @@ app.whenReady().then(() => {
 	ipcMain.handle('load-settings', loadSettings);
 	ipcMain.handle('change-user-directory', changeUserDirectory);
 	ipcMain.handle('start-task-scan', startTaskScan);
+	ipcMain.handle('print-file', printFile);
 
+	ipcMain.on("readyToPrintPDF", (event) => {
+
+    // Use default printing options
+    workerWindow?.webContents.print({ printBackground: false })
+
+});
 	createWindow();
 });
 
@@ -193,6 +217,17 @@ const loadFileTree = () => {
 	return updateFileTree(store.get('userDirectory'))
 }
 
+const printFile = (e: any, filePath: string, content:string) => {
+	console.log(content);
+	// /home/mebza/apps/kazi/dist/print.html
+	console.log(printHTML);
+	console.log("file://" + __dirname + "/print.html");
+	// let window = BrowserWindow.fromWebContents(e.sender);
+	// window.webContents.printToPDF({ printSelectionOnly: true, }).then((data) => {
+	// 		// Use the data however you like :)
+	// });
 
+	workerWindow?.webContents.send("printPDF", content);
+}
 
 const { session } = require('electron');

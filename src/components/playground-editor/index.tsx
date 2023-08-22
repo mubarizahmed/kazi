@@ -15,8 +15,9 @@ import { Milkdown as Editor } from '@milkdown/react';
 import { callCommand } from '@milkdown/utils';
 import clsx from 'clsx';
 import type { FC, RefObject } from 'react';
-import { memo, useImperativeHandle } from 'react';
+import { memo, useImperativeHandle, useRef } from 'react';
 import { usePlayground } from './usePlayground';
+import { renderToString } from 'react-dom/server'
 
 const Button: FC<{ icon: string; onClick?: () => void }> = ({ icon, onClick }) => {
 	const linkClass = useLinkClass();
@@ -67,6 +68,23 @@ const PM: FC<MilkdownProps> = ({ path, content, onChange, onSave, milkdownRef })
 		return get()?.action(callCommand(command, payload));
 	}
 
+	const editorRef = useRef(null)
+
+	const print = () => {
+		let element = document.getElementById('editor-div');
+		console.log(element);
+		// let range = new Range();
+    // range.setStart(element, 0);
+    // range.setEndAfter(element, 0);
+    // document.getSelection().removeAllRanges();
+    // document.getSelection().addRange(range);
+
+		var completeStyle = window.getComputedStyle(element, null).cssText;
+		element.style.cssText = completeStyle;
+
+		window.electronAPI.printFile(path, element?.outerHTML);
+	}
+
 	return (
 		<div className="flex h-full w-full flex-col ">
 			<div className="z-50 flex h-12 items-center justify-between bg-kdark p-4 pt-4 ">
@@ -81,10 +99,10 @@ const PM: FC<MilkdownProps> = ({ path, content, onChange, onSave, milkdownRef })
 					<Button icon="format_list_bulleted" onClick={() => call(wrapInBulletListCommand.key)} />
 					<Button icon="format_list_numbered" onClick={() => call(wrapInOrderedListCommand.key)} />
 					<Button icon="format_quote" onClick={() => call(wrapInBlockquoteCommand.key)} />
-					<Button icon="print" />
+					<Button icon="print" onClick={print}/>
 				</div>
 			</div>
-			<div className="h-full overflow-y-scroll overflow-x-hidden break-words min-w-0 pl-10 pr-10 ">
+			<div ref={editorRef} id='editor-div' className="h-full overflow-y-scroll overflow-x-hidden break-words min-w-0 pl-10 pr-10 ">
 				<Editor />
 			</div>
 		</div>
