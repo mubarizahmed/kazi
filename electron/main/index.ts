@@ -5,10 +5,12 @@ import { update } from './update';
 import { FileTreeType } from '@/types';
 import {startTaskScan} from './taskScanner';
 import {updateFileTree, loadFile, saveFile, createFile, deleteFile} from './fileScanner';
+import { createDb, getProjects, createProject } from './db';
 const path = require('path');
 const dirTree = require('directory-tree');
 const fs = require('fs');
 const Store = require('electron-store');
+const sqlite3 = require('sqlite3').verbose();
 
 // The built directory structure
 //
@@ -69,7 +71,7 @@ function loadSettings() {
 }
 
 function changeUserDirectory(){
-	dialog.showOpenDialog(win, {
+	if (win) dialog.showOpenDialog(win, {
 		properties: ['openDirectory']
 	}).then(result => {
 		if (!result.canceled) {
@@ -79,6 +81,16 @@ function changeUserDirectory(){
 	});
 	return store.store;
 }
+
+
+
+createDb(path.join(store.get('userDirectory'), 'kazi.db'));
+
+getProjects().then((projects: any) => {
+	console.log(projects);
+});
+
+
 
 async function createWindow() {
 	win = new BrowserWindow({
@@ -117,6 +129,10 @@ async function createWindow() {
 	win.webContents.on('did-finish-load', () => {
 		win?.webContents.send('main-process-message', new Date().toLocaleString());
 	});
+
+	win.once('ready-to-show', () => {
+    win?.webContents.setZoomFactor(store.get('zoomFactor'));
+	})	
 
 	// Make all links open with the browser, not with the application
 	win.webContents.setWindowOpenHandler(({ url }) => {
