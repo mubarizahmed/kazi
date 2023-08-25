@@ -2,10 +2,10 @@ import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
 import { release } from 'node:os';
 import { join } from 'node:path';
 import { update } from './update';
-import { FileTreeType } from '@/types';
+import { FileTreeNodeType, FileTreeType } from '@/types';
 import {startTaskScan} from './taskScanner';
-import {updateFileTree, loadFile, saveFile, createFile, deleteFile} from './fileScanner';
-import { createDb, getProjects, createProject } from './db';
+import {scanUpdateFileTree, loadFile, saveFile, createFile, deleteFile} from './fileScanner';
+import { createDb, getProjects, createProject, getProjectTree } from './db';
 const path = require('path');
 const dirTree = require('directory-tree');
 const fs = require('fs');
@@ -53,8 +53,10 @@ const url = process.env.VITE_DEV_SERVER_URL;
 const indexHtml = join(process.env.DIST, 'index.html');
 const printHTML = join(process.env.DIST, 'print.html');
 
+var projectTree: FileTreeNodeType = {} as FileTreeNodeType;
+
 // store stuff
-const store = new Store({
+export const store = new Store({
 	// We'll call our data file 'user-preferences'
 	configName: 'user-preferences',
 	defaults: {
@@ -65,7 +67,7 @@ const store = new Store({
 		zoomFactor: 1
 	}
 });
-
+module.exports = {projectTree, store}
 function loadSettings() {
 	return store.store;
 }
@@ -170,11 +172,17 @@ async function createWindow() {
 }
 
 app.whenReady().then(() => {
+	getProjectTree().then((tree: any) => {
+		projectTree = tree;
+	});
+	updateFileTree();
+
 	ipcMain.handle('load-fileTree', loadFileTree);
+	ipcMain.handle('update-fileTree', updateFileTree);
 	ipcMain.handle('load-file', loadFile);
 	ipcMain.handle('save-file', saveFile);
-	ipcMain.handle('create-file', createFile);
-	ipcMain.handle('delete-file', deleteFile);
+	ipcMain.handle('create-file',  (async (e,path) => {createFile(e,path); updateFileTree()}));
+	ipcMain.handle('delete-file', (async (e,path) => {deleteFile(e,path); updateFileTree()}));
 	ipcMain.handle('load-settings', loadSettings);
 	ipcMain.handle('change-user-directory', changeUserDirectory);
 	ipcMain.handle('start-task-scan', startTaskScan);
@@ -186,6 +194,7 @@ app.whenReady().then(() => {
     workerWindow?.webContents.print({ printBackground: false })
 
 });
+
 	createWindow();
 });
 
@@ -230,7 +239,17 @@ ipcMain.handle('open-win', (_, arg) => {
 
 
 const loadFileTree = () => {
-	return updateFileTree(store.get('userDirectory'))
+	console.log(projectTree)
+	return projectTree;
+}
+
+const updateFileTree = async () => {
+	console.log('updateFileTree');
+	let tree : FileTreeNodeType  = await scanUpdateFileTree(store.get('userDirectory'))
+	projectTree = tree;
+
+	return tree;
+
 }
 
 const printFile = (e: any, filePath: string, content:string) => {

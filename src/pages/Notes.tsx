@@ -48,19 +48,19 @@ const Notes = () => {
 					icon: 'pi pi-info-circle',
 					acceptClassName: 'p-button-danger',
 					accept: () => {
-						window.electronAPI.deleteFile(treeMenuSelectedKey.key).then(() => {
+						window.electronAPI.deleteFile(treeMenuSelectedKey.path).then(() => {
 							// delete from the tree
-							let paths = treeMenuSelectedKey.key.slice(fileTree.key.length + 1).split('/');
+							let paths = treeMenuSelectedKey.path.slice(fileTree.path.length + 1).split('/');
 
-							let searchPath = fileTree.key;
+							let searchPath = fileTree.path;
 							let searchObject = fileTree;
-
+							console.log(paths);
 							for (let i = 0; i < paths.length - 1; i++) {
 								searchPath = searchPath + '/' + paths[i];
 								console.log(searchPath);
 								for (let node of searchObject.children) {
-									console.log(node.key);
-									if (node.key === searchPath) {
+									console.log(node.path);
+									if (node.path === searchPath) {
 										searchObject = node;
 										break;
 									}
@@ -202,7 +202,9 @@ const Notes = () => {
 
 	const load = async () => {
 		console.log('loaded');
-		setFileTree(await window.electronAPI.loadFileTree());
+		let tree = await window.electronAPI.loadFileTree();
+		console.log(tree);
+		setFileTree(tree);
 	};
 
 	useEffect(() => {
@@ -258,8 +260,10 @@ const Notes = () => {
 							</button>
 							<button
 								className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-kaccent1"
-								onClick={() => {
-									load();
+								onClick={async () => {
+									let tree = await window.electronAPI.updateFileTree();
+									console.log(tree);
+									setFileTree(tree);
 								}}
 							>
 								<span className="pi pi-refresh text-base text-klight hover:text-white">

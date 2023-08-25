@@ -1,4 +1,6 @@
 import sqlite3 from 'sqlite3';
+import { treeSort } from './fileScanner';
+import { FileTreeNodeType } from '@/types';
 
 var db: sqlite3.Database;
 var updatedProjects: number[] = [];
@@ -122,6 +124,7 @@ export const upsertProject = (
 				console.log(err);
 			} else {
 				// console.log(`Row(s) updated: ${this.changes}`);
+				
 			}
 		}
 	);
@@ -130,65 +133,85 @@ export const upsertProject = (
 
 export const deleteNonexistentProjects = () => {
 	console.log(updatedProjects);
+	console.log(updatedProjects.length);
 	const placeholders = updatedProjects.map(() => '?').join(', ');
-
-	db.run(`DELETE FROM projects WHERE id NOT IN (${placeholders})`, [updatedProjects], (err) => {
+	const ids = updatedProjects.map((id) =>  id).join(', ');
+	console.log(ids);
+	console.log(placeholders);
+	// db.run(`DELETE FROM projects WHERE id NOT IN (${placeholders})`, [updatedProjects], (err) => {
+	// 	if (err) {
+	// 		console.log(err);
+	// 		return;
+	// 	}
+	// });
+	db.run(`DELETE FROM projects WHERE id NOT IN (${ids})`, (err) => {
 		if (err) {
 			console.log(err);
-		} else {
-			updatedProjects = [];
+			return;
 		}
 	});
+	console.log('Records deleted successfully.');
+	updatedProjects = [];
 };
 
-function list_to_tree(list) {
-	var map = {},
-		node,
-		roots = [],
-		i;
+// function list_to_tree(list) {
+// 	var map = {},
+// 		node,
+// 		roots = [],
+// 		i;
 
-	for (i = 0; i < list.length; i += 1) {
-		map[list[i].id] = i; // initialize the map
-		list[i].children = []; // initialize the children
-	}
+// 	for (i = 0; i < list.length; i += 1) {
+// 		map[list[i].id] = i; // initialize the map
+// 		list[i].children = []; // initialize the children
+// 	}
 
-	for (i = 0; i < list.length; i += 1) {
-		node = list[i];
-		if (node.parent !== 0) {
-			// if you have dangling branches check that map[node.parentId] exists
-			list[map[node.parent]].children.push(node);
-		} else {
-			roots.push(node);
-		}
-	}
-	return roots;
-}
+// 	for (i = 0; i < list.length; i += 1) {
+// 		node = list[i];
+// 		if (node.parent !== 0) {
+// 			// if you have dangling branches check that map[node.parentId] exists
+// 			list[map[node.parent]].children.push(node);
+// 		} else {
+// 			roots.push(node);
+// 		}
+// 	}
+// 	return roots;
+// }
 
-const listToTree = (list) => {
-	var map = {};
-	var tree = null;
-	list.forEach((row) => {
+const listToTree = (list : any) => {
+	var map : any = {};
+	var tree : FileTreeNodeType = {} as FileTreeNodeType;
+	list.forEach((row:any) => {
 		if (row.parent === '?') {
-			tree = {
+			tree  = {
 				id: row.id,
 				key: row.id,
-				name: row.name,
+				label: row.name,
 				path: row.path,
+				type: row.type,
 				modified: row.modified,
 				level: row.level,
+				icon: 'pi pi-fw pi-folder',
+				selectable: false,
 				children: []
 			};
 			map[row.id] = tree;
 		} else {
-			let child = {
-				id: row.id,
-				key: row.id,
-				name: row.name,
-				path: row.path,
-				modified: row.modified,
-				level: row.level,
-				children: []
-			};
+			let child : FileTreeNodeType = {} as FileTreeNodeType;
+			child.id= row.id;
+			child.key = row.path;
+			child.label = row.name;
+			child.path = row.path;
+			child.type = row.type;
+			child.modified = row.modified;
+			child.level = row.level;
+			if (row.type === 'directory') {
+				child.icon = 'pi pi-fw pi-folder';
+				child.children = [];
+				child.selectable = false;
+			} else {
+				child.icon = 'pi pi-fw pi-file';
+				child.selectable = true;
+			}
 			map[row.id] = child;
 			if (map[row.parent]) {
 				map[row.parent].children.push(child);
@@ -196,63 +219,80 @@ const listToTree = (list) => {
       
 		}
 	});
-	console.log('tree out');
-	console.log(map);
-	console.log('tree out');
-	console.log(tree);
-	return tree.children;
-};
-
-export const getProjectTree = () => {
-	var map = {};
-	var tree = {};
-	console.log('getting project tree');
-	db.serialize(() => {
-		db.run(`DROP TABLE IF EXISTS under_project`);
-		//   db.each(`
-		//   WITH RECURSIVE
-		//   under_project(parent,id,name, path, modified ,level) AS (
-		//      VALUES('?',0,'name', '?', '?',0)
-		//      UNION ALL
-		//      SELECT projects.parent_id, projects.id, projects.name, projects.path, projects.modified, under_project.level+1
-		//         FROM projects, under_project
-		//      WHERE projects.parent_id=under_project.id
-		//   )
-		//   SELECT * FROM under_project
-		//   `, (err, row) => {
-		//     if (err) {
-		//     }
-		//     console.log(row.parent + '|' + row.id + '|' + row.name + '|' + row.path + '|' + row.modified + '|' + row.level);
-		//   });
-
-		const rootParentId = '?';
-		const rootId = 0;
-
-		db.all(
-			`
-    WITH RECURSIVE
-    under_project(parent, id, name, path, modified, level, visited) AS (
-      VALUES (?, ?, 'name', '?', '?', 0, 0)
-      UNION ALL
-      SELECT projects.parent_id, projects.id, projects.name, projects.path, projects.modified, under_project.level + 1, projects.id
-      FROM projects, under_project
-      WHERE projects.parent_id = under_project.id AND projects.id <> under_project.visited
-    )
-    SELECT * FROM under_project
-  `,
-			[rootParentId, rootId],
-			(err, rows) => {
-				if (err) {
-					console.error('Error:', err);
-					return;
-				}
-				// console.log(row.parent + '|' + row.id + '|' + row.name + '|' + row.path + '|' + row.modified + '|' + row.level);
-				listToTree(rows);
-			}
-		);
-	});
 	// console.log('tree out');
 	// console.log(map);
+	// console.log('tree out');
 	// console.log(tree);
-	// return tree
+	return treeSort(tree.children?.[0] || tree);
 };
+
+// gets ProjectTree from db and sorts it
+// export const getProjectTree = () => {
+// 	var map = {};
+// 	var tree = {};
+// 	console.log('getting project tree');
+// 	 db.serialize(() => {
+// 		db.run(`DROP TABLE IF EXISTS under_project`);
+
+// 		const rootParentId = '?';
+// 		const rootId = 0;
+
+// 		db.all(
+// 			`
+//     WITH RECURSIVE
+//     under_project(parent, id, name, path, modified, level, visited) AS (
+//       VALUES (?, ?, 'name', '?', '?', 0, 0)
+//       UNION ALL
+//       SELECT projects.parent_id, projects.id, projects.name, projects.path, projects.modified, under_project.level + 1, projects.id
+//       FROM projects, under_project
+//       WHERE projects.parent_id = under_project.id AND projects.id <> under_project.visited
+//     )
+//     SELECT * FROM under_project
+//   `,
+// 			[rootParentId, rootId],
+// 			(err, rows) => {
+// 				if (err) {
+// 					console.error('Error:', err);
+// 					return;
+// 				}
+// 				// console.log(row.parent + '|' + row.id + '|' + row.name + '|' + row.path + '|' + row.modified + '|' + row.level);
+// 				return listToTree(rows);
+// 			}
+// 		);
+// 	});
+// 	console.log('tree out');
+// 	console.log(tree);
+	
+// };
+
+export const getProjectTree = () => {
+  const rootParentId = '?';
+  const rootId = 0;
+
+  return new Promise<FileTreeNodeType>((resolve, reject) => {
+    db.all(
+      `
+        WITH RECURSIVE
+        under_project(parent, id, name, path, type, modified, level, visited) AS (
+          VALUES (?, ?, 'name', '?', '?', '?', 0, 0)
+          UNION ALL
+          SELECT projects.parent_id, projects.id, projects.name, projects.path, projects.type, projects.modified, under_project.level + 1, projects.id
+          FROM projects, under_project
+          WHERE projects.parent_id = under_project.id AND projects.id <> under_project.visited
+        )
+        SELECT * FROM under_project
+      `,
+      [rootParentId, rootId],
+      (err, rows) => {
+        if (err) {
+          console.error('Error:', err);
+          reject(err);
+          return;
+        }
+        const tree : FileTreeNodeType = listToTree(rows);
+        resolve(tree);
+      }
+    );
+  });
+};
+

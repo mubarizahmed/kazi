@@ -5,6 +5,19 @@ export type FileTreeType = {
 	children?: FileTreeType[];
 };
 
+export type FileTreeNodeType = {
+	id: number;
+	key: string;
+	label: string;
+	path: string;
+	type: 'file' | 'directory';
+	modified: number;
+	level: number;
+	icon: string;
+	selectable: boolean;
+	children?: FileTreeNodeType[];
+};
+
 export type Task = {
 	key: string;
 	label: string;

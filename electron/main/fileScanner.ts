@@ -1,8 +1,9 @@
 const dirTree = require('directory-tree');
 const fs = require('fs');
-import { FileTreeType } from '@/types';
+import { FileTreeNodeType, FileTreeType } from '@/types';
 import TreeNode from 'primereact/treenode';
 import { upsertProject, getProjects, deleteNonexistentProjects, getProjectTree } from './db';
+
 
 export function loadFile(_event: any, filePath: string) {
 	console.log('loadFile');
@@ -24,9 +25,9 @@ export function createFile(_event: any, filePath: string) {
 export function deleteFile(_event: any, filePath: string) {
 	console.log('deleteFile');
 	console.log(filePath);
-	// fs.rmSync(filePath, { recursive: true, force: true }, function (err: any) {
-	// 	if (err) return console.log(err);
-	// });
+	fs.rmSync(filePath, { recursive: true, force: true }, function (err: any) {
+		if (err) console.log(err);
+	});
 }
 
 export function saveFile(_event: any, filePath: string, content: string) {
@@ -38,17 +39,17 @@ export function saveFile(_event: any, filePath: string, content: string) {
 	});
 }
 
-const directorySort = (a: FileTreeType, b: FileTreeType) => {
+const directorySort = (a: FileTreeNodeType, b: FileTreeNodeType) => {
 	if (a.type === 'directory' && b.type === 'file') {
 		return -1;
 	} else if (a.type === 'file' && b.type === 'directory') {
 		return 1;
 	} else {
-		return a.name.localeCompare(b.name);
+		return a.label.localeCompare(b.label);
 	}
 };
 
-const treeSort = (tree: FileTreeType) => {
+export const treeSort = (tree: FileTreeNodeType) => {
 	if (tree.children) {
 		tree.children.sort(directorySort).forEach(treeSort);
 	}
@@ -85,7 +86,7 @@ const nodeToDb = (tree: FileTreeType, parent_id?: number) => {
 
 };
 
-export const updateFileTree = (userDir: string) => {
+export const scanUpdateFileTree = async  (userDir: string) => {
 	fs.access(userDir, (err: string) => {
 		console.log(err ? 'no dir' : 'dir exists');
 		fs.mkdirSync(userDir, { recursive: true });
@@ -94,21 +95,10 @@ export const updateFileTree = (userDir: string) => {
 		extensions: /\.md$/,
 		attributes: ['type', 'dev', 'ino', 'mtimeMs']
 	});
-	console.log(fileTree);
-	fileTree.children?.forEach((child: FileTreeType) => {
-		nodeToDb(child);
-	});
+	console.log(fileTree.children[6]);
+	nodeToDb(fileTree);
+	console.log('delete non existent');
 	deleteNonexistentProjects();
-	// getProjects().then((projects: any) => {
-	// 	console.log(projects.length);
-	// 	let i = 0;
-	// 	projects.forEach((project: Project) => {
-	// 		console.log(project.name);
-	// 		i++;
-	// 	});
-	// 	console.log(i);
-	// });
-	getProjectTree();
+	return getProjectTree();
 
-	return transformNode(treeSort(fileTree));
 };
