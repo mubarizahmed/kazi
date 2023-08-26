@@ -56,30 +56,30 @@ export const treeSort = (tree: FileTreeNodeType) => {
 	return tree;
 };
 
-const transformNode = (tree: FileTreeType) => {
-	var node: TreeNode = {} as TreeNode;
-	node.id = tree.path;
-	node.key = tree.path;
-	node.label = tree.name;
-	node.type = tree.type;
+// const transformNode = (tree: FileTreeType) => {
+// 	var node: TreeNode = {} as TreeNode;
+// 	node.id = tree.path;
+// 	node.key = tree.path;
+// 	node.label = tree.name;
+// 	node.type = tree.type;
 
-	if (tree.type === 'directory') {
-		node.icon = 'pi pi-fw pi-folder';
-		node.children = tree.children?.map(transformNode);
-		node.selectable = false;
-	} else {
-		node.icon = 'pi pi-fw pi-file';
-		node.selectable = true;
-	}
+// 	if (tree.type === 'directory') {
+// 		node.icon = 'pi pi-fw pi-folder';
+// 		node.children = tree.children?.map(transformNode);
+// 		node.selectable = false;
+// 	} else {
+// 		node.icon = 'pi pi-fw pi-file';
+// 		node.selectable = true;
+// 	}
 
-	return node;
-};
+// 	return node;
+// };
 
-const nodeToDb = (tree: FileTreeType, parent_id?: number) => {
+const nodeToDb = (tree: any, parent_id?: number) => {
 
 		upsertProject(tree.ino, tree.name, tree.path, tree.type, tree.mtimeMs, parent_id);
 		if (tree.children) {
-			tree.children.forEach((child) => {
+			tree.children.forEach((child: any) => {
 				nodeToDb(child, tree.ino);
 			});
 		}

@@ -2,10 +2,10 @@ import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
 import { release } from 'node:os';
 import { join } from 'node:path';
 import { update } from './update';
-import { FileTreeNodeType, FileTreeType } from '@/types';
-import {startTaskScan} from './taskScanner';
+import { FileTreeNodeType, FileTreeType, TaskTree } from '@/types';
+import {scanAllFiles, startTaskScan} from './taskScanner';
 import {scanUpdateFileTree, loadFile, saveFile, createFile, deleteFile} from './fileScanner';
-import { createDb, getProjects, createProject, getProjectTree } from './db';
+import { createDb, getProjects, createProject, getProjectTree, getTaskTree, getAllTaskTrees } from './db';
 const path = require('path');
 const dirTree = require('directory-tree');
 const fs = require('fs');
@@ -54,6 +54,7 @@ const indexHtml = join(process.env.DIST, 'index.html');
 const printHTML = join(process.env.DIST, 'print.html');
 
 var projectTree: FileTreeNodeType = {} as FileTreeNodeType;
+var taskTree: TaskTree[] = [];
 
 // store stuff
 export const store = new Store({
@@ -185,6 +186,8 @@ app.whenReady().then(() => {
 	ipcMain.handle('delete-file', (async (e,path) => {deleteFile(e,path); updateFileTree()}));
 	ipcMain.handle('load-settings', loadSettings);
 	ipcMain.handle('change-user-directory', changeUserDirectory);
+	ipcMain.handle('load-task-tree', getAllTaskTrees);
+	ipcMain.handle('update-task-tree', scanAllFiles);
 	ipcMain.handle('start-task-scan', startTaskScan);
 	ipcMain.handle('print-file', printFile);
 
@@ -242,6 +245,8 @@ const loadFileTree = () => {
 	console.log(projectTree)
 	return projectTree;
 }
+
+
 
 const updateFileTree = async () => {
 	console.log('updateFileTree');

@@ -10,6 +10,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   loadSettings: () => ipcRenderer.invoke('load-settings'),
   saveSettings: (settings: any) => ipcRenderer.invoke('save-settings', settings),
   changeUserDirectory: () => ipcRenderer.invoke('change-user-directory'),
+  updateTaskTree: () => ipcRenderer.invoke('update-task-tree'),
+  loadTaskTree: () => ipcRenderer.invoke('load-task-tree'),
   startTaskScan: () => ipcRenderer.invoke('start-task-scan'),
   printFile: (filePath:string, content:string) => ipcRenderer.invoke('print-file', filePath, content),
 },)

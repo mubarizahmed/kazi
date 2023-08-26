@@ -26,6 +26,29 @@ export type Task = {
 	children?: Task[];
 };
 
+export type TaskTreeNode = {
+	id: string;
+	key: string;
+	label: string;
+	checked: boolean;
+	dueDate?: Date;
+	priority?: number;
+	parent_id?: string;
+	project_id: number;
+	level: number;
+	icon: string;
+	selectable: boolean;
+	children?: TaskTreeNode[];
+}
+
+export type TaskTree = {
+	project_id: number;
+	project_path: string;
+	project_name: string;
+	tasks: TaskTreeNode[];
+	checkedTasks: CheckedTasks;
+}
+
 export type CheckedTasks = {
 	[key: string]: { checked: boolean; partialChecked: boolean };
 };
