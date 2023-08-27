@@ -4,7 +4,7 @@ import fs from 'fs';
 // want to import the namespace marked from 'marked'
 import { marked } from 'marked';
 import { Task, Project, CheckedTasks, TaskTreeNode } from '../../src/types';
-import { createTask, deleteProjectTasks, getMarkdownProjects, upsertTask } from './db';
+import { createTask, deleteAllTasks, deleteProjectTasks, getMarkdownProjects, upsertTask } from './db';
 
 // interface Task {
 // 	taskName: string;
@@ -254,6 +254,8 @@ export function startTaskScan(): Project[] {
 
 export const scanAllFiles = async () => {
 	console.time('scanAllFiles');
+
+	deleteAllTasks();
 
 	let projects = await getMarkdownProjects();
 	projects.forEach((project: any) => {

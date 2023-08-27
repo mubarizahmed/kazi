@@ -281,7 +281,6 @@ export const upsertTask = (
 	priority: number = 4,
 	parent_id: string = 'root'
 ) => {
-	
 	db.run(
 		`INSERT INTO tasks (
 		id, name, checked, dueDate, project_id, priority, parent_id
@@ -339,16 +338,26 @@ export const deleteProjectTasks = (project_id: number) => {
 	console.log('Records deleted successfully.');
 };
 
+export const deleteAllTasks = () => {
+	db.run(`DELETE FROM tasks`, (err) => {
+		if (err) {
+			console.log(err);
+			return;
+		}
+	});
+	console.log('Records deleted successfully.');
+};
+
 export const listToTaskTree = (list: any) => {
 	var map: any = {};
 	var tree: any = {};
-	// console.log('List to task tree', list);
+	console.log('List to task tree', list.length);
 	try {
 		list.forEach((row: any) => {
-			if (row.parent === '?') {
+			if (row.parent_id === '?') {
 				tree = {
 					id: row.id,
-					key: row.id,
+					key: row.project_id + "/" + row.id,
 					label: row.name,
 					checked: row.checked,
 					dueDate: row.dueDate,
@@ -361,7 +370,7 @@ export const listToTaskTree = (list: any) => {
 			} else {
 				let child: any = {};
 				child.id = row.id;
-				child.key = row.id;
+				child.key = row.project_id + "/" + row.id;
 				child.label = row.name;
 				child.checked = row.checked;
 				child.dueDate = row.dueDate;
@@ -370,8 +379,8 @@ export const listToTaskTree = (list: any) => {
 				child.project_id = row.project_id;
 				child.children = [];
 				map[row.id] = child;
-				if (map[row.parent]) {
-					map[row.parent].children.push(child);
+				if (map[row.parent_id]) {
+					map[row.parent_id].children.push(child);
 				}
 			}
 		});
@@ -381,7 +390,7 @@ export const listToTaskTree = (list: any) => {
 	// console.log('tree out');
 	// console.log(map);
 	// console.log('tree out');
-	// console.log(tree);
+	// console.log(tree.children[0]);
 	return taskTreeSort(tree).children;
 };
 
@@ -393,14 +402,14 @@ export const getTaskTree = (project_id: number) => {
 		db.all(
 			`
 				WITH RECURSIVE
-				under_task(parent, id, name, checked, dueDate, priority, project_id, visited) AS (
+				under_task(parent_id, id, name, checked, dueDate, priority, project_id, visited) AS (
 					VALUES (?, ?, 'name', 0, 'dueDate', 4, ?, 'root')
 					UNION ALL
 					SELECT tasks.parent_id, tasks.id, tasks.name, tasks.checked, tasks.dueDate, tasks.priority, tasks.project_id, tasks.id
 					FROM tasks, under_task
-					WHERE tasks.parent_id = under_task.id AND tasks.id <> under_task.visited
+					WHERE tasks.parent_id = under_task.id AND tasks.id <> under_task.visited AND tasks.project_id = ?
 				)
-				SELECT * FROM under_task WHERE project_id = ?
+				SELECT * FROM under_task
 			`,
 			[rootParentId, rootId, project_id, project_id],
 			(err, rows) => {
@@ -410,8 +419,9 @@ export const getTaskTree = (project_id: number) => {
 					return;
 				}
 				if (rows.length > 1) {
-				// console.log(listToTaskTree(rows));
-				resolve(listToTaskTree(rows));
+					console.log(rows.length);
+					// console.log(listToTaskTree(rows));
+					resolve(listToTaskTree(rows));
 				} else {
 					resolve([]);
 				}
@@ -431,7 +441,7 @@ export const getCheckedTasks = (project_id: number) => {
 				} else {
 					let checked: CheckedTasks = {};
 					rows.forEach((row: any) => {
-						checked[row.id] = { checked: true, partialChecked: false };
+						checked[row.project_id + "/" + row.id] = { checked: true, partialChecked: false };
 					});
 					resolve(checked);
 				}
@@ -440,46 +450,51 @@ export const getCheckedTasks = (project_id: number) => {
 	});
 };
 export const getAllTaskTrees = () => {
-  return new Promise<TaskTree[]>((resolve, reject) => {
-    let tasks: TaskTree[] = [];
-    
-    db.serialize(() => {
-      const fetchPromises:any = [];
-      
-      db.each(`SELECT * FROM projects`, async (err, row: any) => {
-        if (err) {
-          reject(err);
-          return; // Exit the loop on error
-        }
-        
-        const fetchPromise = new Promise<void>(async (innerResolve) => {
-          try {
-            const taskTree = await getTaskTree(row.id);
-            if (taskTree.length > 0) {
-              const checkedTasks = await getCheckedTasks(row.id);
-              tasks.push({
-                project_id: row.id,
-                project_path: row.path,
-                project_name: row.name,
-                tasks: taskTree,
-                checkedTasks: checkedTasks,
-              });
-            }
-            innerResolve();
-          } catch (error) {
-            reject(error);
-          }
-        });
-        
-        fetchPromises.push(fetchPromise);
-      }, () => {
-        // This function is called when db.each() is completed
-        Promise.all(fetchPromises)
-          .then(() => resolve(tasks))
-          .catch((error) => reject(error));
-      });
-    });
-  });
+	return new Promise<TaskTree[]>((resolve, reject) => {
+		let tasks: TaskTree[] = [];
+
+		db.serialize(() => {
+			const fetchPromises: any = [];
+
+			db.each(
+				`SELECT * FROM projects`,
+				async (err, row: any) => {
+					if (err) {
+						reject(err);
+						return; // Exit the loop on error
+					}
+
+					const fetchPromise = new Promise<void>(async (innerResolve) => {
+						try {
+							const taskTree = await getTaskTree(row.id);
+							if (taskTree.length > 0) {
+								const checkedTasks = await getCheckedTasks(row.id);
+								// console.log(taskTree);
+								tasks.push({
+									project_id: row.id,
+									project_path: row.path,
+									project_name: row.name,
+									tasks: taskTree,
+									checkedTasks: checkedTasks
+								});
+							}
+							innerResolve();
+						} catch (error) {
+							reject(error);
+						}
+					});
+
+					fetchPromises.push(fetchPromise);
+				},
+				() => {
+					// This function is called when db.each() is completed
+					Promise.all(fetchPromises)
+						.then(() => resolve(tasks))
+						.catch((error) => reject(error));
+				}
+			);
+		});
+	});
 };
 
 // export const getAllTaskTrees = () => {
