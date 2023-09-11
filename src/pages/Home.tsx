@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import reactLogo from '../assets/react.svg';
-import viteLogo from '/vite.svg';
+
+import kaziLogo from '/kazi_word_l.svg';
 import {
 	IoHome,
 	IoCalendarOutline,
@@ -18,16 +18,13 @@ const Home = () => {
 	return (
 		<div className="App flex w-full flex-col overflow-hidden items-center justify-center gap-4 bg-kdark">
 			<div className="flex flex-row">
-				<a href="https://vitejs.dev" target="_blank">
-					<img src={viteLogo} className="logo" alt="Vite logo" />
-				</a>
-				<a href="https://reactjs.org" target="_blank">
-					<img src={reactLogo} className="logo react" alt="React logo" />
-				</a>
+	
+					<img src={kaziLogo} className="logo" alt="Vite logo" />
+
 			</div>
-			<h1 className="text-6xl text-klight mt-2">
+			{/* <h1 className="text-6xl text-klight mt-2">
 				Welcome to <span className="text-kaccent1">Kazi</span>!
-			</h1>
+			</h1> */}
       <hr className='m-8 w-full h-1 bg-kmedium border-kmedium' />
 			<div className="grid pl-8  pr-8 grid-cols-3 gap-4 items-stretch justify-stretch">
         <Link to="/" className="text-klight w-full">

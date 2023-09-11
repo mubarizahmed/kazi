@@ -97,8 +97,13 @@ getProjects().then((projects: any) => {
 
 async function createWindow() {
 	win = new BrowserWindow({
-		title: 'Main window',
-		icon: join(process.env.PUBLIC, 'favicon.ico'),
+		title: 'Kazi',
+		icon: join(process.env.PUBLIC, 'kazi_word_l.png'),
+		titleBarStyle: 'hidden',
+		titleBarOverlay: {
+			color: '#0d0c1e',
+			symbolColor: '#74b1be'
+		},
 		autoHideMenuBar: true,
 		width: store.get('windowBounds.width'),
 		height: store.get('windowBounds.height'),

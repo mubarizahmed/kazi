@@ -53,13 +53,13 @@ const Tasks = (props: Props) => {
 	};
 
 	const nodeTemplate = (node: TreeNode, options: TreeNodeTemplateOptions) => {
-		if (node.date) {
+		if (node.dueDate) {
 			return (
 				<div className="flex flex-row items-center justify-start gap-2 ">
 					<span className={options.className}>{node.label}</span>
 					<div className="flex items-center justify-center rounded bg-slate-500 p-1">
 						<span className="text-xs text-white">
-							{new Date(node.date).toDateString().slice(4, 10)}
+							{new Date(node.dueDate).toDateString().slice(4, 10)}
 						</span>
 					</div>
 				</div>
@@ -72,6 +72,11 @@ const Tasks = (props: Props) => {
 			</div>
 		);
 	};
+
+	// const headerTemplate 
+	// header template with index prop
+	// useState array for filter text and filter attributes
+	// filter function
 
 	return (
 		<div className="flex h-screen w-full flex-col  gap-4 bg-kdark p-4">
@@ -100,7 +105,7 @@ const Tasks = (props: Props) => {
 					{projects.length > 0 ? (
 						projects.map((project) => {
 							return (
-								<div className=" flex min-w-[25rem] flex-col justify-start overflow-clip rounded-xl border-2 border-kmedium align-top drop-shadow-md">
+								<div className=" flex min-w-[25rem] flex-col justify-start overflow-clip rounded-xl border-2 border-kmedium align-top drop-shadow-md transition-transform ease-in-out duration-1000">
 									<span className="bg-kmedium text-base p-4 pt-2 pb-2 uppercase text-klight">
 										{project.project_name.slice(0, -3)}
 									</span>
