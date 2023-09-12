@@ -3,9 +3,16 @@ import { release } from 'node:os';
 import { join } from 'node:path';
 import { update } from './update';
 import { FileTreeNodeType, FileTreeType, TaskTree } from '@/types';
-import {scanAllFiles, startTaskScan} from './taskScanner';
-import {scanUpdateFileTree, loadFile, saveFile, createFile, deleteFile} from './fileScanner';
-import { createDb, getProjects, createProject, getProjectTree, getTaskTree, getAllTaskTrees } from './db';
+import { scanAllFiles, startTaskScan } from './taskScanner';
+import { scanUpdateFileTree, loadFile, saveFile, createFile, deleteFile } from './fileScanner';
+import {
+	createDb,
+	getProjects,
+	createProject,
+	getProjectTree,
+	getTaskTree,
+	getAllTaskTrees
+} from './db';
 const path = require('path');
 const dirTree = require('directory-tree');
 const fs = require('fs');
@@ -68,32 +75,54 @@ export const store = new Store({
 		zoomFactor: 1
 	}
 });
-module.exports = {projectTree, store}
+module.exports = { projectTree, store };
 function loadSettings() {
 	return store.store;
 }
 
-function changeUserDirectory(){
-	if (win) dialog.showOpenDialog(win, {
-		properties: ['openDirectory']
-	}).then(result => {
-		if (!result.canceled) {
-			console.log(result.filePaths[0]);
-			store.set('userDirectory', result.filePaths[0]);
-		}
-	});
+const defaultTheme = {
+	name: 'Default Dark',
+	color1: [10, 10, 26],
+	color2: [13, 12, 30],
+	color3: [32, 30, 60],
+	color4: [131, 145, 178],
+	color5: [217, 216, 218],
+	accent1: [41, 182, 126],
+	accent2: [249, 100, 83]
+}
+const solarizedTheme = {
+	name: 'Default Dark',
+	color1: [0, 43, 54],
+	color2: [7, 54, 66],
+	color3: [88, 110, 117],
+	color4: [100, 122, 130],
+	color5: [151, 168, 170],
+	accent1: [41, 182, 126],
+	accent2: [249, 100, 83]
+}
+var themes = []
+themes[0] = defaultTheme;
+
+function changeUserDirectory() {
+	if (win)
+		dialog
+			.showOpenDialog(win, {
+				properties: ['openDirectory']
+			})
+			.then((result) => {
+				if (!result.canceled) {
+					console.log(result.filePaths[0]);
+					store.set('userDirectory', result.filePaths[0]);
+				}
+			});
 	return store.store;
 }
-
-
 
 createDb(path.join(store.get('userDirectory'), 'kazi.db'));
 
 getProjects().then((projects: any) => {
 	console.log(projects);
 });
-
-
 
 async function createWindow() {
 	win = new BrowserWindow({
@@ -111,7 +140,6 @@ async function createWindow() {
 		y: store.get('windowBounds.y'),
 		fullscreen: store.get('windowFullScreen'),
 
-
 		webPreferences: {
 			preload,
 			// Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
@@ -119,7 +147,7 @@ async function createWindow() {
 			// Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
 			nodeIntegration: true,
 			contextIsolation: true,
-      zoomFactor: store.get('zoomFactor'),
+			zoomFactor: store.get('zoomFactor')
 		}
 	});
 
@@ -139,16 +167,27 @@ async function createWindow() {
 	});
 
 	win.once('ready-to-show', () => {
-    win?.webContents.setZoomFactor(store.get('zoomFactor'));
-	})	
+		win?.webContents.setZoomFactor(store.get('zoomFactor'));
+		win?.webContents.send('apply-theme',solarizedTheme);
+	});
 
-	// Make all links open with the browser, not with the application
+	// // Make all links open with the browser, not with the application
+	// win.webContents.setWindowOpenHandler(({ url }) => {
+	// 	if (url.startsWith('https:')) shell.openExternal(url);
+	// 	return { action: 'deny' };
+	// });
+
 	win.webContents.setWindowOpenHandler(({ url }) => {
-		if (url.startsWith('https:')) shell.openExternal(url);
+		// config.fileProtocol is my custom file protocol
+		if (url.startsWith('file://')) {
+			return { action: 'allow' };
+		}
+		// open url in a browser and prevent default
+		shell.openExternal(url);
 		return { action: 'deny' };
 	});
 
-	app.commandLine.appendSwitch("--remote-debugging-port", "9222");
+	app.commandLine.appendSwitch('--remote-debugging-port', '9222');
 
 	// Apply electron-updater
 	update(win);
@@ -158,7 +197,7 @@ async function createWindow() {
 			store.set('windowBounds', win.getBounds());
 			store.set('windowLocation', win.getPosition());
 			store.set('windowFullScreen', win.isFullScreen());
-      store.set('zoomFactor', win.webContents.getZoomFactor());
+			store.set('zoomFactor', win.webContents.getZoomFactor());
 		}
 	});
 
@@ -166,14 +205,14 @@ async function createWindow() {
 		webPreferences: {
 			webSecurity: false,
 			nodeIntegration: true,
-			contextIsolation: false,
+			contextIsolation: false
 		}
 	});
-	workerWindow.loadURL("file://" + printHTML);
+	workerWindow.loadURL('file://' + printHTML);
 	workerWindow.hide();
 	workerWindow.webContents.openDevTools();
-	workerWindow.on("closed", () => {
-			workerWindow = null;
+	workerWindow.on('closed', () => {
+		workerWindow = null;
 	});
 }
 
@@ -187,8 +226,14 @@ app.whenReady().then(() => {
 	ipcMain.handle('update-fileTree', updateFileTree);
 	ipcMain.handle('load-file', loadFile);
 	ipcMain.handle('save-file', saveFile);
-	ipcMain.handle('create-file',  (async (e,path) => {createFile(e,path); updateFileTree()}));
-	ipcMain.handle('delete-file', (async (e,path) => {deleteFile(e,path); updateFileTree()}));
+	ipcMain.handle('create-file', async (e, path) => {
+		createFile(e, path);
+		updateFileTree();
+	});
+	ipcMain.handle('delete-file', async (e, path) => {
+		deleteFile(e, path);
+		updateFileTree();
+	});
 	ipcMain.handle('load-settings', loadSettings);
 	ipcMain.handle('change-user-directory', changeUserDirectory);
 	ipcMain.handle('load-task-tree', getAllTaskTrees);
@@ -196,12 +241,10 @@ app.whenReady().then(() => {
 	ipcMain.handle('start-task-scan', startTaskScan);
 	ipcMain.handle('print-file', printFile);
 
-	ipcMain.on("readyToPrintPDF", (event) => {
-
-    // Use default printing options
-    workerWindow?.webContents.print({ printBackground: false })
-
-});
+	ipcMain.on('readyToPrintPDF', (event) => {
+		// Use default printing options
+		workerWindow?.webContents.print({ printBackground: false });
+	});
 
 	createWindow();
 });
@@ -245,34 +288,30 @@ ipcMain.handle('open-win', (_, arg) => {
 	}
 });
 
-
 const loadFileTree = () => {
-	console.log(projectTree)
+	console.log(projectTree);
 	return projectTree;
-}
-
-
+};
 
 const updateFileTree = async () => {
 	console.log('updateFileTree');
-	let tree : FileTreeNodeType  = await scanUpdateFileTree(store.get('userDirectory'))
+	let tree: FileTreeNodeType = await scanUpdateFileTree(store.get('userDirectory'));
 	projectTree = tree;
 
 	return tree;
+};
 
-}
-
-const printFile = (e: any, filePath: string, content:string) => {
+const printFile = (e: any, filePath: string, content: string) => {
 	console.log(content);
 	// /home/mebza/apps/kazi/dist/print.html
 	console.log(printHTML);
-	console.log("file://" + __dirname + "/print.html");
+	console.log('file://' + __dirname + '/print.html');
 	// let window = BrowserWindow.fromWebContents(e.sender);
 	// window.webContents.printToPDF({ printSelectionOnly: true, }).then((data) => {
 	// 		// Use the data however you like :)
 	// });
 
-	workerWindow?.webContents.send("printPDF", content);
-}
+	workerWindow?.webContents.send('printPDF', content);
+};
 
 const { session } = require('electron');

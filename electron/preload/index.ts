@@ -14,6 +14,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   loadTaskTree: () => ipcRenderer.invoke('load-task-tree'),
   startTaskScan: () => ipcRenderer.invoke('start-task-scan'),
   printFile: (filePath:string, content:string) => ipcRenderer.invoke('print-file', filePath, content),
+  applyTheme: (callback:Function) =>     ipcRenderer.on('apply-theme', (event, theme) => {
+    callback(theme);
+  }),
 },)
 
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {

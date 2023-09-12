@@ -19,8 +19,8 @@ module.exports = {
         'kdark' : generateColorClass('color-kdark'),
         'kdarker' : generateColorClass('color-kdarker'),
         'kmedium' : generateColorClass('color-kmedium'),
-        'klight' : generateColorClass('color-klight'),
-        'klighter' : generateColorClass('color-klighter'),
+        'klight' : generateColorClass('color-klighter'),
+        'klighter' : generateColorClass('color-klight'),
         'kaccent1' : generateColorClass('color-kaccent1'),
         'kaccent2' : generateColorClass('color-kaccent2'),
         

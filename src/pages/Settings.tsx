@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Dropdown } from 'primereact/dropdown';
+        
 
 const Settings = () => {
 	const [selectedTab, setSelectedTab] = useState(0);
@@ -65,13 +67,21 @@ const Settings = () => {
 			content: (
 				<div className="flex w-full flex-col items-start justify-start divide-x-2 pl-6 pr-6">
 					<div className="flex w-full ">
-						<div className="flex-col">
-							<span className="text-xl">Kazi Workspace Directory</span>
+						<div className="flex flex-col">
+							<span className="text-xl">Theme</span>
 							<span className="text-sm text-klight">
-								The directory where all your projects will be stored
+								Select the theme. Additional themes can be installed by placing them in the /.Themes folder.
 							</span>
 							<span className="text-sm text-klight">Current: </span>
 						</div>
+						<Dropdown
+							className="w-40 h-fit ml-4"
+							value={settingValues.theme}
+							options={['Dark', 'Light']}
+							onChange={(e) => {
+								setSettingValues({ ...settingValues, theme: e.value });
+							}}
+						/>
 					</div>
 					<hr />
 				</div>

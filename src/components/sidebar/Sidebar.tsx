@@ -8,7 +8,7 @@ import { IconContext } from 'react-icons';
 
 const Sidebar = () => {
 	return (
-		<div className="flex shrink-0 min-w-16 h-screen w-16 flex-col items-center justify-between bg-rich-black pb-8 pt-6 border-r-2 border-r-space-cadet">
+		<div className="flex shrink-0 min-w-16 h-screen w-16 flex-col items-center justify-between bg-kdarker pb-8 pt-6 border-r-2 border-kmedium">
 			{/* top items */}
 			<IconContext.Provider value={{ size: '1.5em', style: { verticalAlign: 'middle' } }}>
 				<div className="flex flex-col items-center gap-8">
