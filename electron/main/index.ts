@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, dialog, contextBridge } from 'electron';
 import { release } from 'node:os';
 import { join } from 'node:path';
 import { update } from './update';
@@ -79,8 +79,8 @@ const solarizedTheme = {
 	color1: [0, 43, 54],
 	color2: [7, 54, 66],
 	color3: [88, 110, 117],
-	color4: [100, 122, 130],
-	color5: [200, 200, 200],
+	color4: [200, 200, 200],
+	color5: [100, 122, 130],
 	accent1: [41, 182, 126],
 	accent2: [249, 100, 83]
 }
@@ -97,6 +97,7 @@ var themes = [];
 themes.push(defaultTheme);
 themes.push(solarizedTheme);
 
+
 // store stuff
 export const store = new Store({
 	// We'll call our data file 'user-preferences'
@@ -111,6 +112,9 @@ export const store = new Store({
 	}
 });
 module.exports = { projectTree, store };
+
+var currentTheme = store.get('currentTheme');
+
 
 function loadSettings() {
 	return [store.store, themes];
@@ -133,11 +137,12 @@ function changeUserDirectory() {
 	return store.store;
 }
 
-const changeTheme = (_event: any, themeName: any) => {
+const changeTheme = (_event: any, theme: any) => {
 	try {
-		console.log(themeName)
-		win?.webContents.send('apply-theme', themeName);
-		store.set('currentTheme', themeName);
+		console.log(theme)
+		win?.webContents.send('apply-theme', theme);
+		store.set('currentTheme', theme);
+		currentTheme = theme;
 	} catch (error) {
 		console.log(error);
 	}
@@ -167,6 +172,7 @@ async function createWindow() {
 		fullscreen: store.get('windowFullScreen'),
 
 		webPreferences: {
+			additionalArguments: [`--themeColor1=${store.get('currentTheme').color2}`, `--themeColor2=${store.get('currentTheme').color4}`],
 			preload,
 			// Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
 			// Consider using contextBridge.exposeInMainWorld
@@ -177,6 +183,8 @@ async function createWindow() {
 		}
 	});
 
+
+
 	if (url) {
 		// electron-vite-vue#298
 		win.loadURL(url);
@@ -186,15 +194,29 @@ async function createWindow() {
 		win.loadFile(indexHtml);
 		// win.webContents.openDevTools();
 	}
-
-	// Test actively push message to the Electron-Renderer
-	win.webContents.on('did-finish-load', () => {
-		win?.webContents.send('main-process-message', new Date().toLocaleString());
+	contextBridge.exposeInMainWorld('myAPI', {
+		currentTheme: currentTheme,
 	});
 
-	win.once('ready-to-show', () => {
+	// Test actively push message to the Electron-Renderer
+	win.webContents.once('did-finish-load', () => {
+		console.log('did-finish-load');
+		win?.webContents.send('main-process-message', new Date().toLocaleString());
+		// win?.webContents.send('apply-theme', currentTheme);
 		win?.webContents.setZoomFactor(store.get('zoomFactor'));
-		win?.webContents.send('apply-theme',store.get('currentTheme'));
+		win?.webContents.send('apply-theme', currentTheme);
+	});
+
+	win.on('ready-to-show', () => {
+		win?.webContents.setZoomFactor(store.get('zoomFactor'));
+		win?.webContents.once('did-finish-load', () => {
+
+
+			win?.webContents.setZoomFactor(store.get('zoomFactor'));
+			win?.webContents.send('apply-theme', currentTheme);
+			console.log('ready-to-show');
+		});
+
 	});
 
 	// // Make all links open with the browser, not with the application

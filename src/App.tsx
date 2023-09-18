@@ -11,8 +11,8 @@ function App() {
 		window.electronAPI.applyTheme((theme) => {
 			// Apply the theme to your app's UI
 			applyTheme(theme);
+			console.log('theme applied', theme);
 		});
-
 	}, []);
 
 	// Function to apply the theme to your app's UI
