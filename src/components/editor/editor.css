@@ -93,20 +93,3 @@ h6 {
 	color: var(--color-base);
 }
 
-/* Works on Firefox */
-* {
-	scrollbar-width: thin;
-	scrollbar-color: white #201e3cff;
-}
-/* Works on Chrome, Edge, and Safari */
-*::-webkit-scrollbar {
-	width: 12px;
-}
-*::-webkit-scrollbar-track {
-	background: #0d0c1eff;
-}
-*::-webkit-scrollbar-thumb {
-	background-color: white;
-	border-radius: 20px;
-	border: 3px solid #201e3cff;
-}

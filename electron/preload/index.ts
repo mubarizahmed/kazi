@@ -14,6 +14,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   loadTaskTree: () => ipcRenderer.invoke('load-task-tree'),
   startTaskScan: () => ipcRenderer.invoke('start-task-scan'),
   printFile: (filePath:string, content:string) => ipcRenderer.invoke('print-file', filePath, content),
+  getThemes: () => ipcRenderer.invoke('get-themes'),
+  changeTheme: (themeName:string) => ipcRenderer.invoke('change-theme', themeName),
   applyTheme: (callback:Function) =>     ipcRenderer.on('apply-theme', (event, theme) => {
     callback(theme);
   }),

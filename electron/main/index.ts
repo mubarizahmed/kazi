@@ -63,23 +63,7 @@ const printHTML = join(process.env.DIST, 'print.html');
 var projectTree: FileTreeNodeType = {} as FileTreeNodeType;
 var taskTree: TaskTree[] = [];
 
-// store stuff
-export const store = new Store({
-	// We'll call our data file 'user-preferences'
-	configName: 'user-preferences',
-	defaults: {
-		// 800x600 is the default size of our window
-		windowBounds: { width: 800, height: 600, x: 0, y: 0 },
-		windowFullScreen: false,
-		userDirectory: path.join(app.getPath('documents'), 'Kazi'),
-		zoomFactor: 1
-	}
-});
-module.exports = { projectTree, store };
-function loadSettings() {
-	return store.store;
-}
-
+// themes
 const defaultTheme = {
 	name: 'Default Dark',
 	color1: [10, 10, 26],
@@ -91,17 +75,48 @@ const defaultTheme = {
 	accent2: [249, 100, 83]
 }
 const solarizedTheme = {
-	name: 'Default Dark',
+	name: 'Solarized',
 	color1: [0, 43, 54],
 	color2: [7, 54, 66],
 	color3: [88, 110, 117],
 	color4: [100, 122, 130],
-	color5: [151, 168, 170],
+	color5: [200, 200, 200],
 	accent1: [41, 182, 126],
 	accent2: [249, 100, 83]
 }
-var themes = []
-themes[0] = defaultTheme;
+
+interface Themes {
+	[key: string]: any;
+}
+
+// var themes:Themes = {};
+// themes["defaultDark"] = defaultTheme;
+// themes["solarized"] = solarizedTheme;
+
+var themes = [];
+themes.push(defaultTheme);
+themes.push(solarizedTheme);
+
+// store stuff
+export const store = new Store({
+	// We'll call our data file 'user-preferences'
+	configName: 'user-preferences',
+	defaults: {
+		// 800x600 is the default size of our window
+		windowBounds: { width: 800, height: 600, x: 0, y: 0 },
+		windowFullScreen: false,
+		userDirectory: path.join(app.getPath('documents'), 'Kazi'),
+		zoomFactor: 1,
+		currentTheme: defaultTheme
+	}
+});
+module.exports = { projectTree, store };
+
+function loadSettings() {
+	return [store.store, themes];
+}
+
+
 
 function changeUserDirectory() {
 	if (win)
@@ -115,6 +130,17 @@ function changeUserDirectory() {
 					store.set('userDirectory', result.filePaths[0]);
 				}
 			});
+	return store.store;
+}
+
+const changeTheme = (_event: any, themeName: any) => {
+	try {
+		console.log(themeName)
+		win?.webContents.send('apply-theme', themeName);
+		store.set('currentTheme', themeName);
+	} catch (error) {
+		console.log(error);
+	}
 	return store.store;
 }
 
@@ -168,7 +194,7 @@ async function createWindow() {
 
 	win.once('ready-to-show', () => {
 		win?.webContents.setZoomFactor(store.get('zoomFactor'));
-		win?.webContents.send('apply-theme',solarizedTheme);
+		win?.webContents.send('apply-theme',store.get('currentTheme'));
 	});
 
 	// // Make all links open with the browser, not with the application
@@ -245,6 +271,9 @@ app.whenReady().then(() => {
 		// Use default printing options
 		workerWindow?.webContents.print({ printBackground: false });
 	});
+
+	ipcMain.handle('get-themes', () => { return themes; });
+	ipcMain.handle('change-theme', changeTheme);
 
 	createWindow();
 });

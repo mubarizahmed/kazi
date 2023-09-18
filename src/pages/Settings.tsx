@@ -1,20 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { Dropdown } from 'primereact/dropdown';
-        
 
 const Settings = () => {
 	const [selectedTab, setSelectedTab] = useState(0);
-	const [settingValues, setSettingValues] = useState(window.electronAPI.loadSettings());
+	const [settingValues, setSettingValues] = useState({});
+	const [themes, setThemes] = useState([]);
 
 	const load = async () => {
 		console.log('loaded');
-		setSettingValues(await window.electronAPI.loadSettings());
-		console.log(settingValues);
+		await window.electronAPI.loadSettings().then((res) => {
+			setSettingValues(res[0]);
+			setThemes(res[1]);
+			console.log(res);
+		});
 	};
 
 	useEffect(() => {
 		load();
 	}, []);
+
+	const themeOptionsTemplate = (theme) => {
+		const createColorCircle = (color) => {
+			const rgbValue = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+			return <div className="h-4 w-4 rounded-full theme-circle" style={{ backgroundColor: rgbValue }}></div>;
+		};
+		if (!theme?.name) return (<div></div>);
+		return (
+			<div className="theme-item overflow-none flex flex-row items-center">
+				<div className="text mr-4 w-24">{theme.name}</div>
+				<div className=" theme-circle-container flex h-4 flex-grow flex-row gap-1">
+					{createColorCircle(theme.color1)}
+					{createColorCircle(theme.color2)}
+					{createColorCircle(theme.color3)}
+					{createColorCircle(theme.color4)}
+					{createColorCircle(theme.color5)}
+					{createColorCircle(theme.accent1)}
+					{createColorCircle(theme.accent2)}
+				</div>
+			</div>
+		);
+	};
 
 	const settings = [
 		{
@@ -66,23 +91,31 @@ const Settings = () => {
 			icon: 'palette',
 			content: (
 				<div className="flex w-full flex-col items-start justify-start divide-x-2 pl-6 pr-6">
-					<div className="flex w-full ">
+					<div className="flex w-full justify-between pb-2">
 						<div className="flex flex-col">
 							<span className="text-xl">Theme</span>
-							<span className="text-sm text-klight">
-								Select the theme. Additional themes can be installed by placing them in the /.Themes folder.
-							</span>
-							<span className="text-sm text-klight">Current: </span>
 						</div>
+						{settingValues?.currentTheme ?
 						<Dropdown
-							className="w-40 h-fit ml-4"
-							value={settingValues.theme}
-							options={['Dark', 'Light']}
+							className=" ml-4 h-fit"
+							value={settingValues?.currentTheme}
+							optionLabel="name"
+							valueTemplate={themeOptionsTemplate}
+							itemTemplate={themeOptionsTemplate}
+							options={themes}
 							onChange={(e) => {
-								setSettingValues({ ...settingValues, theme: e.value });
+								// setSettingValues({ ...settingValues, theme: e.value });
+								window.electronAPI.changeTheme(e.value).then((res) => {
+									setSettingValues(res);
+								});
 							}}
-						/>
+						/> : <div></div>
+					}
 					</div>
+					<div className="text-sm text-klight !border-0">
+						Additional themes can be installed by placing them in the /.Themes folder.
+					</div>
+					{/* <span className="text-sm text-klight">Current: {settingValues?.currentTheme?.name} </span> */}
 					<hr />
 				</div>
 			)
