@@ -1,6 +1,10 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useMemo, useState } from 'react';
 import { Tree, TreeNodeTemplateOptions, TreeTogglerTemplateOptions } from 'primereact/tree';
 import { TreeNode } from 'primereact/treenode';
+import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from '@dnd-kit/core';
+import { SortableContext, arrayMove } from '@dnd-kit/sortable';
+
+//icons
 import 'primeicons/primeicons.css';
 //theme
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
@@ -9,23 +13,63 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.min.css';
 
 import { Project, TaskTree } from '../types';
+import { TasksContainer } from '@/components';
+import { createPortal } from 'react-dom';
 
 type Props = {};
 
 const Tasks = (props: Props) => {
 	const [projects, setProjects] = useState<TaskTree[]>([]);
+	const projectsId = useMemo(() => projects.map((project) => project.project_id), [projects]);
+	const [activeProject, setActiveProject] = useState<TaskTree | null>(null);
+
+	const sortProjects = (unsortedProjects: TaskTree[], ids: number[]) => {
+		return unsortedProjects.sort((a:TaskTree, b:TaskTree) => {
+			const indexA = ids.indexOf(a.project_id); // Assuming 'id' is the property containing project IDs
+			const indexB = ids.indexOf(b.project_id);
+
+			// Check if a or b is not found in projectIds
+			if (indexA === -1 && indexB === -1) {
+				// If both are not found, maintain their original order
+				return 0;
+			} else if (indexA === -1) {
+				// If 'a' is not found, move 'a' to the end
+				return 1;
+			} else if (indexB === -1) {
+				// If 'b' is not found, move 'b' to the end
+				return -1;
+			} else {
+				// Compare based on the order of projectIds
+				return indexA - indexB;
+			}
+		});
+	}
 
 	async function startScan() {
-		console.log(await window.electronAPI.updateTaskTree());
+		let taskTree = await window.electronAPI.updateTaskTree();
+		console.log(taskTree);
+		setProjects(sortProjects(taskTree, projectsId));
 	}
 
 	async function getTasks() {
-		console.log(await window.electronAPI.loadTaskTree());
+		let taskTree =await window.electronAPI.loadTaskTree();
+		console.log(taskTree);
+		setProjects(sortProjects(taskTree, projectsId));
 	}
 
+	
 	const load = async () => {
+		let po = sessionStorage.getItem('kazi-projects-order');
+		if (po !== null && po !== '') {
+			let ids = JSON.parse(po);
+			let unsortedProjects = await window.electronAPI.loadTaskTree();
+			console.log("sorting",ids)
+			setProjects(sortProjects(unsortedProjects, ids));
+		} else {
+			setProjects(await window.electronAPI.loadTaskTree());
+		}
+
 		console.log('loaded');
-		setProjects(await window.electronAPI.loadTaskTree());
 	};
 
 	useEffect(() => {
@@ -36,6 +80,9 @@ const Tasks = (props: Props) => {
 		console.log(projects);
 	}, [projects]);
 
+	useEffect(() => {
+		sessionStorage.setItem('kazi-projects-order', JSON.stringify(projectsId));
+	}, [projectsId]);
 	// var projectTrees = () => {
 	// 	var res: ReactNode[] = [];
 	// 	if (projects.length > 0) {
@@ -52,28 +99,32 @@ const Tasks = (props: Props) => {
 		console.log(event);
 	};
 
-	const nodeTemplate = (node: TreeNode, options: TreeNodeTemplateOptions) => {
-		if (node.dueDate) {
-			return (
-				<div className="flex flex-row items-center justify-start gap-2 ">
-					<span className={options.className}>{node.label}</span>
-					<div className="flex items-center justify-center rounded bg-slate-500 p-1">
-						<span className="text-xs text-white">
-							{new Date(node.dueDate).toDateString().slice(4, 10)}
-						</span>
-					</div>
-				</div>
-			);
+	const onDragStart = (event: DragStartEvent) => {
+		console.log(event);
+		if (event.active.data.current?.type === 'project') {
+			setActiveProject(event.active.data.current.project);
 		}
-
-		return (
-			<div className="flex flex-row items-center justify-start gap-1">
-				<span className={options.className}>{node.label}</span>
-			</div>
-		);
 	};
 
-	// const headerTemplate 
+	const onDragEnd = (event: DragEndEvent) => {
+		const { active, over } = event;
+
+		if (!over) return;
+
+		if (active.id === over.id) return;
+
+		setProjects((projects) => {
+			const oldIndex = projects.findIndex((project) => project.project_id === active.id);
+			const newIndex = projects.findIndex((project) => project.project_id === over.id);
+
+			// const newProjects = [...projects];
+			// newProjects.splice(oldIndex, 1);
+			// newProjects.splice(newIndex, 0, projects[oldIndex]);
+
+			return arrayMove(projects, oldIndex, newIndex);
+		});
+	};
+	// const headerTemplate
 	// header template with index prop
 	// useState array for filter text and filter attributes
 	// filter function
@@ -99,34 +150,26 @@ const Tasks = (props: Props) => {
 					</button>
 				</div>
 			</div>
-			<div className="w-full overflow-y-scroll pl-4 pr-3">
-				<div className="flex flex-row flex-wrap justify-center gap-4 align-top">
+			<DndContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+				<div className="flex h-full w-full flex-wrap gap-4 overflow-y-scroll pl-4 pr-3">
 					{/* {projectTrees} */}
-					{projects.length > 0 ? (
-						projects.map((project) => {
-							return (
-								<div className=" flex min-w-[25rem] flex-col justify-start overflow-clip rounded-xl border-2 border-kmedium align-top drop-shadow-md transition-transform ease-in-out duration-1000">
-									<span className="bg-kmedium text-base p-4 pt-2 pb-2 uppercase text-klight">
-										{project.project_name.slice(0, -3)}
-									</span>
-									<div className='p-4 pb-8'>
-									<Tree
-										value={project.tasks}
-										selectionMode="checkbox"
-										onSelectionChange={updateChecked}
-										className="md:w-30rem w-full"
-										selectionKeys={project.checkedTasks}
-										nodeTemplate={nodeTemplate}
-									/>
-									</div>
-								</div>
-							);
-						})
-					) : (
-						<p>Test</p>
-					)}
+					<SortableContext items={projectsId}>
+						{projects.length > 0 ? (
+							projects.map((proj) => {
+								return <TasksContainer project={proj} updateChecked={updateChecked} />;
+							})
+						) : (
+							<p>Test</p>
+						)}
+					</SortableContext>
 				</div>
-			</div>
+
+				<DragOverlay>
+					{activeProject && (
+						<TasksContainer project={activeProject} updateChecked={updateChecked} />
+					)}
+				</DragOverlay>
+			</DndContext>
 		</div>
 	);
 };
