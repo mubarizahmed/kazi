@@ -151,7 +151,7 @@ const Tasks = (props: Props) => {
 				</div>
 			</div>
 			<DndContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
-				<div className="flex h-full w-full flex-wrap gap-4 overflow-y-scroll pl-4 pr-3">
+				<div className="flex w-full flex-wrap gap-4 overflow-y-scroll pl-4 pr-3">
 					{/* {projectTrees} */}
 					<SortableContext items={projectsId}>
 						{projects.length > 0 ? (
