@@ -85,6 +85,17 @@ const solarizedTheme = {
 	accent2: [249, 100, 83]
 }
 
+const creamyCoffeeTheme = {
+	name: 'Creamy Coffee',
+	color1: [208, 194, 167],
+	color2: [221, 210, 188],
+	color3: [181, 150, 113],
+	color4: [146, 99, 55],
+	color5: [101, 59, 23],
+	accent1: [0, 0, 0],
+	accent2: [249, 100, 83]
+}
+
 interface Themes {
 	[key: string]: any;
 }
@@ -96,6 +107,7 @@ interface Themes {
 var themes = [];
 themes.push(defaultTheme);
 themes.push(solarizedTheme);
+themes.push(creamyCoffeeTheme);
 
 
 // store stuff

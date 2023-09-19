@@ -76,6 +76,9 @@
 .p-tree .p-tree-filter-container {
 	margin: 0.5rem 0;
 }
+.p-tree .p-tree-filter-container .p-tree-filter-icon {
+	@apply text-klight;
+}
 .p-inputtext {
 	@apply border-none bg-kmedium text-klight;
 	font-family: var(--font-family);

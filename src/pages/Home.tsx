@@ -19,7 +19,7 @@ const Home = () => {
 		<div className="App flex w-full flex-col items-center justify-center gap-4 overflow-hidden bg-kdark">
 			<div className="flex flex-row">
 				<a href="https://github.com/mubarizahmed/kazi" target="_blank">
-					<img src={kaziLogo} className="logo" alt="Vite logo" />
+					<img src={kaziLogo} className="logo fill-black" alt="Vite logo" />
 				</a>
 			</div>
 			{/* <h1 className="text-6xl text-klight mt-2">

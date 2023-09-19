@@ -40,7 +40,7 @@ export const MathBlock: FC = () => {
             value="preview"
             className={[
               'rounded-t-xs  inline-block border-b-2 border-transparent px-4 py-2 hover:border-klighter hover:text-klighter',
-              value === 'preview' ? 'text-kaccent1' : ''
+              value === 'preview' ? 'text-kaccent1' : 'text-klight'
             ].join(' ')}
           >
             <span className="material-symbols-outlined text-xs">function</span>
@@ -49,7 +49,7 @@ export const MathBlock: FC = () => {
             value="source"
             className={[
               'rounded-t-xs inline-block border-b-2 border-transparent px-4 py-2 hover:border-klighter hover:text-klighter',
-              value === 'source' ? 'text-kaccent1' : ''
+              value === 'source' ? 'text-kaccent1' : 'text-klight'
             ].join(' ')}
           >
             <span className="material-symbols-outlined text-xs">code</span>
@@ -61,14 +61,14 @@ export const MathBlock: FC = () => {
       </Tabs.Content>
       <Tabs.Content value="source" className="flex flex-col">
         <textarea
-          className="block h-48 w-full ring-0 focus:outline-none rounded bg-kdark p-4 font-mono text-gray-50"
+          className="block h-48 w-full ring-0 focus:outline-none rounded bg-kdarker p-4 font-mono text-klight"
           ref={codeInput}
           defaultValue={code}
           spellCheck="false"
         />
         <div className="flex items-center justify-end gap-2 py-2">
           <button
-            className="rounded-t-xs bg-transparent inline-block border-b-2 border-transparent px-4 py-2 hover:border-klighter hover:text-klighter "
+            className="rounded-t-xs bg-transparent inline-block border-b-2 text-klight border-transparent px-4 py-2 hover:border-klighter hover:text-klighter "
             onClick={() => {
               setValue('preview');
             }}

@@ -13,28 +13,28 @@ const Sidebar = () => {
 			<IconContext.Provider value={{ size: '1.5em', style: { verticalAlign: 'middle' } }}>
 				<div className="flex flex-col items-center gap-8">
 					<Link className=" text-center" to="/">
-						<IoHome className="text-white" />
+						<IoHome className="text-klighter" />
 					</Link>
 					<Link className="text-center" to="/">
-						<IoCalendarOutline className="text-white" />
+						<IoCalendarOutline className="text-klighter" />
 					</Link>
 					<Link className="text-center" to="/">
-						<IoMailOutline className="text-white" />
+						<IoMailOutline className="text-klighter" />
 					</Link>
 					<Link className="text-center" to="/tasks">
-						<IoFileTrayFullOutline className="text-white" />
+						<IoFileTrayFullOutline className="text-klighter" />
 					</Link>
 					<Link className="text-center" to="/notes">
-						<IoDocumentTextOutline className="text-white" />
+						<IoDocumentTextOutline className="text-klighter" />
 					</Link>
 					<Link className="text-center" to="/">
-						<BsClockHistory className="text-white" />
+						<BsClockHistory className="text-klighter" />
 					</Link>
 				</div>
 				{/* bottom items */}
 				<div className="flex flex-col items-center">
 					<Link className="text-center" to="/settings">
-						<IoSettingsOutline className="text-white" />
+						<IoSettingsOutline className="text-klighter" />
 					</Link>
 				</div>
 			</IconContext.Provider>

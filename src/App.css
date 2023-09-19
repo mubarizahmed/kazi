@@ -31,12 +31,12 @@
 
 .light {
 	--color-base: 78, 81, 95;
-	--color-base-contrast: hsl(227, 32%, 30%);
-	--color-bg: hsl(270, 3%, 85%);
-	--color-bg-contrast: hsl(9, 5%, 70%);
-	--color-button: hsl(199, 59%, 47%);
-	--color-button-contrast: hsl(199, 59%, 46%);
-	--color-button-base: hsl(270, 3%, 85%);
+	--color-base-contrast: rgb(52, 63, 101);
+	--color-bg: rgb(217, 216, 218);
+	--color-bg-contrast: rgb(182, 176, 175);
+	--color-button: rgb(49, 146, 191);
+	--color-button-contrast: rgb(48, 143, 187);
+	--color-button-base: rgb(217, 216, 218);
 }
 .dark {
 	--color-base: hsl(207, 7%, 50%);
@@ -48,22 +48,22 @@
 	--color-button-base: hsl(270, 3%, 85%);
 }
 .purple-void {
-	--color-base: hsl(331, 75%, 68%);
-	--color-base-contrast: hsl(334, 81%, 74%);
-	--color-bg: hsl(318, 34%, 13%);
-	--color-bg-contrast: hsl(315, 49%, 18%);
-	--color-button: hsl(322, 44%, 32%);
-	--color-button-contrast: hsl(331, 75%, 68%);
-	--color-button-base: hsl(0, 0%, 100%);
+	--color-base: rgb(235, 112, 171);
+	--color-base-contrast: rgb(242, 135, 182);
+	--color-bg: rgb(44, 22, 38);
+	--color-bg-contrast: rgb(68, 23, 57);
+	--color-button: rgb(118, 46, 91);
+	--color-button-contrast: rgb(235, 112, 171);
+	--color-button-base: rgb(255, 255, 255);
 }
 .creamy-coffee {
-	--color-base: #926337;
-	--color-base-contrast: #653b17;
-	--color-bg: #ddd2bc;
-	--color-bg-contrast: #d0c2a7;
-	--color-button: #b59671;
-	--color-button-contrast: #b59671;
-	--color-button-base: hsl(0, 0%, 100%);
+	--color-base: rgb(146, 99, 55);
+	--color-base-contrast: rgb(101, 59, 23);
+	--color-bg: rgb(221, 210, 188);
+	--color-bg-contrast: rgb(208, 194, 167);
+	--color-button: rgb(181, 150, 113);
+	--color-button-contrast: rgb(181, 150, 113);
+	--color-button-base: rgb(255, 255, 255);
 }
 
 .logo {

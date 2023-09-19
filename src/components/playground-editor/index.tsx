@@ -29,7 +29,7 @@ const Button: FC<{ icon: string; onClick?: () => void }> = ({ icon, onClick }) =
 			)}
 			onClick={onClick}
 		>
-			<span className="material-symbols-outlined !text-base text-color-base">{icon}</span>
+			<span className="material-symbols-outlined !text-base text-klight">{icon}</span>
 		</div>
 	);
 };
@@ -87,12 +87,12 @@ const PM: FC<MilkdownProps> = ({ path, content, onChange, onSave, milkdownRef })
 
 	return (
 		<div className="flex h-full w-full flex-col ">
-			<div className="z-50 flex h-12 items-center justify-between bg-kdark p-4 pt-4 ">
+			<div className="z-50 flex h-12 items-center justify-between text-klight bg-kdark p-4 pt-4 ">
 				<div className="flex gap-1">
 					<Button icon="arrow_back" onClick={() => call(undoCommand.key)} />
 					<Button icon="arrow_forward" onClick={() => call(redoCommand.key)} />
 				</div>
-				<p className="font-mono text-xs tracking-wider text-color-base">{path}</p>
+				<p className="font-mono text-xs tracking-wider ">{path}</p>
 				<div className="flex gap-1">
 
 					<Button icon="table" onClick={() => call(insertTableCommand.key)} />

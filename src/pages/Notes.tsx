@@ -312,7 +312,7 @@ const Notes = () => {
 						/>
 					) : (
 						<div className="flex h-full w-full flex-col items-center justify-center">
-							<h1 className="text-3xl text-color-base">Select a file to edit</h1>
+							<h1 className="text-3xl text-klight">Select a file to edit</h1>
 						</div>
 					)}
 				</SplitterPanel>

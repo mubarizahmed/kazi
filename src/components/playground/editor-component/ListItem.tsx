@@ -16,15 +16,15 @@ export const ListItem: FC = () => {
       <span className="flex h-6 items-center">
         {checked != null ? (
           <input
-            className="form-checkbox rounded"
+            className="form-checkbox [accent-color:rgb(var(--color-kaccent1))] rounded"
             onChange={() => setAttrs({ checked: !checked })}
             type="checkbox"
             checked={checked}
           />
         ) : isBullet ? (
-          <span className="h-2 w-2 rounded-full bg-color-base" />
+          <span className="h-2 w-2 rounded-full bg-klight" />
         ) : (
-          <span className="text-color-base">{attrs?.label}</span>
+          <span className="text-klight">{attrs?.label}</span>
         )}
       </span>
       <div className="min-w-0" ref={contentRef} />

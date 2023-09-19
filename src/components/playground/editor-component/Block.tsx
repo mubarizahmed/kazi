@@ -57,8 +57,8 @@ export const Block = () => {
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
-            stroke="currentColor"
-            className="h-5 w-5"
+            // stroke="var(--klight)"
+            className="h-5 w-5 fill-klighter stroke-klighter"
           >
             <path
               strokeLinecap="round"
