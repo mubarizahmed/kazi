@@ -4,7 +4,14 @@ import fs from 'fs';
 // want to import the namespace marked from 'marked'
 import { marked } from 'marked';
 import { Task, Project, CheckedTasks, TaskTreeNode } from '../../src/types';
-import { createTask, deleteAllTasks, deleteProjectTasks, getMarkdownProjects, upsertTask } from './db';
+import {
+	createTask,
+	deleteAllTasks,
+	deleteProjectTasks,
+	getMarkdownProjects,
+	getProject,
+	upsertTask
+} from './db';
 
 // interface Task {
 // 	taskName: string;
@@ -61,14 +68,11 @@ const parseTask = (taskText: string) => {
 			let date = new Date(+y, +m - 1, +d).toISOString();
 			return { taskName, date };
 		}
-
 	} catch (error) {
 		console.log(error);
 		console.log(taskText);
 
 		taskName = task.join('-');
-
-
 	}
 	return { taskName };
 };
@@ -238,6 +242,37 @@ export const taskTreeSort = (tree: TaskTreeNode) => {
 	return tree;
 };
 
+export const checkTask = async (_event: any, task: TaskTreeNode, checked: boolean) => {
+	let file = await getProject(task.project_id);
+
+	let fileContent = fs.readFileSync(file.path, 'utf-8');
+	task.checked = checked;
+	console.log(task.label, checked);
+
+	// Define a regular expression pattern to match the task line with the specified label
+	const pattern = new RegExp(`([*-]\\s*\\[)(.*)(]\\s*${task.label})`, 'g');
+
+	// Function to replace the checkbox state based on the 'checked' parameter
+	const replaceCallback = (match , match1, match2, match3 ) => {
+    console.log(match);
+    console.log(match1)
+    console.log(match2)
+    console.log(match3)
+    console.log([match1, (checked ? `x` : ` `), match3].join(''));
+    return [match1, checked ? `x` : ` `, match3].join('');
+	};
+
+	// Replace the task line in the file content
+	const updatedContent = fileContent.replace(pattern, replaceCallback);
+
+	// upsert task to db
+	upsertTask(task.id, task.label, checked, task.project_id, task.dueDate?.toISOString() , task.priority, task.parent_id);
+
+	console.log('updated Task', updatedContent);
+	// Write the updated content back to the file
+	// fs.writeFileSync(filePath, updatedContent, 'utf-8');
+	return true;
+};
 // Example usage
 // const filePath = '/home/mebza/Kazi/Projects/dashboard/dashboard app.md';
 // const tasks: Task[] = scanMarkdownFile(filePath);

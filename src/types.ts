@@ -58,3 +58,12 @@ export type Project = {
 	children: Task[];
 	checkedTasks: CheckedTasks;
 };
+
+export type ProjectType = {
+	id: number;
+	name: string;
+	path: string;
+	type: 'file' | 'directory';
+	modified: number;
+	parent_id?: number;
+}

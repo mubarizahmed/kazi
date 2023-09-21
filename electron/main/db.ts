@@ -1,6 +1,6 @@
 import sqlite3 from 'sqlite3';
 import { treeSort } from './fileScanner';
-import { CheckedTasks, FileTreeNodeType, TaskTree, TaskTreeNode } from '@/types';
+import { CheckedTasks, FileTreeNodeType, ProjectType, TaskTree, TaskTreeNode } from '@/types';
 import { taskTreeSort } from './taskScanner';
 
 var db: sqlite3.Database;
@@ -58,6 +58,18 @@ export const createDb = (path: string) => {
 
 	return db;
 };
+
+export const getProject = (id: number) => {
+	return new Promise<ProjectType>((resolve, reject) => {
+		db.get(`SELECT * FROM projects WHERE id = ?`, [id], (err, row) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(row);
+			}
+		});
+	});
+}
 
 export const getProjects = () => {
 	return new Promise((resolve, reject) => {
@@ -449,6 +461,7 @@ export const getCheckedTasks = (project_id: number) => {
 		);
 	});
 };
+
 export const getAllTaskTrees = () => {
 	return new Promise<TaskTree[]>((resolve, reject) => {
 		let tasks: TaskTree[] = [];

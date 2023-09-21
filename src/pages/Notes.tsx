@@ -231,7 +231,7 @@ const Notes = () => {
 	}, [editorFilePath]);
 
 	return (
-		<div className="h-screen w-[calc(100vw-4rem)] bg-kdark">
+		<div className="h-screen w-[calc(100vw-4rem)] overflow-hidden bg-kdark">
 			<Splitter
 				style={{ width: '100%', height: '100%' }}
 				className="bg-kdark"

@@ -106,10 +106,11 @@
 * {
 	scrollbar-width: thin;
 	scrollbar-color: white var(--kdark);
+	/* scrollbar-gutter: stable; */
 }
 /* Works on Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
-	width: 12px;
+	width: 0.75rem;
 }
 *::-webkit-scrollbar-track {
 	background: #0d0c1eff;

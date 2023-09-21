@@ -3,7 +3,7 @@ import { release } from 'node:os';
 import { join } from 'node:path';
 import { update } from './update';
 import { FileTreeNodeType, FileTreeType, TaskTree } from '@/types';
-import { scanAllFiles, startTaskScan } from './taskScanner';
+import { checkTask, scanAllFiles, startTaskScan } from './taskScanner';
 import { scanUpdateFileTree, loadFile, saveFile, createFile, deleteFile } from './fileScanner';
 import {
 	createDb,
@@ -299,6 +299,7 @@ app.whenReady().then(() => {
 	ipcMain.handle('load-task-tree', getAllTaskTrees);
 	ipcMain.handle('update-task-tree', scanAllFiles);
 	ipcMain.handle('start-task-scan', startTaskScan);
+	ipcMain.handle('check-task', checkTask);
 	ipcMain.handle('print-file', printFile);
 
 	ipcMain.on('readyToPrintPDF', (event) => {

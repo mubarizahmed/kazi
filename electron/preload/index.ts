@@ -1,3 +1,5 @@
+import { TaskTreeNode } from "@/types";
+
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
@@ -14,6 +16,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	updateTaskTree: () => ipcRenderer.invoke('update-task-tree'),
 	loadTaskTree: () => ipcRenderer.invoke('load-task-tree'),
 	startTaskScan: () => ipcRenderer.invoke('start-task-scan'),
+	checkTask: (task: TaskTreeNode, checked: boolean) => ipcRenderer.invoke('check-task', task, checked),
 	printFile: (filePath: string, content: string) =>
 		ipcRenderer.invoke('print-file', filePath, content),
 	getThemes: () => ipcRenderer.invoke('get-themes'),

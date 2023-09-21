@@ -14,6 +14,10 @@ dist-electron
 release
 *.local
 
+kazi.sqlite
+/kazi.sqlite
+*.sqlite
+
 # Editor directories and files
 .vscode/.debug.env
 .idea
@@ -33,4 +37,3 @@ yarn.lock
 /playwright/.cache/
 commands.md
 
-kazi.sqlite

@@ -12,7 +12,7 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css';
 //core
 import 'primereact/resources/primereact.min.css';
 
-import { Project, TaskTree } from '../types';
+import { Project, TaskTree, TaskTreeNode } from '../types';
 import { TasksContainer } from '@/components';
 import { createPortal } from 'react-dom';
 
@@ -24,7 +24,7 @@ const Tasks = (props: Props) => {
 	const [activeProject, setActiveProject] = useState<TaskTree | null>(null);
 
 	const sortProjects = (unsortedProjects: TaskTree[], ids: number[]) => {
-		return unsortedProjects.sort((a:TaskTree, b:TaskTree) => {
+		return unsortedProjects.sort((a: TaskTree, b: TaskTree) => {
 			const indexA = ids.indexOf(a.project_id); // Assuming 'id' is the property containing project IDs
 			const indexB = ids.indexOf(b.project_id);
 
@@ -43,7 +43,7 @@ const Tasks = (props: Props) => {
 				return indexA - indexB;
 			}
 		});
-	}
+	};
 
 	async function startScan() {
 		let taskTree = await window.electronAPI.updateTaskTree();
@@ -52,18 +52,17 @@ const Tasks = (props: Props) => {
 	}
 
 	async function getTasks() {
-		let taskTree =await window.electronAPI.loadTaskTree();
+		let taskTree = await window.electronAPI.loadTaskTree();
 		console.log(taskTree);
 		setProjects(sortProjects(taskTree, projectsId));
 	}
 
-	
 	const load = async () => {
 		let po = sessionStorage.getItem('kazi-projects-order');
 		if (po !== null && po !== '') {
 			let ids = JSON.parse(po);
 			let unsortedProjects = await window.electronAPI.loadTaskTree();
-			console.log("sorting",ids)
+			console.log('sorting', ids);
 			setProjects(sortProjects(unsortedProjects, ids));
 		} else {
 			setProjects(await window.electronAPI.loadTaskTree());
@@ -97,6 +96,41 @@ const Tasks = (props: Props) => {
 
 	var updateChecked = (event: any) => {
 		console.log(event);
+	};
+
+	const checkTask = async (task: TaskTreeNode, checked: boolean) => {
+		let res = await window.electronAPI.checkTask(task, !checked);
+		if (res) {
+			console.log(res);
+			task.checked = checked ? 0 : 1;
+			console.log(task);
+			updateTask(task);
+		}
+	};
+
+	const updateTask = (task: TaskTreeNode) => {
+		const id = task.id.split('-');
+
+		// loop through projects
+		// const updatedProjects = projects.map((project) => {
+		// 	let updatedTasks = project.tasks;
+		// 	if (project.project_id === task.project_id) {
+		// 		console.log(parseInt(id[1]));
+		// 		let t;
+		// 		t = project.tasks[parseInt(id[1]) - 1];
+		// 		for (let i = 2; i < id.length; i++) {
+		// 			console.log(parseInt(id[1]));
+		// 			t = t.children[parseInt(id[i])];
+		// 		}
+		// 		if (t.id === task.id) {
+		// 			t = { ...t, task };
+		// 			updatedTasks = [...project.tasks];
+		// 		}
+		// 	}
+		// 	return { ...project, tasks: updatedTasks };
+		// });
+
+		setProjects(updatedProjects);
 	};
 
 	const onDragStart = (event: DragStartEvent) => {
@@ -156,7 +190,7 @@ const Tasks = (props: Props) => {
 					<SortableContext items={projectsId}>
 						{projects.length > 0 ? (
 							projects.map((proj) => {
-								return <TasksContainer project={proj} updateChecked={updateChecked} />;
+								return <TasksContainer project={proj} checkTask={checkTask} />;
 							})
 						) : (
 							<p>Test</p>
@@ -165,9 +199,7 @@ const Tasks = (props: Props) => {
 				</div>
 
 				<DragOverlay>
-					{activeProject && (
-						<TasksContainer project={activeProject} updateChecked={updateChecked} />
-					)}
+					{activeProject && <TasksContainer project={activeProject} checkTask={checkTask} />}
 				</DragOverlay>
 			</DndContext>
 		</div>
