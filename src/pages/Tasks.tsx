@@ -112,25 +112,31 @@ const Tasks = (props: Props) => {
 		const id = task.id.split('-');
 
 		// loop through projects
-		// const updatedProjects = projects.map((project) => {
-		// 	let updatedTasks = project.tasks;
-		// 	if (project.project_id === task.project_id) {
-		// 		console.log(parseInt(id[1]));
-		// 		let t;
-		// 		t = project.tasks[parseInt(id[1]) - 1];
-		// 		for (let i = 2; i < id.length; i++) {
-		// 			console.log(parseInt(id[1]));
-		// 			t = t.children[parseInt(id[i])];
-		// 		}
-		// 		if (t.id === task.id) {
-		// 			t = { ...t, task };
-		// 			updatedTasks = [...project.tasks];
-		// 		}
-		// 	}
-		// 	return { ...project, tasks: updatedTasks };
-		// });
+		const updatedProjects = projects.map((project) => {
+			let updatedTasks = project.tasks;
+			if (project.project_id === task.project_id) {
+				const updateTaskRecursive = (tasks: TaskTreeNode[], taskUpdate:TaskTreeNode, level: number) => {
+					let currId = parseInt(taskUpdate.id.split('-')[level]);
+					console.log(currId, level, id.length);
+					let preTasks = tasks.slice(0, currId - 1);
+					let postTasks = tasks.slice(currId);
+					console.log(currId, level, id.length, preTasks, postTasks);
+					if (level === id.length - 1) {
+						return [...preTasks, taskUpdate, ...postTasks];
+					}
+					let currTask = tasks[currId - 1];
+					currTask.children = updateTaskRecursive(currTask.children || [], taskUpdate, level + 1);
+					return [...preTasks, currTask, ...postTasks];
+				}
+
+				updatedTasks = updateTaskRecursive(project.tasks, task, 1);
+				return { ...project, tasks: updatedTasks };
+			}
+			return project;
+		});
 
 		setProjects(updatedProjects);
+		console.log('task updated')
 	};
 
 	const onDragStart = (event: DragStartEvent) => {

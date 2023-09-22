@@ -31,6 +31,10 @@ const Task = ({ task, child = false, checkTask }: { task: TaskTreeNode; child: b
 		console.log(task);
 	};
 
+	useEffect(() => {
+		setChecked(task.checked === 1);
+	}, [task.checked]);
+
 
 
 	return (

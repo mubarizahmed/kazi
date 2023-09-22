@@ -73,7 +73,13 @@ const TasksContainer = (props: Props) => {
 		} else if (filterValue === 2) {
 			setShowTasks(dueToday);
 		}
-	}, [filterValue]);
+		console.log('showTasks updated')
+	}, [filterValue, incomplete, project, dueToday]);
+
+	useEffect(() => {
+		setIncomplete(filterCompleted(project.tasks));
+	}, [project]);
+
 
 
 

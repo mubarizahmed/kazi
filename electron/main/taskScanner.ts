@@ -270,7 +270,7 @@ export const checkTask = async (_event: any, task: TaskTreeNode, checked: boolea
 
 	console.log('updated Task', updatedContent);
 	// Write the updated content back to the file
-	// fs.writeFileSync(filePath, updatedContent, 'utf-8');
+	fs.writeFileSync(file.path, updatedContent, 'utf-8');
 	return true;
 };
 // Example usage
