@@ -45,11 +45,11 @@ const TooltipButton: FC<{ onClick: () => void; icon: string }> = ({
     <button
       className={clsx(
         linkClass(false),
-        "inline-flex items-center justify-center rounded border-0 border-klight bg-kaccent1 px-2 py-1 text-kdark font-medium leading-6 shadow-sm"
+        "inline-flex items-center justify-center rounded border-0 border-primary-200 bg-secondary-400 px-2 py-1 text-primary-900 font-medium leading-6 shadow-sm"
       )}
       onClick={onClick}
     >
-      <span className="material-symbols-outlined text-base text-kdark ">{icon}</span>
+      <span className="material-symbols-outlined text-base text-primary-900 ">{icon}</span>
     </button>
   );
 };
@@ -224,7 +224,7 @@ const TableSelectorWidget: FC = () => {
   const common = useMemo(
     () =>
       clsx(
-        "hover:bg-kaccent1 hover:kaccent1 absolute cursor-pointer bg-kmedium",
+        "hover:bg-secondary-400 hover:secondary-400 absolute cursor-pointer bg-primary-800",
         dragOver ? "ring-2" : ""
       ),
     [dragOver]

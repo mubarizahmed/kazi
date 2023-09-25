@@ -8,33 +8,33 @@ import { IconContext } from 'react-icons';
 
 const Sidebar = () => {
 	return (
-		<div className="flex shrink-0 min-w-16 h-screen w-16 flex-col items-center justify-between bg-kdarker pb-8 pt-6 border-r-2 border-kmedium">
+		<div className="flex shrink-0 min-w-16 h-screen w-16 flex-col items-center justify-between bg-primary-900 pb-8 pt-6 border-r-2 border-primary-800">
 			{/* top items */}
 			<IconContext.Provider value={{ size: '1.5em', style: { verticalAlign: 'middle' } }}>
 				<div className="flex flex-col items-center gap-8">
 					<Link className=" text-center" to="/">
-						<IoHome className="text-klighter" />
+						<IoHome className="text-primary-100" />
 					</Link>
 					<Link className="text-center" to="/">
-						<IoCalendarOutline className="text-klighter" />
+						<IoCalendarOutline className="text-primary-100" />
 					</Link>
 					<Link className="text-center" to="/">
-						<IoMailOutline className="text-klighter" />
+						<IoMailOutline className="text-primary-100" />
 					</Link>
 					<Link className="text-center" to="/tasks">
-						<IoFileTrayFullOutline className="text-klighter" />
+						<IoFileTrayFullOutline className="text-primary-100" />
 					</Link>
 					<Link className="text-center" to="/notes">
-						<IoDocumentTextOutline className="text-klighter" />
+						<IoDocumentTextOutline className="text-primary-100" />
 					</Link>
 					<Link className="text-center" to="/">
-						<BsClockHistory className="text-klighter" />
+						<BsClockHistory className="text-primary-100" />
 					</Link>
 				</div>
 				{/* bottom items */}
 				<div className="flex flex-col items-center">
 					<Link className="text-center" to="/settings">
-						<IoSettingsOutline className="text-klighter" />
+						<IoSettingsOutline className="text-primary-100" />
 					</Link>
 				</div>
 			</IconContext.Provider>

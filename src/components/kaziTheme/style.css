@@ -1,17 +1,17 @@
 .milkdown-theme-kazi {
-  @apply text-klight;
+  @apply text-primary-200;
 }
 
 .milkdown-theme-kazi h1 {
-  @apply text-kaccent1;
+  @apply text-secondary-400;
 }
 
 .milkdown-theme-kazi blockquote {
-  @apply not-italic font-serif border-l-4 border-kaccent1 pl-4;
+  @apply not-italic font-serif border-l-4 border-secondary-400 pl-4;
 }
 
 .milkdown-theme-kazi code {
-  @apply text-klight font-mono font-normal;
+  @apply text-primary-200 font-mono font-normal;
 }
 
 .milkdown-theme-kazi pre code {
@@ -28,7 +28,7 @@
 
 .milkdown-theme-kazi.prose :where(ol > li):not(:where([class~="not-prose"] *))::marker,
 .milkdown-theme-kazi.prose :where(ul > li):not(:where([class~="not-prose"] *))::marker {
-  @apply text-klight;
+  @apply text-primary-200;
 }
 
 
@@ -52,7 +52,7 @@
 }
 
 .milkdown-theme-kazi.prose col {
-  @apply border border-klight ;
+  @apply border border-primary-800 ;
 }
 
 .milkdown-theme-kazi.prose td, th {
@@ -60,11 +60,11 @@
 }
 
 .milkdown-theme-kazi.prose th {
-  @apply bg-klight text-kdark;
+  @apply bg-primary-800 text-primary-200;
 }
 
 .milkdown-theme-kazi.prose tr {
-  @apply border border-kmedium ;
+  @apply border border-primary-800 ;
 }
 
 .milkdown-theme-kazi.prose :where(td, th) p {
@@ -76,7 +76,7 @@
 }
 
 .milkdown-theme-kazi.prose.ProseMirror .selectedCell:after {
-  @apply bg-kaccent1 opacity-20;
+  @apply bg-secondary-400 opacity-20;
 }
 
 /* A little workaround to turn the element into a space */

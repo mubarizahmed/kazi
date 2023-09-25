@@ -164,7 +164,7 @@ const Notes = () => {
 					>
 						<div className={options.className + ' cursor-default'}>{node.label}</div>
 						<div
-							className="pi pi-plus h-fit cursor-pointer opacity-0 hover:text-kaccent1 group-hover:opacity-100 "
+							className="pi pi-plus h-fit cursor-pointer opacity-0 hover:text-secondary-400 group-hover:opacity-100 "
 							onClick={() => {
 								console.log(node.key);
 								setFileCreate(node);
@@ -191,7 +191,7 @@ const Notes = () => {
 	const treeFooter = (
 		<div className="flex h-8 w-full items-center justify-center">
 			<div
-				className="pi pi-plus h-fit cursor-pointer hover:text-kaccent1 "
+				className="pi pi-plus h-fit cursor-pointer hover:text-secondary-400 "
 				onClick={() => {
 					console.log(fileTree.key);
 					setFileCreate(fileTree);
@@ -231,42 +231,42 @@ const Notes = () => {
 	}, [editorFilePath]);
 
 	return (
-		<div className="h-screen w-[calc(100vw-4rem)] overflow-hidden bg-kdark">
+		<div className="h-screen w-[calc(100vw-4rem)] overflow-hidden bg-primary-900">
 			<Splitter
 				style={{ width: '100%', height: '100%' }}
-				className="bg-kdark"
+				className="bg-primary-900"
 				stateStorage="session"
 				stateKey="kazi-notes-splitter"
 			>
-				{/* <div className="col-span-2 flex h-screen flex-col items-center justify-start gap-2 border-r-2 border-kmedium  bg-kdark p-0 pt-4"> */}
+				{/* <div className="col-span-2 flex h-screen flex-col items-center justify-start gap-2 border-r-2 border-primary-800  bg-primary-900 p-0 pt-4"> */}
 				<SplitterPanel
 					size={200 / 7}
 					minSize={15}
-					className="flex h-full flex-col items-center justify-start gap-2  overflow-clip  border-kmedium bg-kdark p-0 pt-4"
+					className="flex h-full flex-col items-center justify-start gap-2  overflow-clip  border-primary-800 bg-primary-900 p-0 pt-4"
 				>
 					<div className="flex w-full items-center justify-between pl-4 pr-6">
-						<span className=" text-2xl tracking-wider text-klight">NOTES</span>
+						<span className=" text-2xl tracking-wider text-primary-200">NOTES</span>
 						<div className="flex h-full items-center gap-2">
 							<button
-								className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-kaccent1"
+								className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-secondary-400"
 								onClick={() => {
 									console.log(fileTree.key);
 									setFileCreate(fileTree);
 								}}
 							>
-								<span className="pi pi-plus text-base text-klight hover:text-white">
+								<span className="pi pi-plus text-base text-primary-200 hover:text-primary-900">
 									
 								</span>
 							</button>
 							<button
-								className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-kaccent1"
+								className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-secondary-400"
 								onClick={async () => {
 									let tree = await window.electronAPI.updateFileTree();
 									console.log(tree);
 									setFileTree(tree);
 								}}
 							>
-								<span className="pi pi-refresh text-base text-klight hover:text-white">
+								<span className="pi pi-refresh text-base text-primary-200 hover:text-primary-900">
 
 								</span>
 							</button>
@@ -298,11 +298,11 @@ const Notes = () => {
 					{/* refresh button */}
 				</SplitterPanel>
 				{/* </div> */}
-				{/* <div className="col-span-5 flex h-screen flex-col items-center justify-start border-kmedium bg-kdark"> */}
+				{/* <div className="col-span-5 flex h-screen flex-col items-center justify-start border-primary-800 bg-primary-900"> */}
 				<SplitterPanel
 					size={500 / 7}
 					minSize={15}
-					className="flex h-full w-full min-w-0 flex-col items-center justify-start overflow-clip border-kmedium bg-kdark"
+					className="flex h-full w-full min-w-0 flex-col items-center justify-start overflow-clip border-primary-800 bg-primary-900"
 				>
 					{editorFilePath ? (
 						<Editor
@@ -312,7 +312,7 @@ const Notes = () => {
 						/>
 					) : (
 						<div className="flex h-full w-full flex-col items-center justify-center">
-							<h1 className="text-3xl text-klight">Select a file to edit</h1>
+							<h1 className="text-3xl text-primary-200">Select a file to edit</h1>
 						</div>
 					)}
 				</SplitterPanel>

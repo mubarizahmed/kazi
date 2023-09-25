@@ -158,7 +158,7 @@ export default function Editor({
 			<Toast ref={toast} />
 			<Provider>
 				<div
-					className="h-full w-full overflow-hidden overscroll-none text-color-base md:h-screen"
+					className="h-full w-full overflow-hidden overscroll-none text-primary-200 md:h-screen"
 					tabIndex={-1}
 				>
 					<PlaygroundMilkdown

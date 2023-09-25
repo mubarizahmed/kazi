@@ -46,7 +46,7 @@ export const Block = () => {
     <div className="hidden">
       <div
         className={clsx(
-          "relative cursor-grab rounded-full bg-kmedium ",
+          "relative cursor-grab rounded-full bg-primary-600 ",
           showMenu ? "ring-2 ring-offset-2" : ""
         )}
         ref={setElement}
@@ -57,8 +57,8 @@ export const Block = () => {
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
-            // stroke="var(--klight)"
-            className="h-5 w-5 fill-klighter stroke-klighter"
+            // stroke="var(--primary-200)"
+            className="h-5 w-5 fill-primary-100 stroke-primary-100"
           >
             <path
               strokeLinecap="round"
@@ -68,7 +68,7 @@ export const Block = () => {
           </svg>
         </div>
         {showMenu && (
-          <div className="absolute top-full mt-2 w-60 cursor-pointer rounded border-2 border-kdark bg-kmedium shadow text-klight">
+          <div className="absolute top-full mt-2 w-60 cursor-pointer rounded border-2 border-primary-900 bg-primary-600 shadow text-primary-200">
             <div
               onClick={() => {
                 if (loading) return;
@@ -76,7 +76,7 @@ export const Block = () => {
                 const commands = get().ctx.get(commandsCtx);
                 commands.call(wrapInHeadingCommand.key, 1);
               }}
-              className="px-6 py-3 hover:bg-kdark"
+              className="px-6 py-3 hover:bg-primary-900"
             >
               Heading 1
             </div>
@@ -87,7 +87,7 @@ export const Block = () => {
                 const commands = get().ctx.get(commandsCtx);
                 commands.call(wrapInHeadingCommand.key, 2);
               }}
-              className="px-6 py-3 hover:bg-kdark"
+              className="px-6 py-3 hover:bg-primary-900"
             >
               Heading 2
             </div>
@@ -98,7 +98,7 @@ export const Block = () => {
                 const commands = get().ctx.get(commandsCtx);
                 commands.call(wrapInHeadingCommand.key, 3);
               }}
-              className="px-6 py-3 hover:bg-kdark"
+              className="px-6 py-3 hover:bg-primary-900"
             >
               Heading 3
             </div>
@@ -109,7 +109,7 @@ export const Block = () => {
                 const commands = get().ctx.get(commandsCtx);
                 commands.call(turnIntoTextCommand.key);
               }}
-              className="px-6 py-3 hover:bg-kdark"
+              className="px-6 py-3 hover:bg-primary-900"
             >
               Text
             </div>
@@ -126,7 +126,7 @@ export const Block = () => {
                 
                 // blockProvider.current?.destroy();
               }}
-              className="px-6 py-3 hover:bg-kdark"
+              className="px-6 py-3 hover:bg-primary-900"
             >
               Delete
             </div>

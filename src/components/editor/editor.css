@@ -29,7 +29,7 @@ h3,
 h4,
 h5,
 h6 {
-	@apply text-klight;
+	@apply text-primary-200;
 }
 .milkdown .editor .milkdown-placeholder {
 	opacity: 0.5;
@@ -50,14 +50,14 @@ h6 {
 	margin: 0;
 }
 .milkdown .editor li p::marker {
-	@apply text-klight
+	@apply text-primary-200
 }
 
 .milkdown .editor a {
-	@apply text-kaccent1;
+	@apply text-secondary-400;
 }
 .milkdown .editor a:hover {
-	@apply text-kaccent2;
+	@apply text-caution;
 }
 .milkdown .editor code {
 	padding: 0.2em 0.4em;
@@ -68,7 +68,7 @@ h6 {
 .milkdown .editor hr {
 	margin-top: 1em;
 	margin-bottom: 1em;
-	@apply border-0 border-t-2 border-klight;
+	@apply border-0 border-t-2 border-primary-200;
 }
 .milkdown .editor pre {
 	padding: 0.2em 0.4em;
@@ -85,9 +85,9 @@ h6 {
 
 .milkdown .editor pre hr {
 	border: 0;
-	@apply border-0 border-t-2 border-klight;
+	@apply border-0 border-t-2 border-primary-200;
 }
 .milkdown .editor pre em {
 	font-style: italic;
-	color: var(--color-base);
+	color: var(--primary-200);
 }

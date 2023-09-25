@@ -124,57 +124,25 @@ const TasksContainer = (props: Props) => {
 
 	if (isDragging) {
 		return (
-			<div
-				ref={setNodeRef}
-				style={style}
-				className=" flex min-w-[30vw] max-w-[35vw] flex-col justify-start overflow-clip rounded-xl border-2 border-kaccent1 bg-kdark align-top opacity-40 drop-shadow-md transition-transform duration-1000 ease-in-out"
-			>
-				<span
-					{...attributes}
-					{...listeners}
-					className=" bg-kmedium p-4 pb-2 pt-2 text-base uppercase text-klight opacity-0"
-				>
-					{project.project_name.slice(0, -3)}
-				</span>
-				<div className="flex flex-col gap-2 p-2 pb-4 opacity-0">
-					{project.tasks.map((task) => {
-						return <Task task={task} child={false} key={task.id} checkTask={checkTask}></Task>;
-					})}
-				</div>
-			</div>
-		);
-	}
-
-	return (
-		<div
+<div
 			ref={setNodeRef}
 			style={style}
-			className=" flex w-[35vw] flex-col justify-start overflow-clip rounded-xl border-2 border-kmedium bg-kdark align-top drop-shadow-md"
+			className=" flex w-[35vw] flex-col justify-start opacity-50  overflow-clip rounded-xl border-2 border-secondary-400 bg-primary-900 align-top drop-shadow-md"
 		>
-			<div className="flex flex-col bg-kmedium p-3">
+			<div className="flex flex-col bg-primary-800 opacity-0 p-3">
 				<div className="flex w-full pb-1 items-center justify-between gap-2">
-					<span className="bg-kmedium  text-base uppercase text-klight">
+					<span className="bg-primary-800  text-base uppercase text-primary-200">
 						{project.project_name.slice(0, -3)}
 					</span>
-					<IconContext.Provider value={{ size: '1em', style: { verticalAlign: 'middle' } }}>
-						<div
-							{...attributes}
-							{...listeners}
-							className={
-								'flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 text-klight hover:text-kaccent1'
-							}
-						>
-							<MdDragIndicator />
-						</div>
-					</IconContext.Provider>
+
 				</div>
 				<div className="flex w-full items-center justify-start gap-2">
 					<button
 						className={
 							'rounded p-1 text-xs  ' +
 							(filterValue === 1
-								? 'bg-kaccent1 text-kdark'
-								: 'border-klight bg-kmedium text-klight hover:border-kaccent1 hover:text-kaccent1')
+								? 'bg-secondary-400 text-primary-900'
+								: 'border-primary-200 bg-primary-800 text-primary-200 hover:border-secondary-400 hover:text-secondary-400')
 						}
 						onClick={() => {
 							filterToggle(1);
@@ -186,8 +154,8 @@ const TasksContainer = (props: Props) => {
 						className={
 							'rounded p-1 text-xs  ' +
 							(filterValue === 2
-								? 'bg-kaccent1 text-kdark'
-								: 'border-klight bg-kmedium text-klight hover:border-kaccent1 hover:text-kaccent1')
+								? 'bg-secondary-400 text-primary-900'
+								: 'border-primary-200 bg-primary-800 text-primary-200 hover:border-secondary-400 hover:text-secondary-400')
 						}
 						onClick={() => {
 							filterToggle(2);
@@ -197,7 +165,68 @@ const TasksContainer = (props: Props) => {
 					</button>
 				</div>
 			</div>
-			<div className="flex max-h-[60vh] flex-col gap-2 overflow-x-hidden overflow-y-scroll bg-kdark p-3 pr-0">
+			<div className="flex max-h-[60vh]  opacity-0 flex-col gap-2 overflow-x-hidden overflow-y-scroll bg-primary-900 p-3 pr-0">
+				{showTasks.map((task) => {
+					return <Task task={task} child={false} key={task.id}  checkTask={checkTask}></Task>;
+				})}
+			</div>
+		</div>
+		);
+	}
+
+	return (
+		<div
+			ref={setNodeRef}
+			style={style}
+			className=" flex w-[35vw] flex-col justify-start overflow-clip rounded-xl border-2 border-primary-800 bg-primary-900 align-top drop-shadow-md"
+		>
+			<div className="flex flex-col bg-primary-800 p-3">
+				<div className="flex w-full pb-1 items-center justify-between gap-2">
+					<span className="bg-primary-800  text-base uppercase text-primary-200">
+						{project.project_name.slice(0, -3)}
+					</span>
+					<IconContext.Provider value={{ size: '1em', style: { verticalAlign: 'middle' } }}>
+						<div
+							{...attributes}
+							{...listeners}
+							className={
+								'flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 text-primary-200 hover:text-secondary-400'
+							}
+						>
+							<MdDragIndicator />
+						</div>
+					</IconContext.Provider>
+				</div>
+				<div className="flex w-full items-center justify-start gap-2">
+					<button
+						className={
+							'rounded p-1 text-xs  ' +
+							(filterValue === 1
+								? 'bg-secondary-400 text-primary-900'
+								: 'border-primary-200 bg-primary-800 text-primary-200 hover:border-secondary-400 hover:text-secondary-400')
+						}
+						onClick={() => {
+							filterToggle(1);
+						}}
+					>
+						Completed
+					</button>
+					<button
+						className={
+							'rounded p-1 text-xs  ' +
+							(filterValue === 2
+								? 'bg-secondary-400 text-primary-900'
+								: 'border-primary-200 bg-primary-800 text-primary-200 hover:border-secondary-400 hover:text-secondary-400')
+						}
+						onClick={() => {
+							filterToggle(2);
+						}}
+					>
+						Today
+					</button>
+				</div>
+			</div>
+			<div className="flex max-h-[60vh] flex-col gap-2 overflow-x-hidden overflow-y-scroll bg-primary-900 p-3 pr-0">
 				{/* <Tree
 					ref={treeRef}
 					value={project.tasks}

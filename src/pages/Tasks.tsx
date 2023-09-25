@@ -170,9 +170,9 @@ const Tasks = (props: Props) => {
 	// filter function
 
 	return (
-		<div className="flex h-screen w-full flex-col  gap-4 bg-kdark p-4">
+		<div className="flex h-screen w-full flex-col  gap-4 bg-primary-900 p-4">
 			<div className="flex w-full items-center justify-between pl-4 pr-6">
-				<span className=" text-2xl tracking-wider text-klight">TASKS</span>
+				<span className=" text-2xl tracking-wider text-primary-200">TASKS</span>
 
 				{/* button named start scan */}
 				<div className="flex h-full items-center gap-2">
@@ -180,13 +180,13 @@ const Tasks = (props: Props) => {
 						className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-kaccent1"
 						onClick={getTasks}
 					>
-						<span className="pi pi-arrow-down text-base text-klight hover:text-white"></span>
+						<span className="pi pi-arrow-down text-base text-primary-200 hover:text-white"></span>
 					</button>
 					<button
 						className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-kaccent1"
 						onClick={startScan}
 					>
-						<span className="pi pi-refresh text-base text-klight hover:text-white"></span>
+						<span className="pi pi-refresh text-base text-primary-200 hover:text-white"></span>
 					</button>
 				</div>
 			</div>

@@ -13,6 +13,7 @@ import {
 	getTaskTree,
 	getAllTaskTrees
 } from './db';
+import { defaultTheme, getThemes } from './themes';
 const path = require('path');
 const dirTree = require('directory-tree');
 const fs = require('fs');
@@ -63,51 +64,51 @@ const printHTML = join(process.env.DIST, 'print.html');
 var projectTree: FileTreeNodeType = {} as FileTreeNodeType;
 var taskTree: TaskTree[] = [];
 
-// themes
-const defaultTheme = {
-	name: 'Default Dark',
-	color1: [10, 10, 26],
-	color2: [13, 12, 30],
-	color3: [32, 30, 60],
-	color4: [131, 145, 178],
-	color5: [217, 216, 218],
-	accent1: [41, 182, 126],
-	accent2: [249, 100, 83]
-}
-const solarizedTheme = {
-	name: 'Solarized',
-	color1: [0, 43, 54],
-	color2: [7, 54, 66],
-	color3: [88, 110, 117],
-	color4: [200, 200, 200],
-	color5: [100, 122, 130],
-	accent1: [41, 182, 126],
-	accent2: [249, 100, 83]
-}
 
-const creamyCoffeeTheme = {
-	name: 'Creamy Coffee',
-	color1: [208, 194, 167],
-	color2: [221, 210, 188],
-	color3: [181, 150, 113],
-	color4: [146, 99, 55],
-	color5: [101, 59, 23],
-	accent1: [0, 0, 0],
-	accent2: [249, 100, 83]
-}
+// const defaultTheme = {
+// 	name: 'Default Dark',
+// 	color1: [10, 10, 26],
+// 	color2: [13, 12, 30],
+// 	color3: [32, 30, 60],
+// 	color4: [131, 145, 178],
+// 	color5: [217, 216, 218],
+// 	accent1: [41, 182, 126],
+// 	accent2: [249, 100, 83]
+// }
+// const solarizedTheme = {
+// 	name: 'Solarized',
+// 	color1: [0, 43, 54],
+// 	color2: [7, 54, 66],
+// 	color3: [88, 110, 117],
+// 	color4: [200, 200, 200],
+// 	color5: [100, 122, 130],
+// 	accent1: [41, 182, 126],
+// 	accent2: [249, 100, 83]
+// }
 
-interface Themes {
-	[key: string]: any;
-}
+// const creamyCoffeeTheme = {
+// 	name: 'Creamy Coffee',
+// 	color1: [208, 194, 167],
+// 	color2: [221, 210, 188],
+// 	color3: [181, 150, 113],
+// 	color4: [146, 99, 55],
+// 	color5: [101, 59, 23],
+// 	accent1: [0, 0, 0],
+// 	accent2: [249, 100, 83]
+// }
+
+// interface Themes {
+// 	[key: string]: any;
+// }
 
 // var themes:Themes = {};
 // themes["defaultDark"] = defaultTheme;
 // themes["solarized"] = solarizedTheme;
 
-var themes = [];
-themes.push(defaultTheme);
-themes.push(solarizedTheme);
-themes.push(creamyCoffeeTheme);
+// var themes = [];
+// themes.push(defaultTheme);
+// themes.push(solarizedTheme);
+// themes.push(creamyCoffeeTheme);
 
 
 // store stuff
@@ -124,6 +125,8 @@ export const store = new Store({
 	}
 });
 module.exports = { projectTree, store };
+
+const themes = getThemes(store.get('userDirectory'));
 
 var currentTheme = store.get('currentTheme');
 

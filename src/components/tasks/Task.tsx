@@ -41,14 +41,14 @@ const Task = ({ task, child = false, checkTask }: { task: TaskTreeNode; child: b
 		<div
 			className={
 				'flex w-full flex-col items-start justify-start gap-1 pb-2 pl-2 pt-2 ' +
-				(child ? '' : 'rounded-lg border-2 border-kmedium')
+				(child ? '' : 'rounded-lg border-2 border-primary-800')
 			}
 		>
 			<div className="flex w-full items-center justify-start gap-1 pr-2">
 				{/* {task.children && task.children.length > 0 ? (
 					<button
 						className={
-							' flex h-5 flex-shrink-0 place-content-center place-items-center bg-transparent p-0 hover:border-transparent hover:text-kaccent1 ' +
+							' flex h-5 flex-shrink-0 place-content-center place-items-center bg-transparent p-0 hover:border-transparent hover:text-secondary-400 ' +
 							'pi pi-chevron-' +
 							(children ? 'down' : 'right')
 						}
@@ -61,24 +61,24 @@ const Task = ({ task, child = false, checkTask }: { task: TaskTreeNode; child: b
 					className={
 						'pi pi-check h-5 w-5 flex-shrink-0 rounded-full  p-0 text-xs ' +
 						(checked
-							? 'bg-kaccent1 text-kdark text-opacity-100 hover:text-opacity-0'
-							: 'bg-klighter text-kaccent1 text-opacity-0 hover:text-opacity-100')
+							? 'bg-secondary-400 text-primary-900 text-opacity-100 hover:text-opacity-0'
+							: 'bg-primary-100 text-secondary-400 text-opacity-0 hover:text-opacity-100')
 					}
 					onClick={() => checkTask(task,checked)}
 				></button>
 				<div className="flex w-full flex-col">
-					<span className="max-h-10 overflow-hidden pl-1 text-sm text-klight">{task.label}</span>
+					<span className="max-h-10 overflow-hidden pl-1 text-sm text-primary-200">{task.label}</span>
 					<div className=" w-full grid grid-cols-2">
 						{task.dueDate && (
-							<span className={'pl-1 text-xs col-start-1 ' + (overdue ? 'text-red-500' : 'text-klight')}>
+							<span className={'pl-1 text-xs col-start-1 ' + (overdue ? 'text-danger' : 'text-primary-200')}>
 								{new Date(task.dueDate).toDateString().slice(4, 10)}
 							</span>
 						)}
 						{task.children && task.children.length > 0 && (
-							<span className="pl-1 col-start-2 justify-self-end text-xs text-klight ">
+							<span className="pl-1 col-start-2 justify-self-end text-xs text-primary-200 ">
 								<button
 									className={
-										'items-start bg-transparent border-0 p-0 text-xs hover:border-transparent hover:text-kaccent1 mr-1 ' +
+										'items-start bg-transparent border-0 p-0 text-xs text-primary-600 hover:border-transparent hover:text-secondary-400 mr-1 ' +
 										'pi pi-chevron-' +
 										(children ? 'down' : 'right')
 									}
@@ -88,13 +88,13 @@ const Task = ({ task, child = false, checkTask }: { task: TaskTreeNode; child: b
 								{completedChildren + '/' + task.children?.length}
 							</span>
 						)}
-						{/* <span className="pl-1 text-xs text-klight">{task.priority}</span> */}
+						{/* <span className="pl-1 text-xs text-primary-200">{task.priority}</span> */}
 					</div>
 				</div>
 			</div>
 
 			{children && (
-				<div className="ml-2 flex w-[calc(100%-0.5rem)] flex-col box-border gap-1 rounded-l-lg  border-kmedium border-opacity-0 bg-kmedium hover:border-opacity-100">
+				<div className="ml-2 flex w-[calc(100%-0.5rem)] flex-col box-border gap-1 rounded-l-lg  border-primary-800 border-opacity-0 bg-primary-800 hover:border-opacity-100">
 					{task.children?.map((child) => {
 						return <Task task={child} child={true} checkTask={checkTask}/>;
 					})}

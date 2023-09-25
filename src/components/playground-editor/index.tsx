@@ -24,12 +24,12 @@ const Button: FC<{ icon: string; onClick?: () => void }> = ({ icon, onClick }) =
 	return (
 		<div
 			className={clsx(
-				'flex h-6 w-6 cursor-pointer items-center justify-center rounded',
+				'flex h-6 w-6 cursor-pointer items-center justify-center rounded text-primary-200 hover:bg-primary-200 hover:text-primary-900',
 				linkClass(false)
 			)}
 			onClick={onClick}
 		>
-			<span className="material-symbols-outlined !text-base text-klight">{icon}</span>
+			<span className="material-symbols-outlined !text-base ">{icon}</span>
 		</div>
 	);
 };
@@ -87,7 +87,7 @@ const PM: FC<MilkdownProps> = ({ path, content, onChange, onSave, milkdownRef })
 
 	return (
 		<div className="flex h-full w-full flex-col ">
-			<div className="z-50 flex h-12 items-center justify-between text-klight bg-kdark p-4 pt-4 ">
+			<div className="z-50 flex h-12 items-center justify-between text-primary-200 bg-primary-900 p-4 pt-4 ">
 				<div className="flex gap-1">
 					<Button icon="arrow_back" onClick={() => call(undoCommand.key)} />
 					<Button icon="arrow_forward" onClick={() => call(redoCommand.key)} />

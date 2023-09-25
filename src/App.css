@@ -10,6 +10,28 @@
 } */
 
 :root {
+	--color-primary-100: 227, 225, 237;
+	--color-primary-200: 200, 196, 222; 
+	--color-primary-400: 145, 139, 192;
+	--color-primary-600: 90, 87, 162;
+	--color-primary-800: 46, 44, 86;
+	--color-primary-900: 26, 24, 54;
+
+	--color-secondary-200: 62, 224, 158;
+	--color-secondary-400: 41, 182, 126;
+	--color-secondary-600: 20, 108, 73;
+
+	--color-danger: 255, 82, 69;
+	--color-caution: 234, 144, 51;
+
+	--color-neutral-100: 226, 225, 239;
+	--color-neutral-200: 198, 197, 209;
+	--color-neutral-400: 144, 144, 156;
+	--color-neutral-600: 94, 93, 105;
+	--color-neutral-800: 48, 48, 58;
+	--color-neutral-900: 14, 13, 24;
+
+
 	--color-klighter: 217, 216, 218;
 	--color-klight: 131,145,178;
 	--color-kmedium: 32, 30, 60;
@@ -114,11 +136,11 @@
 }
 *::-webkit-scrollbar-track {
 	background: #0d0c1eff;
-	@apply bg-kdark;
+	@apply bg-primary-900;
 }
 *::-webkit-scrollbar-thumb {
 	background-color: white;
 	border-radius: 20px;
 	border: 3px solid #201e3cff;
-	@apply bg-klighter border-kdarker;
+	@apply bg-primary-100 border-primary-900;
 }

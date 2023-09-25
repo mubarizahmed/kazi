@@ -67,3 +67,59 @@ export type ProjectType = {
 	modified: number;
 	parent_id?: number;
 }
+
+export type Theme = {
+	name: string;
+	type: 'Dark' | 'Light';
+	primary: {
+		'100': [number, number, number];
+		'200': [number, number, number];
+		'400': [number, number, number];
+		'600': [number, number, number];
+		'800': [number, number, number];
+		'900': [number, number, number];
+	};
+	secondary: {
+		'200': [number, number, number];
+		'400': [number, number, number];
+		'600': [number, number, number];
+	};
+	danger: [number, number, number];
+	caution: [number, number, number];
+	neutral: {
+		'100': [number, number, number];
+		'200': [number, number, number];
+		'400': [number, number, number];
+		'600': [number, number, number];
+		'800': [number, number, number];
+		'900': [number, number, number];
+	};
+};
+
+export type ThemeHex = {
+	name: string;
+	type: 'Dark' | 'Light';
+	primary: {
+		'100': string;
+		'200': string;
+		'400': string;
+		'600': string;
+		'800': string;
+		'900': string;
+	};
+	secondary: {
+		'200': string;
+		'400': string;
+		'600': string;
+	};
+	danger: string;
+	caution: string;
+	neutral: {
+		'100': string;
+		'200': string;
+		'400': string;
+		'600': string;
+		'800': string;
+		'900': string;
+	};
+}
