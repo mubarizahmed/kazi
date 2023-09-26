@@ -64,53 +64,6 @@ const printHTML = join(process.env.DIST, 'print.html');
 var projectTree: FileTreeNodeType = {} as FileTreeNodeType;
 var taskTree: TaskTree[] = [];
 
-
-// const defaultTheme = {
-// 	name: 'Default Dark',
-// 	color1: [10, 10, 26],
-// 	color2: [13, 12, 30],
-// 	color3: [32, 30, 60],
-// 	color4: [131, 145, 178],
-// 	color5: [217, 216, 218],
-// 	accent1: [41, 182, 126],
-// 	accent2: [249, 100, 83]
-// }
-// const solarizedTheme = {
-// 	name: 'Solarized',
-// 	color1: [0, 43, 54],
-// 	color2: [7, 54, 66],
-// 	color3: [88, 110, 117],
-// 	color4: [200, 200, 200],
-// 	color5: [100, 122, 130],
-// 	accent1: [41, 182, 126],
-// 	accent2: [249, 100, 83]
-// }
-
-// const creamyCoffeeTheme = {
-// 	name: 'Creamy Coffee',
-// 	color1: [208, 194, 167],
-// 	color2: [221, 210, 188],
-// 	color3: [181, 150, 113],
-// 	color4: [146, 99, 55],
-// 	color5: [101, 59, 23],
-// 	accent1: [0, 0, 0],
-// 	accent2: [249, 100, 83]
-// }
-
-// interface Themes {
-// 	[key: string]: any;
-// }
-
-// var themes:Themes = {};
-// themes["defaultDark"] = defaultTheme;
-// themes["solarized"] = solarizedTheme;
-
-// var themes = [];
-// themes.push(defaultTheme);
-// themes.push(solarizedTheme);
-// themes.push(creamyCoffeeTheme);
-
-
 // store stuff
 export const store = new Store({
 	// We'll call our data file 'user-preferences'
@@ -130,12 +83,9 @@ const themes = getThemes(store.get('userDirectory'));
 
 var currentTheme = store.get('currentTheme');
 
-
 function loadSettings() {
 	return [store.store, themes];
 }
-
-
 
 function changeUserDirectory() {
 	if (win)
@@ -154,7 +104,7 @@ function changeUserDirectory() {
 
 const changeTheme = (_event: any, theme: any) => {
 	try {
-		console.log(theme)
+		console.log(theme);
 		win?.webContents.send('apply-theme', theme);
 		store.set('currentTheme', theme);
 		currentTheme = theme;
@@ -162,7 +112,7 @@ const changeTheme = (_event: any, theme: any) => {
 		console.log(error);
 	}
 	return store.store;
-}
+};
 
 createDb(path.join(store.get('userDirectory'), 'kazi.db'));
 
@@ -185,9 +135,13 @@ async function createWindow() {
 		x: store.get('windowBounds.x'),
 		y: store.get('windowBounds.y'),
 		fullscreen: store.get('windowFullScreen'),
+		show: false,
 
 		webPreferences: {
-			additionalArguments: [`--themeColor1=${store.get('currentTheme').color2}`, `--themeColor2=${store.get('currentTheme').color4}`],
+			additionalArguments: [
+				`--themeColor1=${store.get('currentTheme').primary[900]}`,
+				`--themeColor2=${store.get('currentTheme').primary[400]}`
+			],
 			preload,
 			// Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
 			// Consider using contextBridge.exposeInMainWorld
@@ -198,7 +152,24 @@ async function createWindow() {
 		}
 	});
 
-
+		// Test actively push message to the Electron-Renderer
+		win.webContents.once('did-finish-load', () => {
+			console.log('did-finish-load');
+			win?.webContents.send('main-process-message', new Date().toLocaleString());
+			console.log('zoomFactor', store.get('zoomFactor'));
+			// win?.webContents.setZoomFactor(store.get('zoomFactor'));
+			win?.webContents.send('apply-theme', store.get('currentTheme'));
+		});
+	
+		win.on('ready-to-show', () => {
+			console.log('ready-to-show');
+			console.log('zoomFactor', store.get('zoomFactor'));
+			console.log('store', store.store)
+			// win?.webContents.setZoomFactor(store.get('zoomFactor'));
+			win?.webContents.send('apply-theme', store.get('currentTheme'));
+			win?.show();
+		});
+	
 
 	if (url) {
 		// electron-vite-vue#298
@@ -210,29 +181,10 @@ async function createWindow() {
 		// win.webContents.openDevTools();
 	}
 	contextBridge.exposeInMainWorld('myAPI', {
-		currentTheme: currentTheme,
+		currentTheme: currentTheme
 	});
 
-	// Test actively push message to the Electron-Renderer
-	win.webContents.once('did-finish-load', () => {
-		console.log('did-finish-load');
-		win?.webContents.send('main-process-message', new Date().toLocaleString());
-		// win?.webContents.send('apply-theme', currentTheme);
-		win?.webContents.setZoomFactor(store.get('zoomFactor'));
-		win?.webContents.send('apply-theme', currentTheme);
-	});
 
-	win.on('ready-to-show', () => {
-		win?.webContents.setZoomFactor(store.get('zoomFactor'));
-		win?.webContents.once('did-finish-load', () => {
-
-
-			win?.webContents.setZoomFactor(store.get('zoomFactor'));
-			win?.webContents.send('apply-theme', currentTheme);
-			console.log('ready-to-show');
-		});
-
-	});
 
 	// // Make all links open with the browser, not with the application
 	// win.webContents.setWindowOpenHandler(({ url }) => {
@@ -256,27 +208,17 @@ async function createWindow() {
 	update(win);
 
 	win.on('close', () => {
-		if (win) {
-			store.set('windowBounds', win.getBounds());
-			store.set('windowLocation', win.getPosition());
-			store.set('windowFullScreen', win.isFullScreen());
-			store.set('zoomFactor', win.webContents.getZoomFactor());
-		}
+		console.log('close');
+		// if (win) {
+			store.set('windowBounds', win?.getBounds());
+			store.set('windowLocation', win?.getPosition());
+			store.set('windowFullScreen', win?.isFullScreen());
+			console.log('set zoomFactor', win?.webContents.getZoomFactor());
+			store.set('zoomFactor', win?.webContents.getZoomFactor());
+		// }
 	});
 
-	workerWindow = new BrowserWindow({
-		webPreferences: {
-			webSecurity: false,
-			nodeIntegration: true,
-			contextIsolation: false
-		}
-	});
-	workerWindow.loadURL('file://' + printHTML);
-	workerWindow.hide();
-	workerWindow.webContents.openDevTools();
-	workerWindow.on('closed', () => {
-		workerWindow = null;
-	});
+
 }
 
 app.whenReady().then(() => {
@@ -310,7 +252,9 @@ app.whenReady().then(() => {
 		workerWindow?.webContents.print({ printBackground: false });
 	});
 
-	ipcMain.handle('get-themes', () => { return themes; });
+	ipcMain.handle('get-themes', () => {
+		return themes;
+	});
 	ipcMain.handle('change-theme', changeTheme);
 
 	createWindow();
@@ -371,6 +315,21 @@ const updateFileTree = async () => {
 const printFile = (e: any, filePath: string, content: string) => {
 	console.log(content);
 	// /home/mebza/apps/kazi/dist/print.html
+	workerWindow = new BrowserWindow({
+		webPreferences: {
+			webSecurity: false,
+			nodeIntegration: true,
+			contextIsolation: false
+		},
+		show: false
+	});
+	workerWindow.loadURL('file://' + printHTML);
+
+	workerWindow.webContents.openDevTools();
+	workerWindow.on('closed', () => {
+		workerWindow = null;
+	});
+
 	console.log(printHTML);
 	console.log('file://' + __dirname + '/print.html');
 	// let window = BrowserWindow.fromWebContents(e.sender);
@@ -378,7 +337,11 @@ const printFile = (e: any, filePath: string, content: string) => {
 	// 		// Use the data however you like :)
 	// });
 
-	workerWindow?.webContents.send('printPDF', content);
+
+	workerWindow?.once('ready-to-show', () => {
+		workerWindow?.webContents.send('printPDF', content);
+		workerWindow?.show();
+	});
 };
 
 const { session } = require('electron');

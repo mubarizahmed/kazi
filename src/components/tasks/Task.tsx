@@ -62,7 +62,7 @@ const Task = ({ task, child = false, checkTask }: { task: TaskTreeNode; child: b
 						'pi pi-check h-5 w-5 flex-shrink-0 rounded-full  p-0 text-xs ' +
 						(checked
 							? 'bg-secondary-400 text-primary-900 text-opacity-100 hover:text-opacity-0'
-							: 'bg-primary-100 text-secondary-400 text-opacity-0 hover:text-opacity-100')
+							: 'bg-primary-100 text-primary-900 text-opacity-0 hover:text-opacity-100')
 					}
 					onClick={() => checkTask(task,checked)}
 				></button>

@@ -170,10 +170,11 @@ const Tasks = (props: Props) => {
 	// filter function
 
 	return (
-		<div className="flex h-screen w-full flex-col  gap-4 bg-primary-900 p-4">
-			<div className="flex w-full items-center justify-between pl-4 pr-6">
-				<span className=" text-2xl tracking-wider text-primary-200">TASKS</span>
-
+		<div className="flex h-screen w-full flex-col  gap-4 bg-primary-900 p-5">
+			<div className="flex w-full items-center justify-between pr-6">
+				<span className=" text-3xl font-light uppercase tracking-widest text-primary-200">
+						Tasks
+					</span>
 				{/* button named start scan */}
 				<div className="flex h-full items-center gap-2">
 					<button

@@ -93,7 +93,8 @@ export const scanUpdateFileTree = async  (userDir: string) => {
 	});
 	const fileTree = dirTree(userDir, {
 		extensions: /\.md$/,
-		attributes: ['type', 'dev', 'ino', 'mtimeMs']
+		attributes: ['type', 'dev', 'ino', 'mtimeMs'],
+		exclude: /.themes/,
 	});
 	console.log(fileTree.children[6]);
 	nodeToDb(fileTree);

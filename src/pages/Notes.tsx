@@ -242,10 +242,12 @@ const Notes = () => {
 				<SplitterPanel
 					size={200 / 7}
 					minSize={15}
-					className="flex h-full flex-col items-center justify-start gap-2  overflow-clip  border-primary-800 bg-primary-900 p-0 pt-4"
+					className="flex h-full flex-col items-center justify-start gap-2  overflow-clip  border-primary-800 bg-primary-900 p-0 pt-5"
 				>
 					<div className="flex w-full items-center justify-between pl-4 pr-6">
-						<span className=" text-2xl tracking-wider text-primary-200">NOTES</span>
+						<span className=" text-3xl font-light uppercase tracking-widest text-primary-200">
+						Notes
+					</span>
 						<div className="flex h-full items-center gap-2">
 							<button
 								className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-secondary-400"

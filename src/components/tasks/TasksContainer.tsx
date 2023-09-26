@@ -182,7 +182,7 @@ const TasksContainer = (props: Props) => {
 		>
 			<div className="flex flex-col bg-primary-800 p-3">
 				<div className="flex w-full pb-1 items-center justify-between gap-2">
-					<span className="bg-primary-800  text-base uppercase text-primary-200">
+					<span className="bg-primary-800  text-base capitalize font-medium tracking-tight text-primary-200">
 						{project.project_name.slice(0, -3)}
 					</span>
 					<IconContext.Provider value={{ size: '1em', style: { verticalAlign: 'middle' } }}>

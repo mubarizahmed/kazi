@@ -52,10 +52,34 @@ const solarizedTheme: Theme = {
 	}
 };
 
-const defaultThemes: Theme[] = [defaultTheme, solarizedTheme];
+const creamyCoffeeTheme: Theme = {
+	name: 'Creamy Coffee',
+	type: 'Light',
+	primary: {
+		'100': [67, 34, 0],
+		'200': [101, 59, 23],
+		'400': [129, 83, 34],
+		'600': [207, 148, 64],
+		'800': [231, 192, 125],
+		'900': [227, 212, 184],
+	},
+	secondary: { '200': [37, 37, 37], '400': [16, 16, 16], '600': [0, 0, 0] },
+	danger: [189, 60, 47],
+	caution: [128, 86, 208],
+	neutral: {
+		'100': [226, 225, 239],
+		'200': [201, 198, 193],
+		'400': [138, 136, 132],
+		'600': [96, 94, 91],
+		'800': [49, 48, 47],
+		'900': [28, 27, 27]
+	}
+};
+
+const defaultThemes: Theme[] = [defaultTheme, solarizedTheme, creamyCoffeeTheme];
 
 export const getThemes = (userDir: string) => {
-	const themeDir = path.join(userDir, 'themes');
+	const themeDir = path.join(userDir, '.themes');
 
 	let themes: Theme[] = [...defaultThemes];
 
