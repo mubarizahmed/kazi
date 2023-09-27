@@ -239,10 +239,7 @@ async function createWindow() {
 }
 
 app.whenReady().then(() => {
-	getProjectTree().then((tree: any) => {
-		projectTree = tree;
-	});
-	updateFileTree();
+
 
 	ipcMain.handle('load-fileTree', loadFileTree);
 	ipcMain.handle('update-fileTree', updateFileTree);
@@ -275,6 +272,13 @@ app.whenReady().then(() => {
 	ipcMain.handle('change-theme', changeTheme);
 
 	createWindow();
+
+	// check files for new tasks
+	getProjectTree().then((tree: any) => {
+		projectTree = tree;
+	});
+	updateFileTree();
+	scanAllFiles();
 });
 
 app.on('window-all-closed', () => {
