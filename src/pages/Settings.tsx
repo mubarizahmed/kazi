@@ -209,9 +209,9 @@ const Settings = () => {
 			icon: 'code',
 			key: 'editor',
 			content: (
-				<div className="flex h-full w-full flex-col items-center justify-center">
+				<div className="flex !under-construction h-full w-full flex-col items-center justify-center">
 					<IconContext.Provider value={{ size: '20%', style: { verticalAlign: 'middle' } }}>
-						<LuConstruction className="h-32"></LuConstruction>
+						<LuConstruction className=" h-32"></LuConstruction>
 					</IconContext.Provider>
 					<div className="font rounded-lg bg-primary-200 p-4 pb-2 pt-2 text-center text-lg uppercase tracking-widest text-primary-900">
 						Under <br /> construction

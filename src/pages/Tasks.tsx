@@ -15,13 +15,16 @@ import 'primereact/resources/primereact.min.css';
 import { Project, TaskTree, TaskTreeNode } from '../types';
 import { TasksContainer } from '@/components';
 import { createPortal } from 'react-dom';
+import Loading from '@/components/loading';
 
 type Props = {};
 
 const Tasks = (props: Props) => {
+	const [loaded, setLoaded] = useState(false);
 	const [projects, setProjects] = useState<TaskTree[]>([]);
 	const projectsId = useMemo(() => projects.map((project) => project.project_id), [projects]);
 	const [activeProject, setActiveProject] = useState<TaskTree | null>(null);
+	const [filter, setFilter] = useState(0);
 
 	const sortProjects = (unsortedProjects: TaskTree[], ids: number[]) => {
 		return unsortedProjects.sort((a: TaskTree, b: TaskTree) => {
@@ -69,6 +72,7 @@ const Tasks = (props: Props) => {
 		}
 
 		console.log('loaded');
+		setLoaded(true);
 	};
 
 	useEffect(() => {
@@ -82,6 +86,14 @@ const Tasks = (props: Props) => {
 	useEffect(() => {
 		sessionStorage.setItem('kazi-projects-order', JSON.stringify(projectsId));
 	}, [projectsId]);
+
+	const filterToggle = (val: number) => {
+		if (filter === val) {
+			setFilter(0);
+		} else {
+			setFilter(val);
+		}
+	};
 	// var projectTrees = () => {
 	// 	var res: ReactNode[] = [];
 	// 	if (projects.length > 0) {
@@ -115,7 +127,11 @@ const Tasks = (props: Props) => {
 		const updatedProjects = projects.map((project) => {
 			let updatedTasks = project.tasks;
 			if (project.project_id === task.project_id) {
-				const updateTaskRecursive = (tasks: TaskTreeNode[], taskUpdate:TaskTreeNode, level: number) => {
+				const updateTaskRecursive = (
+					tasks: TaskTreeNode[],
+					taskUpdate: TaskTreeNode,
+					level: number
+				) => {
 					let currId = parseInt(taskUpdate.id.split('-')[level]);
 					console.log(currId, level, id.length);
 					let preTasks = tasks.slice(0, currId - 1);
@@ -127,7 +143,7 @@ const Tasks = (props: Props) => {
 					let currTask = tasks[currId - 1];
 					currTask.children = updateTaskRecursive(currTask.children || [], taskUpdate, level + 1);
 					return [...preTasks, currTask, ...postTasks];
-				}
+				};
 
 				updatedTasks = updateTaskRecursive(project.tasks, task, 1);
 				return { ...project, tasks: updatedTasks };
@@ -136,7 +152,7 @@ const Tasks = (props: Props) => {
 		});
 
 		setProjects(updatedProjects);
-		console.log('task updated')
+		console.log('task updated');
 	};
 
 	const onDragStart = (event: DragStartEvent) => {
@@ -171,44 +187,77 @@ const Tasks = (props: Props) => {
 
 	return (
 		<div className="flex h-screen w-full flex-col  gap-4 bg-primary-900 p-5">
-			<div className="flex w-full items-center justify-between pr-6">
+			<div className="flex w-full items-center justify-between">
 				<span className=" text-3xl font-light uppercase tracking-widest text-primary-200">
-						Tasks
-					</span>
-				{/* button named start scan */}
-				<div className="flex h-full items-center gap-2">
-					<button
-						className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-kaccent1"
-						onClick={getTasks}
+					Tasks
+				</span>
+				
+				<div className='flex items-center justify-center gap-0.5'>
+				<button
+						className={
+							'rounded-none w-28 rounded-l-lg p-1 text-md  ' +
+							(filter === 1
+								? 'bg-secondary-400 text-primary-900'
+								: ' bg-primary-800 text-primary-200 hover:border-secondary-400 hover:text-secondary-400')
+						}
+						onClick={() => {
+							filterToggle(1);
+						}}
 					>
-						<span className="pi pi-arrow-down text-base text-primary-200 hover:text-white"></span>
+						Completed
 					</button>
 					<button
-						className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-kaccent1"
+						className={
+							'rounded-none w-28 rounded-r-lg p-1 text-md  ' +
+							(filter === 2
+								? 'bg-secondary-400 text-primary-900'
+								: ' bg-primary-800 text-primary-200 hover:border-secondary-400 hover:text-secondary-400')
+						}
+						onClick={() => {
+							filterToggle(2);
+						}}
+					>
+						Today
+					</button>
+				</div>
+				<div className="flex h-full items-center gap-4 px-4">
+					<button
+						className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-secondary-400  text-base text-primary-200 hover:text-primary-900"
+						onClick={getTasks}
+					>
+						<span className="pi pi-arrow-down"></span>
+					</button>
+					<button
+						className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-secondary-400 text-base text-primary-200 hover:text-primary-900"
 						onClick={startScan}
 					>
-						<span className="pi pi-refresh text-base text-primary-200 hover:text-white"></span>
+						<span className="pi pi-refresh "></span>
 					</button>
 				</div>
 			</div>
-			<DndContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
-				<div className="flex w-full flex-wrap gap-4 overflow-y-scroll pl-4 pr-3">
-					{/* {projectTrees} */}
-					<SortableContext items={projectsId}>
-						{projects.length > 0 ? (
-							projects.map((proj) => {
-								return <TasksContainer project={proj} checkTask={checkTask} />;
-							})
-						) : (
-							<p>Test</p>
-						)}
-					</SortableContext>
-				</div>
+			{loaded ? (
+				<DndContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+					<div className="flex w-full flex-wrap gap-4 overflow-y-scroll px-4">
+						<SortableContext items={projectsId}>
+							{projects.length > 0 ? (
+								projects.map((proj) => {
+									return <TasksContainer project={proj} checkTask={checkTask} filter={filter}/>;
+								})
+							) : (
+								<p>Test</p>
+							)}
+						</SortableContext>
+					</div>
 
-				<DragOverlay>
-					{activeProject && <TasksContainer project={activeProject} checkTask={checkTask} />}
-				</DragOverlay>
-			</DndContext>
+					<DragOverlay>
+						{activeProject && <TasksContainer project={activeProject} checkTask={checkTask} filter={filter}/>}
+					</DragOverlay>
+				</DndContext>
+			) : (
+				<div className="flex w-full h-full items-center justify-center">
+					<Loading />
+				</div>
+			)}
 		</div>
 	);
 };

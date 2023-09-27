@@ -210,7 +210,7 @@ async function createWindow() {
 		win.webContents.openDevTools();
 	} else {
 		win.loadFile(indexHtml);
-		// win.webContents.openDevTools();
+		win.webContents.openDevTools();
 	}
 	contextBridge.exposeInMainWorld('myAPI', {
 		currentTheme: currentTheme
