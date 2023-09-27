@@ -195,7 +195,7 @@ const Tasks = (props: Props) => {
 				<div className='flex items-center justify-center gap-0.5'>
 				<button
 						className={
-							'rounded-none w-28 rounded-l-lg p-1 text-md  ' +
+							'rounded-none w-28 drop-shadow-sm rounded-l-lg p-1 text-md  ' +
 							(filter === 1
 								? 'bg-secondary-400 text-primary-900'
 								: ' bg-primary-800 text-primary-200 hover:border-secondary-400 hover:text-secondary-400')
@@ -208,7 +208,7 @@ const Tasks = (props: Props) => {
 					</button>
 					<button
 						className={
-							'rounded-none w-28 rounded-r-lg p-1 text-md  ' +
+							'rounded-none w-28 drop-shadow-sm rounded-r-lg p-1 text-md  ' +
 							(filter === 2
 								? 'bg-secondary-400 text-primary-900'
 								: ' bg-primary-800 text-primary-200 hover:border-secondary-400 hover:text-secondary-400')

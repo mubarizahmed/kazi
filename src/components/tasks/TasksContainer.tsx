@@ -5,6 +5,7 @@ import { Project, TaskTree, TaskTreeNode } from '../../types';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import Task from './Task';
+import AddTask from './AddTask';
 import { IconContext } from 'react-icons';
 import { MdDragIndicator } from 'react-icons/md';
 
@@ -19,6 +20,7 @@ const TasksContainer = (props: Props) => {
 	const { project, checkTask, filter } = props;
 	const [filterValue, setFilterValue] = useState(filter);
 	const [filterBy, setFilterBy] = useState('');
+	const [addTaskPosition, setAddTaskPosition] = useState(-2);
 
 	const treeRef = useRef(null);
 
@@ -227,22 +229,36 @@ const TasksContainer = (props: Props) => {
 					</button>
 				</div>
 			</div>
-			<div className="flex max-h-[60vh] flex-col gap-2 overflow-x-hidden overflow-y-scroll bg-primary-900 p-3 pr-0">
-				{/* <Tree
-					ref={treeRef}
-					value={project.tasks}
-					selectionMode="checkbox"
-					onSelectionChange={updateChecked}
-					className="md:w-30rem w-full"
-					selectionKeys={project.checkedTasks}
-					nodeTemplate={nodeTemplate}
-					filterBy={filterBy}
-					filterValue={filterValue}
-					filter
-				/> */}
-				{showTasks.map((task) => {
-					return <Task task={task} child={false} key={task.id} checkTask={checkTask}></Task>;
-				})}
+			<div className="flex max-h-[60vh] flex-col items-center gap-2 overflow-x-hidden overflow-y-scroll bg-primary-900 p-3 pr-0">
+				{showTasks.map((task, index) => (
+					<div className="flex w-full flex-col items-center justify-center gap-2">
+						<div className="relative flex w-full items-center justify-center">
+							<Task task={task} child={false} key={task.id} checkTask={checkTask} />
+							{index + 1 < showTasks.length && index !== addTaskPosition ? (
+								<button
+									className="absolute bottom-[-1rem] z-10 flex h-6 w-6 items-center justify-center rounded-full border-2 border-opacity-0 bg-primary-800 p-0 text-primary-200 opacity-0 hover:opacity-100"
+									onClick={() => setAddTaskPosition(index)}
+								>
+									<span className="pi pi-plus text-xs"></span>
+								</button>
+							) : (
+								''
+							)}
+						</div>
+						{addTaskPosition === index ? <AddTask close={() => setAddTaskPosition(-2)} /> : ''}
+					</div>
+				))}
+				{/* add task */}
+				<div className="flex w-full flex-col items-center">
+					{addTaskPosition === -1 ? (
+						<AddTask close={() => setAddTaskPosition(-2)} />
+					) : (
+						<button
+							className="pi pi-plus flex h-8 w-8 flex-shrink-0 place-content-center place-items-center rounded-md border-transparent bg-primary-900 p-0 text-primary-200 hover:bg-primary-800"
+							onClick={() => setAddTaskPosition(-1)}
+						></button>
+					)}
+				</div>
 			</div>
 		</div>
 	);

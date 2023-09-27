@@ -1,7 +1,15 @@
 import { TaskTreeNode } from '@/types';
 import React, { useEffect, useState } from 'react';
 
-const Task = ({ task, child = false, checkTask }: { task: TaskTreeNode; child: boolean; checkTask: any }) => {
+const Task = ({
+	task,
+	child = false,
+	checkTask
+}: {
+	task: TaskTreeNode;
+	child: boolean;
+	checkTask: any;
+}) => {
 	const [checked, setChecked] = useState(task.checked === 1);
 	const [children, setChildren] = useState(false);
 	const [completedChildren, setCompletedChildren] = useState(0);
@@ -35,8 +43,6 @@ const Task = ({ task, child = false, checkTask }: { task: TaskTreeNode; child: b
 		setChecked(task.checked === 1);
 	}, [task.checked]);
 
-
-
 	return (
 		<div
 			className={
@@ -64,21 +70,27 @@ const Task = ({ task, child = false, checkTask }: { task: TaskTreeNode; child: b
 							? 'bg-secondary-400 text-primary-900 text-opacity-100 hover:text-opacity-0'
 							: 'bg-primary-100 text-primary-900 text-opacity-0 hover:text-opacity-100')
 					}
-					onClick={() => checkTask(task,checked)}
+					onClick={() => checkTask(task, checked)}
 				></button>
 				<div className="flex w-full flex-col">
-					<span className="max-h-10 overflow-hidden pl-1 text-sm text-primary-200">{task.label}</span>
-					<div className=" w-full grid grid-cols-2">
+					<span className="max-h-10 overflow-hidden pl-1 text-sm text-primary-200">
+						{task.label}
+					</span>
+					<div className=" grid w-full grid-cols-2">
 						{task.dueDate && (
-							<span className={'pl-1 text-xs col-start-1 ' + (overdue ? 'text-danger' : 'text-primary-200')}>
+							<span
+								className={
+									'col-start-1 pl-1 text-xs ' + (overdue ? 'text-danger' : 'text-primary-200')
+								}
+							>
 								{new Date(task.dueDate).toDateString().slice(4, 10)}
 							</span>
 						)}
 						{task.children && task.children.length > 0 && (
-							<span className="pl-1 col-start-2 justify-self-end text-xs text-primary-200 ">
+							<span className="col-start-2 justify-self-end pl-1 text-xs text-primary-200 ">
 								<button
 									className={
-										'items-start bg-transparent border-0 p-0 text-xs text-primary-600 hover:border-transparent hover:text-secondary-400 mr-1 ' +
+										'mr-1 items-start border-0 bg-transparent p-0 text-xs text-primary-600 hover:border-transparent hover:text-secondary-400 ' +
 										'pi pi-chevron-' +
 										(children ? 'down' : 'right')
 									}
@@ -94,9 +106,9 @@ const Task = ({ task, child = false, checkTask }: { task: TaskTreeNode; child: b
 			</div>
 
 			{children && (
-				<div className="ml-2 flex w-[calc(100%-0.5rem)] flex-col box-border gap-1 rounded-l-lg  border-primary-800 border-opacity-0 bg-primary-800 hover:border-opacity-100">
+				<div className="ml-2 box-border flex w-[calc(100%-0.5rem)] flex-col gap-1 rounded-l-lg  border-primary-800 border-opacity-0 bg-primary-800 hover:border-opacity-100">
 					{task.children?.map((child) => {
-						return <Task task={child} child={true} checkTask={checkTask}/>;
+						return <Task task={child} child={true} checkTask={checkTask} />;
 					})}
 				</div>
 			)}
