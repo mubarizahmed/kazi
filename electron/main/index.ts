@@ -109,6 +109,11 @@ const changeTheme = (_event: any, theme: any) => {
 		win?.webContents.send('apply-theme', theme);
 		store.set('currentTheme', theme);
 		currentTheme = theme;
+		win?.setBackgroundColor('rgb(' +theme.primary[900]+ ')');
+		// win?.setTitleBarOverlay({
+		// 	color: 'rgb(' + currentTheme.primary[900] + ')',
+		// 	symbolColor: 'rgb(' + currentTheme.secondary[400] + ')'
+		// });
 	} catch (error) {
 		console.log(error);
 	}
@@ -124,12 +129,13 @@ getProjects().then((projects: any) => {
 async function createWindow() {
 	win = new BrowserWindow({
 		title: 'Kazi',
-		icon: join(process.env.PUBLIC, 'kazi_word_l.png'),
-		// titleBarStyle: 'hidden',
-		titleBarOverlay: {
-			color: currentTheme.primary[900],
-			symbolColor: currentTheme.secondary[400]
-		},
+		icon: join(process.env.PUBLIC, 'kazi_mark_l.png'),
+		titleBarStyle: 'default',
+		// titleBarOverlay: {
+		// 	color: 'rgb(' + currentTheme.primary[900] + ')',
+		// 	symbolColor: 'rgb(' + currentTheme.secondary[400] + ')'
+		// },
+		// frame: false,
 		autoHideMenuBar: true,
 		width: store.get('windowBounds.width'),
 		height: store.get('windowBounds.height'),
@@ -166,17 +172,29 @@ async function createWindow() {
 		console.log('ready-to-show');
 
 		win?.webContents.send('apply-theme', store.get('currentTheme'));
-		if (store.get('windowMaximized'))  win?.maximize();
+		if (store.get('windowMaximized')) win?.maximize();
 		win?.show();
+		win?.focus();
 	});
 
 	win.on('maximize', () => {
-		console.log('maximize');	
-	})
+		console.log('maximize');
+	});
 
 	win.on('close', () => {
 		console.log('close');
-		console.log('windowBounds', win?.getBounds(),'windowNormalBounds', win?.getNormalBounds(),'windowMaximized',win?.isMaximized(),'windowFullScreen', win?.isFullScreen(),'zoomFactor', win?.webContents.getZoomFactor());
+		console.log(
+			'windowBounds',
+			win?.getBounds(),
+			'windowNormalBounds',
+			win?.getNormalBounds(),
+			'windowMaximized',
+			win?.isMaximized(),
+			'windowFullScreen',
+			win?.isFullScreen(),
+			'zoomFactor',
+			win?.webContents.getZoomFactor()
+		);
 		// if (win) {
 		store.set('windowBounds', win?.getNormalBounds());
 		store.set('windowMaximized', win?.isMaximized());
@@ -315,7 +333,6 @@ const printFile = (e: any, filePath: string, content: string) => {
 	console.log(content);
 	// /home/mebza/apps/kazi/dist/print.html
 	workerWindow = new BrowserWindow({
-
 		webPreferences: {
 			webSecurity: false,
 			nodeIntegration: true,
