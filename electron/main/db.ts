@@ -7,7 +7,7 @@ var db: sqlite3.Database;
 var updatedProjects: number[] = [];
 
 export const createDb = (path: string) => {
-	db = new sqlite3.Database('/home/mebza/apps/kazi/kazi.sqlite', (err) => {
+	db = new sqlite3.Database(path, (err) => {
 		if (err) {
 			console.error(err.message);
 		} else {

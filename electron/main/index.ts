@@ -72,6 +72,7 @@ export const store = new Store({
 		// 800x600 is the default size of our window
 		windowBounds: { width: 800, height: 600, x: 0, y: 0 },
 		windowFullScreen: false,
+		windowMaximized: true,
 		userDirectory: path.join(app.getPath('documents'), 'Kazi'),
 		zoomFactor: 1,
 		currentTheme: defaultTheme
@@ -124,10 +125,10 @@ async function createWindow() {
 	win = new BrowserWindow({
 		title: 'Kazi',
 		icon: join(process.env.PUBLIC, 'kazi_word_l.png'),
-		titleBarStyle: 'hidden',
+		// titleBarStyle: 'hidden',
 		titleBarOverlay: {
-			color: '#0d0c1e',
-			symbolColor: '#74b1be'
+			color: currentTheme.primary[900],
+			symbolColor: currentTheme.secondary[400]
 		},
 		autoHideMenuBar: true,
 		width: store.get('windowBounds.width'),
@@ -152,24 +153,37 @@ async function createWindow() {
 		}
 	});
 
-		// Test actively push message to the Electron-Renderer
-		win.webContents.once('did-finish-load', () => {
-			console.log('did-finish-load');
-			win?.webContents.send('main-process-message', new Date().toLocaleString());
-			console.log('zoomFactor', store.get('zoomFactor'));
-			// win?.webContents.setZoomFactor(store.get('zoomFactor'));
-			win?.webContents.send('apply-theme', store.get('currentTheme'));
-		});
-	
-		win.on('ready-to-show', () => {
-			console.log('ready-to-show');
-			console.log('zoomFactor', store.get('zoomFactor'));
-			console.log('store', store.store)
-			// win?.webContents.setZoomFactor(store.get('zoomFactor'));
-			win?.webContents.send('apply-theme', store.get('currentTheme'));
-			win?.show();
-		});
-	
+	// Test actively push message to the Electron-Renderer
+	win.webContents.once('did-finish-load', () => {
+		console.log('did-finish-load');
+		win?.webContents.send('main-process-message', new Date().toLocaleString());
+
+		// win?.webContents.setZoomFactor(store.get('zoomFactor'));
+		win?.webContents.send('apply-theme', store.get('currentTheme'));
+	});
+
+	win.on('ready-to-show', () => {
+		console.log('ready-to-show');
+
+		win?.webContents.send('apply-theme', store.get('currentTheme'));
+		if (store.get('windowMaximized'))  win?.maximize();
+		win?.show();
+	});
+
+	win.on('maximize', () => {
+		console.log('maximize');	
+	})
+
+	win.on('close', () => {
+		console.log('close');
+		console.log('windowBounds', win?.getBounds(),'windowNormalBounds', win?.getNormalBounds(),'windowMaximized',win?.isMaximized(),'windowFullScreen', win?.isFullScreen(),'zoomFactor', win?.webContents.getZoomFactor());
+		// if (win) {
+		store.set('windowBounds', win?.getNormalBounds());
+		store.set('windowMaximized', win?.isMaximized());
+		store.set('windowFullScreen', win?.isFullScreen());
+		store.set('zoomFactor', win?.webContents.getZoomFactor());
+		// }
+	});
 
 	if (url) {
 		// electron-vite-vue#298
@@ -183,8 +197,6 @@ async function createWindow() {
 	contextBridge.exposeInMainWorld('myAPI', {
 		currentTheme: currentTheme
 	});
-
-
 
 	// // Make all links open with the browser, not with the application
 	// win.webContents.setWindowOpenHandler(({ url }) => {
@@ -206,19 +218,6 @@ async function createWindow() {
 
 	// Apply electron-updater
 	update(win);
-
-	win.on('close', () => {
-		console.log('close');
-		// if (win) {
-			store.set('windowBounds', win?.getBounds());
-			store.set('windowLocation', win?.getPosition());
-			store.set('windowFullScreen', win?.isFullScreen());
-			console.log('set zoomFactor', win?.webContents.getZoomFactor());
-			store.set('zoomFactor', win?.webContents.getZoomFactor());
-		// }
-	});
-
-
 }
 
 app.whenReady().then(() => {
@@ -316,6 +315,7 @@ const printFile = (e: any, filePath: string, content: string) => {
 	console.log(content);
 	// /home/mebza/apps/kazi/dist/print.html
 	workerWindow = new BrowserWindow({
+
 		webPreferences: {
 			webSecurity: false,
 			nodeIntegration: true,
@@ -336,7 +336,6 @@ const printFile = (e: any, filePath: string, content: string) => {
 	// window.webContents.printToPDF({ printSelectionOnly: true, }).then((data) => {
 	// 		// Use the data however you like :)
 	// });
-
 
 	workerWindow?.once('ready-to-show', () => {
 		workerWindow?.webContents.send('printPDF', content);
