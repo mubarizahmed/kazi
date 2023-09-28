@@ -3,7 +3,7 @@ import { release } from 'node:os';
 import { join } from 'node:path';
 import { update } from './update';
 import { FileTreeNodeType, FileTreeType, TaskTree } from '@/types';
-import { checkTask, scanAllFiles, startTaskScan } from './taskScanner';
+import { checkTask, addTask, scanAllFiles, startTaskScan } from './taskScanner';
 import { scanUpdateFileTree, loadFile, saveFile, createFile, deleteFile } from './fileScanner';
 import {
 	createDb,
@@ -75,7 +75,8 @@ export const store = new Store({
 		windowMaximized: true,
 		userDirectory: path.join(app.getPath('documents'), 'Kazi'),
 		zoomFactor: 1,
-		currentTheme: defaultTheme
+		currentTheme: defaultTheme,
+		dateFormat: 'DD.MM.YYYY',
 	}
 });
 module.exports = { projectTree, store };
@@ -166,6 +167,7 @@ async function createWindow() {
 
 		// win?.webContents.setZoomFactor(store.get('zoomFactor'));
 		win?.webContents.send('apply-theme', store.get('currentTheme'));
+		win?.show();
 	});
 
 	win.on('ready-to-show', () => {
@@ -259,6 +261,7 @@ app.whenReady().then(() => {
 	ipcMain.handle('update-task-tree', scanAllFiles);
 	ipcMain.handle('start-task-scan', startTaskScan);
 	ipcMain.handle('check-task', checkTask);
+	ipcMain.handle('add-task', addTask);
 	ipcMain.handle('print-file', printFile);
 
 	ipcMain.on('readyToPrintPDF', (event) => {

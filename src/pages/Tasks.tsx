@@ -111,6 +111,8 @@ const Tasks = (props: Props) => {
 	};
 
 	const checkTask = async (task: TaskTreeNode, checked: boolean) => {
+		console.log(task, checked);
+		console.log(typeof task.dueDate)
 		let res = await window.electronAPI.checkTask(task, !checked);
 		if (res) {
 			console.log(res);
@@ -155,6 +157,18 @@ const Tasks = (props: Props) => {
 		console.log('task updated');
 	};
 
+	const updateProject = (project: TaskTree) => {
+		console.log('update project',project);
+		const updatedProjects = projects.map((p) => {
+			if (p.project_id === project.project_id) {
+				return project;
+			}
+			return p;
+		});
+		setProjects(updatedProjects);
+	};
+
+
 	const onDragStart = (event: DragStartEvent) => {
 		console.log(event);
 		if (event.active.data.current?.type === 'project') {
@@ -195,7 +209,7 @@ const Tasks = (props: Props) => {
 				<div className='flex items-center justify-center gap-0.5'>
 				<button
 						className={
-							'rounded-none w-28 drop-shadow-sm rounded-l-lg p-1 text-md  ' +
+							'rounded-none w-28 drop-shadow-sm rounded-l-lg p-1 text-sm  ' +
 							(filter === 1
 								? 'bg-secondary-400 text-primary-900'
 								: ' bg-primary-800 text-primary-200 hover:border-secondary-400 hover:text-secondary-400')
@@ -208,7 +222,7 @@ const Tasks = (props: Props) => {
 					</button>
 					<button
 						className={
-							'rounded-none w-28 drop-shadow-sm rounded-r-lg p-1 text-md  ' +
+							'rounded-none w-28 drop-shadow-sm rounded-r-lg p-1 text-sm  ' +
 							(filter === 2
 								? 'bg-secondary-400 text-primary-900'
 								: ' bg-primary-800 text-primary-200 hover:border-secondary-400 hover:text-secondary-400')
@@ -241,7 +255,7 @@ const Tasks = (props: Props) => {
 						<SortableContext items={projectsId}>
 							{projects.length > 0 ? (
 								projects.map((proj) => {
-									return <TasksContainer project={proj} checkTask={checkTask} filter={filter}/>;
+									return <TasksContainer key={proj.project_id} project={proj} updateProject={updateProject} checkTask={checkTask} filter={filter}/>;
 								})
 							) : (
 								<p>Test</p>

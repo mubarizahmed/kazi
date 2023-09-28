@@ -10,8 +10,11 @@ import {
 	deleteProjectTasks,
 	getMarkdownProjects,
 	getProject,
+	getTaskTree,
 	upsertTask
 } from './db';
+import { insert } from '@milkdown/utils';
+import { store } from '.';
 
 // interface Task {
 // 	taskName: string;
@@ -25,7 +28,7 @@ import {
 // }
 
 // Function to scan and parse a markdown file
-function scanMarkdownFile(filePath: string) {
+const scanMarkdownFile = async (filePath: string) => {
 	// delete existing tasks in db
 	let fileId = fs.statSync(filePath).ino;
 	deleteProjectTasks(fileId);
@@ -50,9 +53,10 @@ function scanMarkdownFile(filePath: string) {
 	// 			}
 	// 		}
 	// 	});
-	filterTokensToDb(tokens, 'root-0', fileId);
+	await filterTokensToDb(tokens, 'root-0', fileId);
+	console.log('scanMarkdownFile complete');
 	return filterTokens(tokens, '-0');
-}
+};
 
 const parseTask = (taskText: string) => {
 	let task = taskText
@@ -64,9 +68,28 @@ const parseTask = (taskText: string) => {
 
 	try {
 		if (task.length > 1) {
-			let [d, m, y] = task[1].trim().split('.');
-			let date = new Date(+y, +m - 1, +d).toISOString();
-			return { taskName, date };
+			const dateFormat = store.get('dateFormat');
+			console.log(dateFormat);
+			// make regexp from dateFormat string
+			const regexp = dateFormat
+				.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+				.replace(/dd/gi, '(?<day>\\d{2})')
+				.replace(/mm/gi, '(?<month>\\d{2})')
+				.replace(/yyyy/gi, '(?<year>\\d{4})');
+
+			// get date from task
+			let match = task[1].match(new RegExp(regexp));
+			// console.log(match);
+			if (match?.length === 4) {
+				let {
+					groups: { day, month, year }
+				} = match;
+				let date = new Date(+year, +month - 1, +day).toISOString();
+				return { taskName, date };
+			}
+			// let [d, m, y] = task[1].trim().split('.');
+			// let date = new Date(+y, +m - 1, +d).toISOString();
+			// return { taskName, date };
 		}
 	} catch (error) {
 		console.log(error);
@@ -77,12 +100,12 @@ const parseTask = (taskText: string) => {
 	return { taskName };
 };
 
-const filterTokensToDb = (tokens: marked.Token[], id: string, fileId: number) => {
+const filterTokensToDb = async (tokens: marked.Token[], id: string, fileId: number) => {
 	// loop through top level tokens
-	tokens.forEach((token: marked.Token) => {
+	const asyncTokens = tokens.map(async (token: marked.Token) => {
 		// if list & not empty go down one level
 		if (token.type === 'list' && token.items.length > 0) {
-			let childrenId = filterTokensToDb(token.items, id, fileId);
+			let childrenId = await filterTokensToDb(token.items, id, fileId);
 			if (childrenId !== id) {
 				if (childrenId.split('-').length !== id.split('-').length) {
 					id = childrenId.slice(0, childrenId.slice(id.length).indexOf('-') + id.length);
@@ -107,14 +130,14 @@ const filterTokensToDb = (tokens: marked.Token[], id: string, fileId: number) =>
 				// console.log(token);
 				const status = match[1] === 'x';
 				let { taskName, date } = parseTask(token.text);
-				upsertTask(id, taskName, status, fileId, date, 4, id.slice(0, id.lastIndexOf('-')));
+				await upsertTask(id, taskName, status, fileId, date, 4, id.slice(0, id.lastIndexOf('-')));
 
 				// if has sub tasks then recursevily get them
 				if (token.tokens.length > 1) {
-					filterTokensToDb(token.tokens, id + '-0', fileId);
+					await filterTokensToDb(token.tokens, id + '-0', fileId);
 				}
 			} else {
-				let childrenId = filterTokensToDb(token.tokens, id, fileId);
+				let childrenId = await filterTokensToDb(token.tokens, id, fileId);
 				if (childrenId !== id) {
 					if (childrenId.split('-').length !== id.split('-').length) {
 						id = childrenId.slice(0, childrenId.slice(id.length).indexOf('-') + id.length);
@@ -139,10 +162,19 @@ const filterTokensToDb = (tokens: marked.Token[], id: string, fileId: number) =>
 				// console.log(token);
 				const status = match[1] === 'x';
 				let { taskName, date } = parseTask(token.text);
-				upsertTask(id, taskName, status, fileId, date, 4, id.slice(0, id.lastIndexOf('-')));
+				await upsertTask(id, taskName, status, fileId, date, 4, id.slice(0, id.lastIndexOf('-')));
 			}
 		}
 	});
+
+	try {
+		const results = await Promise.all(asyncTokens);
+		// All asynchronous tasks are completed here
+		// console.log(results);
+	} catch (error) {
+		// Handle errors
+		// console.error(error);
+	}
 	return id;
 };
 
@@ -253,20 +285,28 @@ export const checkTask = async (_event: any, task: TaskTreeNode, checked: boolea
 	const pattern = new RegExp(`([*-]\\s*\\[)(.*)(]\\s*${task.label})`, 'g');
 
 	// Function to replace the checkbox state based on the 'checked' parameter
-	const replaceCallback = (match , match1, match2, match3 ) => {
-    console.log(match);
-    console.log(match1)
-    console.log(match2)
-    console.log(match3)
-    console.log([match1, (checked ? `x` : ` `), match3].join(''));
-    return [match1, checked ? `x` : ` `, match3].join('');
+	const replaceCallback = (match, match1, match2, match3) => {
+		console.log(match);
+		console.log(match1);
+		console.log(match2);
+		console.log(match3);
+		console.log([match1, checked ? `x` : ` `, match3].join(''));
+		return [match1, checked ? `x` : ` `, match3].join('');
 	};
 
 	// Replace the task line in the file content
 	const updatedContent = fileContent.replace(pattern, replaceCallback);
 
 	// upsert task to db
-	upsertTask(task.id, task.label, checked, task.project_id, task.dueDate?.toISOString() , task.priority, task.parent_id);
+	upsertTask(
+		task.id,
+		task.label,
+		checked,
+		task.project_id,
+		task.dueDate ? new Date(task.dueDate).toISOString() : undefined,
+		task.priority,
+		task.parent_id
+	);
 
 	console.log('updated Task', updatedContent);
 	// Write the updated content back to the file
@@ -298,4 +338,54 @@ export const scanAllFiles = async () => {
 	});
 	console.timeEnd('scanAllFiles');
 	return true;
+};
+
+export const addTask = async (
+	_event: any,
+	label: string,
+	dueDate: Date | null,
+	project_id: number,
+	project_path: string,
+	prevTask?: TaskTreeNode
+) => {
+	console.log('addTask started', label, project_id, project_path, prevTask);
+	let fileContent = fs.readFileSync(project_path, 'utf-8');
+	console.log(fileContent);
+	let dateString = '';
+	if (dueDate) {
+		const dateFormat = store.get('dateFormat');
+
+		dateString = dateFormat
+			.replace(/dd/gi, dueDate.getDate().toString().padStart(2, '0'))
+			.replace(/mm/gi, dueDate.getMonth().toString().padStart(2, '0'))
+			.replace(/yyyy/gi, dueDate.getFullYear().toString().padStart(4, '20'));
+		// console.log(dateString);
+		dateString = ` - ${dateString}`;
+	}
+
+	if (prevTask !== undefined) {
+		// regular expression to find the location of previous task
+		const pattern = new RegExp(`([*-]\\s*\\[)(.*)(]\\s*${prevTask.label})`, 'g');
+		// function to find loaction of previous task
+		const prevTaskPos = fileContent.search(pattern);
+		// regular expression to find the next new line character
+		const insertPos = fileContent.substring(prevTaskPos).search(/\n/) + prevTaskPos + 1;
+		let newTask = fileContent.substring(prevTaskPos, insertPos);
+		newTask = newTask.slice(0, newTask.indexOf(']') + 1) + ' ' + label + dateString + ' \n';
+		// insert new task
+		fileContent = fileContent.slice(0, insertPos) + newTask + fileContent.slice(insertPos);
+	} else {
+		fileContent = fileContent.trimEnd() + '\n*   [ ] ' + label + dateString + '\n';
+	}
+	console.log(fileContent);
+
+	// write new file content
+	fs.writeFileSync(project_path, fileContent);
+
+	await scanMarkdownFile(project_path);
+	// setTimeout(()=>{
+	// 	return getTaskTree(project_id);
+	// },300);
+
+	return getTaskTree(project_id);
 };

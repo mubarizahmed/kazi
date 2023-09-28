@@ -69,7 +69,7 @@ export const getProject = (id: number) => {
 			}
 		});
 	});
-}
+};
 
 export const getProjects = () => {
 	return new Promise((resolve, reject) => {
@@ -293,51 +293,40 @@ export const upsertTask = (
 	priority: number = 4,
 	parent_id: string = 'root'
 ) => {
-	db.run(
-		`INSERT INTO tasks (
+	return new Promise((resolve, reject) => {
+		db.run(
+			`INSERT INTO tasks (
 		id, name, checked, dueDate, project_id, priority, parent_id
 		) 
 		VALUES (?, ?, ?, ?, ?, ?, ?)
 		ON CONFLICT (id, project_id) DO UPDATE 
 		SET name = ?, checked = ?, dueDate = ?, project_id = ?, priority = ?, parent_id = ?`,
-		[
-			id,
-			name,
-			checked,
-			dueDate,
-			project_id,
-			priority,
-			parent_id,
-			name,
-			checked,
-			dueDate,
-			project_id,
-			priority,
-			parent_id
-		],
-		(err) => {
-			if (err) {
-				console.log(err);
-				console.log(
-					id +
-						' | ' +
-						name +
-						' | ' +
-						checked +
-						' | ' +
-						project_id +
-						' | ' +
-						dueDate +
-						' | ' +
-						priority +
-						' | ' +
-						parent_id
-				);
-			} else {
-				// console.log(`Row(s) updated: ${this.changes}`);
+			[
+				id,
+				name,
+				checked,
+				dueDate,
+				project_id,
+				priority,
+				parent_id,
+				name,
+				checked,
+				dueDate,
+				project_id,
+				priority,
+				parent_id
+			],
+			(err) => {
+				if (err) {
+					console.log(err);
+					reject(err);
+				} else {
+					console.log('upsertTask', name);
+					resolve(true);
+				}
 			}
-		}
-	);
+		);
+	});
 };
 
 export const deleteProjectTasks = (project_id: number) => {
@@ -369,7 +358,7 @@ export const listToTaskTree = (list: any) => {
 			if (row.parent_id === '?') {
 				tree = {
 					id: row.id,
-					key: row.project_id + "/" + row.id,
+					key: row.project_id + '/' + row.id,
 					label: row.name,
 					checked: row.checked,
 					dueDate: row.dueDate,
@@ -382,7 +371,7 @@ export const listToTaskTree = (list: any) => {
 			} else {
 				let child: any = {};
 				child.id = row.id;
-				child.key = row.project_id + "/" + row.id;
+				child.key = row.project_id + '/' + row.id;
 				child.label = row.name;
 				child.checked = row.checked;
 				child.dueDate = row.dueDate;
@@ -431,7 +420,7 @@ export const getTaskTree = (project_id: number) => {
 					return;
 				}
 				if (rows.length > 1) {
-					console.log(rows.length);
+					console.log('getTaskTree', rows.length);
 					// console.log(listToTaskTree(rows));
 					resolve(listToTaskTree(rows));
 				} else {
@@ -453,7 +442,7 @@ export const getCheckedTasks = (project_id: number) => {
 				} else {
 					let checked: CheckedTasks = {};
 					rows.forEach((row: any) => {
-						checked[row.project_id + "/" + row.id] = { checked: true, partialChecked: false };
+						checked[row.project_id + '/' + row.id] = { checked: true, partialChecked: false };
 					});
 					resolve(checked);
 				}

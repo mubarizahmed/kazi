@@ -14,6 +14,7 @@ type Props = {
 	// updateChecked: ((event: TreeSelectionEvent) => void) | undefined;
 	checkTask: Function;
 	filter: number;
+	updateProject: (project: TaskTree) => void;
 };
 
 const TasksContainer = (props: Props) => {
@@ -101,25 +102,17 @@ const TasksContainer = (props: Props) => {
 		transform: CSS.Translate.toString(transform)
 	};
 
-	const nodeTemplate = (node: TreeNode, options: TreeNodeTemplateOptions) => {
-		if (node.dueDate) {
-			return (
-				<div className="flex flex-row items-center justify-start gap-2 ">
-					<span className={options.className}>{node.label}</span>
-					<div className="flex items-center justify-center rounded bg-slate-500 p-1">
-						<span className="text-xs text-white">
-							{new Date(node.dueDate).toDateString().slice(4, 10)}
-						</span>
-					</div>
-				</div>
-			);
-		}
+	const addTaskHandle = async (label: string, dueDate: Date | null, prevTask?: TaskTreeNode) => {
 
-		return (
-			<div className="flex flex-row items-center justify-start gap-1">
-				<span className={options.className}>{node.label}</span>
-			</div>
-		);
+		console.log('addTaskHandle', label, dueDate, prevTask);
+		let taskTree = await window.electronAPI.addTask(label, dueDate, project.project_id, project.project_path, prevTask);
+		console.log(taskTree);
+		if (taskTree) {
+			let projectTree = { ...project };
+			projectTree.tasks = taskTree;
+			props.updateProject(projectTree);
+		}
+		setAddTaskPosition(-2);
 	};
 
 	useEffect(() => {
@@ -245,13 +238,23 @@ const TasksContainer = (props: Props) => {
 								''
 							)}
 						</div>
-						{addTaskPosition === index ? <AddTask close={() => setAddTaskPosition(-2)} /> : ''}
+						{addTaskPosition === index ? (
+							<AddTask
+								close={() => setAddTaskPosition(-2)}
+								add={(t: string, d: Date | null) => addTaskHandle(t, d, task)}
+							/>
+						) : (
+							''
+						)}
 					</div>
 				))}
 				{/* add task */}
 				<div className="flex w-full flex-col items-center">
 					{addTaskPosition === -1 ? (
-						<AddTask close={() => setAddTaskPosition(-2)} />
+						<AddTask
+							close={() => setAddTaskPosition(-2)}
+							add={(t: string, d: Date | null) => addTaskHandle(t, d)}
+						/>
 					) : (
 						<button
 							className="pi pi-plus flex h-8 w-8 flex-shrink-0 place-content-center place-items-center rounded-md border-transparent bg-primary-900 p-0 text-primary-200 hover:bg-primary-800"

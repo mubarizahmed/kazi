@@ -17,6 +17,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	loadTaskTree: () => ipcRenderer.invoke('load-task-tree'),
 	startTaskScan: () => ipcRenderer.invoke('start-task-scan'),
 	checkTask: (task: TaskTreeNode, checked: boolean) => ipcRenderer.invoke('check-task', task, checked),
+	addTask: (label: string,dueDate: Date | null, project_id: number, project_path: string, prevTask?: TaskTreeNode) => ipcRenderer.invoke('add-task', label, dueDate, project_id, project_path, prevTask),
 	printFile: (filePath: string, content: string) =>
 		ipcRenderer.invoke('print-file', filePath, content),
 	getThemes: () => ipcRenderer.invoke('get-themes'),
