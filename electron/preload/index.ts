@@ -1,4 +1,4 @@
-import { TaskTreeNode } from "@/types";
+import { TaskTreeNode } from '@/types';
 
 const { contextBridge, ipcRenderer } = require('electron');
 
@@ -13,11 +13,19 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	loadSettings: () => ipcRenderer.invoke('load-settings'),
 	saveSettings: (settings: any) => ipcRenderer.invoke('save-settings', settings),
 	changeUserDirectory: () => ipcRenderer.invoke('change-user-directory'),
+	changeDateFormat: (dateFormat: string) => ipcRenderer.invoke('change-date-format', dateFormat),
 	updateTaskTree: () => ipcRenderer.invoke('update-task-tree'),
 	loadTaskTree: () => ipcRenderer.invoke('load-task-tree'),
 	startTaskScan: () => ipcRenderer.invoke('start-task-scan'),
-	checkTask: (task: TaskTreeNode, checked: boolean) => ipcRenderer.invoke('check-task', task, checked),
-	addTask: (label: string,dueDate: Date | null, project_id: number, project_path: string, prevTask?: TaskTreeNode) => ipcRenderer.invoke('add-task', label, dueDate, project_id, project_path, prevTask),
+	checkTask: (task: TaskTreeNode, checked: boolean) =>
+		ipcRenderer.invoke('check-task', task, checked),
+	addTask: (
+		label: string,
+		dueDate: Date | null,
+		project_id: number,
+		project_path: string,
+		prevTask?: TaskTreeNode
+	) => ipcRenderer.invoke('add-task', label, dueDate, project_id, project_path, prevTask),
 	printFile: (filePath: string, content: string) =>
 		ipcRenderer.invoke('print-file', filePath, content),
 	getThemes: () => ipcRenderer.invoke('get-themes'),

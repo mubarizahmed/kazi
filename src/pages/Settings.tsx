@@ -3,17 +3,21 @@ import { Dropdown } from 'primereact/dropdown';
 import { LuConstruction } from 'react-icons/lu';
 import { Theme } from '@/types';
 import { IconContext } from 'react-icons';
+import { InputText } from 'primereact/inputtext';
 
 const Settings = () => {
 	const [selectedTab, setSelectedTab] = useState(0);
 	const [settingValues, setSettingValues] = useState({});
 	const [themes, setThemes] = useState([]);
+	const [dateFormat, setDateFormat] = useState('');
+	const [dateFormatValid, setDateFormatValid] = useState(true);
 
 	const load = async () => {
 		console.log('loaded');
 		await window.electronAPI.loadSettings().then((res) => {
 			setSettingValues(res[0]);
 			setThemes(res[1]);
+			setDateFormat(res[0].dateFormat);
 			console.log(res);
 		});
 	};
@@ -22,30 +26,23 @@ const Settings = () => {
 		load();
 	}, []);
 
-	const themeOptionsTemplate = (theme: Theme) => {
-		const createColorCircle = (color: number[]) => {
-			const rgbValue = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
-			return (
-				<div
-					className="theme-circle h-4 w-4 rounded-full"
-					style={{ backgroundColor: rgbValue }}
-				></div>
-			);
-		};
-		if (!theme?.name) return <div></div>;
-		return (
-			<div className="theme-item overflow-none flex flex-row items-center">
-				<div className="text mr-4 w-24">{theme.name}</div>
-				<div className=" theme-circle-container flex h-4 flex-grow flex-row gap-1">
-					{createColorCircle(theme.primary[900])}
-					{createColorCircle(theme.primary[800])}
-					{createColorCircle(theme.primary[600])}
-					{createColorCircle(theme.secondary[400])}
-					{createColorCircle(theme.danger)}
-					{createColorCircle(theme.caution)}
-				</div>
-			</div>
-		);
+	const validateDateFormat = () => {
+		const pattern =
+		/(?=^[^d]*d{2}[^d]*$)(?=^[^m]*m{2}[^m]*$)(?=^[^y]*y{4}[^y]*$)(?=^[^dd]*dd{1}[^dd]*$)(?=^[^mm]*mm{1}[^mm]*$)(?=^[^yyyy]*yyyy{1}[^yyyy]*$)/ig;
+
+		console.log(dateFormat.search(pattern));
+			console.log(pattern.test(dateFormat));
+		// Test if the pattern matches the dateFormat string
+		if (pattern.test(dateFormat)) {
+			console.log('valid');
+			setDateFormatValid(true);
+			window.electronAPI.changeDateFormat(dateFormat).then((res) => {
+				setSettingValues(res);
+			});
+		} else {
+			console.log('invalid');
+			setDateFormatValid(false);
+		}
 	};
 
 	const settings = [
@@ -61,15 +58,15 @@ const Settings = () => {
 					</div>
 					<hr />
 
-					<div className="flex flex-col w-full gap-2">
+					<div className="mb-2 flex w-full flex-col gap-2">
 						<span className="text font-medium">Workspace Directory</span>
 
 						<div className="flex w-full items-stretch">
-							<div className="text-sm min-w-[30vw] bg-primary-800 rounded-l-md p-2 text-primary-200">
+							<div className="min-w-[30vw] rounded-l-md bg-primary-800 p-2 text-sm text-primary-200">
 								{settingValues.userDirectory}
 							</div>
 							<button
-								className=" rounded-none border-0 rounded-r-md bg-secondary-400 p-2 text-sm text-primary-900"
+								className=" rounded-none rounded-r-md border-0 bg-secondary-400 p-2 text-sm text-primary-900"
 								onClick={async () => {
 									setSettingValues(await window.electronAPI.changeUserDirectory());
 								}}
@@ -79,6 +76,36 @@ const Settings = () => {
 						</div>
 						<p className=" text-sm text-primary-400">
 							The directory where all your notes will be stored.
+						</p>
+					</div>
+					<div className="flex w-full flex-col gap-2">
+						<span className="text font-medium">Date Format</span>
+
+						<div className="flex w-full items-stretch">
+							<InputText
+								className={
+									'min-w-[30vw] rounded-none rounded-l-md bg-primary-800 p-2 text-sm ' +
+									(dateFormatValid
+										? 'text-primary-200'
+										: 'shadow-[0_0_0_0.2rem_rgba(var(--color-danger),0.4)] text-danger ')
+								}
+								value={dateFormat}
+								onChange={(e) => {
+									setDateFormat(e.currentTarget.value);
+								}}
+								spellCheck={false}
+							/>
+							
+
+							<button
+								className=" rounded-none rounded-r-md border-0 bg-secondary-400 p-2 text-sm text-primary-900"
+								onClick={validateDateFormat}
+							>
+								Change
+							</button>
+						</div>
+						<p className=" text-sm text-primary-400">
+							The date format used to parse notes for tasks. It needs to contain exactly one set of each DD, MM, and YYYY.
 						</p>
 					</div>
 				</div>
@@ -209,7 +236,7 @@ const Settings = () => {
 			icon: 'code',
 			key: 'editor',
 			content: (
-				<div className="flex !under-construction h-full w-full flex-col items-center justify-center">
+				<div className="!under-construction flex h-full w-full flex-col items-center justify-center">
 					<IconContext.Provider value={{ size: '20%', style: { verticalAlign: 'middle' } }}>
 						<LuConstruction className=" h-32"></LuConstruction>
 					</IconContext.Provider>
@@ -279,6 +306,7 @@ const Settings = () => {
 					onClick={() => {
 						setSelectedTab(i);
 					}}
+					key={i}
 				>
 					<span className="material-symbols-outlined text-base ">{settings[i].icon}</span>
 					<span className=" ">{settings[i].name}</span>

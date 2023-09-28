@@ -257,6 +257,7 @@ app.whenReady().then(() => {
 	});
 	ipcMain.handle('load-settings', loadSettings);
 	ipcMain.handle('change-user-directory', changeUserDirectory);
+	ipcMain.handle('change-date-format', (_e,f) => { store.set('dateFormat', f); return store.store});
 	ipcMain.handle('load-task-tree', getAllTaskTrees);
 	ipcMain.handle('update-task-tree', scanAllFiles);
 	ipcMain.handle('start-task-scan', startTaskScan);
