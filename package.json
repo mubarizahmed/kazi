@@ -1,6 +1,6 @@
 {
   "name": "kazi",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "App that helps you work! With task-management, notes, scheduling, timers in one app.",
   "main": "dist-electron/main/index.js",
   "author": "Mubariz Ahmed",
