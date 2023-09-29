@@ -64,7 +64,7 @@ export const Slash = () => {
     <div className="hidden">
       <div
         role="tooltip"
-        className="min-w-[6rem] w-fit rounded bg-kmedium shadow-lg"
+        className="min-w-[6rem] w-fit rounded bg-primary-800 shadow-lg"
         ref={ref}
       >
         <ul className="m-0 list-none">
@@ -85,7 +85,7 @@ export const Slash = () => {
                 ctx.get(commandsCtx).call(wrapInHeadingCommand.key, 1);
               });
             }}
-            className="cursor-pointer px-6 py-3 hover:text-kaccent1"
+            className="cursor-pointer px-6 py-3 hover:text-secondary-400"
           >
             Heading 1
           </li>
@@ -106,7 +106,7 @@ export const Slash = () => {
                 ctx.get(commandsCtx).call(wrapInHeadingCommand.key, 2);
               });
             }}
-            className="cursor-pointer px-6 py-3 hover:text-kaccent1"
+            className="cursor-pointer px-6 py-3 hover:text-secondary-400"
           >
             Heading 2
           </li>
@@ -127,7 +127,7 @@ export const Slash = () => {
                 ctx.get(commandsCtx).call(wrapInHeadingCommand.key, 3);
               });
             }}
-            className="cursor-pointer px-6 py-3 hover:text-kaccent1"
+            className="cursor-pointer px-6 py-3 hover:text-secondary-400"
           >
             Heading 3
           </li>
@@ -148,7 +148,7 @@ export const Slash = () => {
                 ctx.get(commandsCtx).call(createCodeBlockCommand.key);
               });
             }}
-            className="cursor-pointer px-6 py-3 hover:text-kaccent1"
+            className="cursor-pointer px-6 py-3 hover:text-secondary-400"
           >
             Code Block
           </li>
@@ -170,7 +170,7 @@ export const Slash = () => {
                 ctx.get(commandsCtx).call(insertHrCommand.key);
               });
             }}
-            className="cursor-pointer px-6 py-3 hover:text-kaccent1"
+            className="cursor-pointer px-6 py-3 hover:text-secondary-400"
           >
             Horizontal Rule
           </li>

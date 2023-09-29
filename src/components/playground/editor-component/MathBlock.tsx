@@ -35,12 +35,12 @@ export const MathBlock: FC = () => {
     >
       <Tabs.List className=" text-center">
         <div className=" flex flex-row items-center justify-end gap-2 mb-2">
-          <div className="h-[1px] w-full bg-kmedium" />
+          <div className="h-[1px] w-full bg-primary-600" />
           <Tabs.Trigger
             value="preview"
             className={[
-              'rounded-t-xs  inline-block border-b-2 border-transparent px-4 py-2 hover:border-klighter hover:text-klighter',
-              value === 'preview' ? 'text-kaccent1' : ''
+              'rounded-t-xs  inline-block border-b-2 border-transparent px-4 py-2 hover:border-primary-100 hover:text-primary-100',
+              value === 'preview' ? 'text-secondary-400' : 'text-primary-200'
             ].join(' ')}
           >
             <span className="material-symbols-outlined text-xs">function</span>
@@ -48,8 +48,8 @@ export const MathBlock: FC = () => {
           <Tabs.Trigger
             value="source"
             className={[
-              'rounded-t-xs inline-block border-b-2 border-transparent px-4 py-2 hover:border-klighter hover:text-klighter',
-              value === 'source' ? 'text-kaccent1' : ''
+              'rounded-t-xs inline-block border-b-2 border-transparent px-4 py-2 hover:border-primary-100 hover:text-primary-100',
+              value === 'source' ? 'text-secondary-400' : 'text-primary-200'
             ].join(' ')}
           >
             <span className="material-symbols-outlined text-xs">code</span>
@@ -59,16 +59,16 @@ export const MathBlock: FC = () => {
       <Tabs.Content value="preview">
         <div className="py-3 text-center" ref={codePanel} />
       </Tabs.Content>
-      <Tabs.Content value="source" className="flex flex-col">
+      <Tabs.Content value="source" className=" flex flex-col">
         <textarea
-          className="block h-48 w-full ring-0 focus:outline-none rounded bg-kdark p-4 font-mono text-gray-50"
+          className="block h-48 w-full ring-0 focus:outline-none rounded bg-primary-800 p-4 font-mono text-primary-200"
           ref={codeInput}
           defaultValue={code}
           spellCheck="false"
         />
         <div className="flex items-center justify-end gap-2 py-2">
           <button
-            className="rounded-t-xs bg-transparent inline-block border-b-2 border-transparent px-4 py-2 hover:border-klighter hover:text-klighter "
+            className="rounded-t-xs bg-transparent inline-block border-b-2 text-primary-200 border-transparent px-4 py-2 hover:border-primary-100 hover:text-primary-100 "
             onClick={() => {
               setValue('preview');
             }}
@@ -76,7 +76,7 @@ export const MathBlock: FC = () => {
             <span className="material-symbols-outlined text-xs">close</span>
           </button>
           <button
-            className="rounded-t-xs bg-transparent inline-block text-kaccent1 border-b-2 border-transparent px-4 py-2 hover:border-kaccent1 "
+            className="rounded-t-xs bg-transparent inline-block text-secondary-400 border-b-2 border-transparent px-4 py-2 hover:border-secondary-400 "
             onClick={() => {
               setAttrs({ value: codeInput.current?.value || '' });
               setValue('preview');

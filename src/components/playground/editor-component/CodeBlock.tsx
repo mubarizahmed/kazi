@@ -10,7 +10,7 @@ export const CodeBlock: FC = () => {
 		<div
 			className={clsx(
 				selected ? 'ProseMirror-selectednode' : '',
-				'not-prose my-4 rounded  p-4 shadow bg-black'
+				'not-prose my-4 rounded  p-4 shadow bg-neutral-900'
 			)}
 		>
 			<div
@@ -19,7 +19,7 @@ export const CodeBlock: FC = () => {
 				className="mb-2 flex justify-between items-center"
 			>
 				<select
-					className="!focus:shadow-none cursor-pointer align-bottom rounded !border-0 p-2 font-mono  text-xs uppercase shadow-sm focus:ring-2 focus:ring-offset-2 bg-kdark"
+					className="!focus:shadow-none cursor-pointer align-bottom rounded !border-0 p-2 font-mono  text-xs uppercase shadow-sm focus:ring-2 focus:ring-offset-2 bg-primary-900"
 					value={node.attrs.language || 'text'}
 					onChange={(e) => {
 						setAttrs({ language: e.target.value });
@@ -33,7 +33,7 @@ export const CodeBlock: FC = () => {
 				</select>
 
 				<button
-					className="inline-flex items-center justify-center rounded border  w-4 leading-6 shadow-sm hover:bg-gray-50 focus:ring-2 !ring-kdark focus:ring-offset-2 bg-black"
+					className="inline-flex items-center justify-center rounded border  w-4 leading-6 shadow-sm hover:bg-neutral-100 focus:ring-2 !ring-primary-900 focus:ring-offset-2 bg-neutral-900"
 					onClick={(e) => {
 						e.preventDefault();
 						navigator.clipboard.writeText(node.textContent);

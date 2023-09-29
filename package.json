@@ -1,6 +1,6 @@
 {
   "name": "kazi",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "App that helps you work! With task-management, notes, scheduling, timers in one app.",
   "main": "dist-electron/main/index.js",
   "author": "Mubariz Ahmed",
@@ -18,7 +18,7 @@
     "pree2e": "vite build --mode=test",
     "e2e": "playwright test",
     "electron": "electron-builder --win portable --x64",
-    "release" : "electron-builder --win --publish always"
+    "release": "electron-builder --win --publish always"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.5.1",
@@ -29,6 +29,8 @@
     "@codemirror/search": "^6.3.0",
     "@codemirror/state": "^6.2.0",
     "@codemirror/view": "^6.9.4",
+    "@dnd-kit/core": "^6.0.8",
+    "@dnd-kit/sortable": "^7.0.2",
     "@lezer/highlight": "^1.1.4",
     "@milkdown/core": "7.2.0",
     "@milkdown/ctx": "7.2.0",
@@ -70,9 +72,11 @@
     "primereact": "^9.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-icons": "^4.8.0",
+    "react-hotkeys-hook": "^4.4.1",
+    "react-icons": "^4.11.0",
     "react-router-dom": "^6.10.0",
-    "react-spinners": "^0.13.8"
+    "react-spinners": "^0.13.8",
+    "sqlite3": "^5.1.6"
   },
   "devDependencies": {
     "@playwright/test": "^1.32.0",

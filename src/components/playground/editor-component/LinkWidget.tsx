@@ -25,7 +25,7 @@ export const LinkWidgetAfter: FC = () => {
         (
         {
           <>
-            <small className="font-light text-nord8">link: </small>
+            <small className="font-light text-secondary-200">link: </small>
             <input
               size={href.length}
               placeholder="empty"
@@ -38,12 +38,12 @@ export const LinkWidgetAfter: FC = () => {
                   });
                 });
               }}
-              className="rounded border-none bg-gray-50 py-0 px-2 ring-1 dark:bg-gray-900"
+              className="rounded border-none bg-primary-800 py-0 px-2 "
               type="text"
               defaultValue={href}
             />
             &nbsp;
-            <small className="font-light text-nord8">title: </small>
+            <small className="font-light text-secondary-200">title: </small>
             &quot;
             <input
               size={title.length || 5}
@@ -57,7 +57,7 @@ export const LinkWidgetAfter: FC = () => {
                   });
                 });
               }}
-              className="rounded border-none bg-gray-50 py-0 px-2 ring-1 dark:bg-gray-900"
+              className="rounded border-none bg-primary-800 py-0 px-2 "
               type="text"
               defaultValue={title}
             />

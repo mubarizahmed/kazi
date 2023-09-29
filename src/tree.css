@@ -3,17 +3,17 @@
 	border: none;
 	font-family: var(--font-family);
 	padding: 0;
-	@apply text-klight;
+	@apply text-primary-200;
 }
 .p-tree .p-tree-header {
-  @apply pl-4 pr-4
+	@apply pl-4 pr-4;
 }
 .p-tree .p-tree-container {
 	margin-top: 1rem;
-	@apply overflow-y-auto w-full h-full pl-4 pr-4;
+	@apply h-full w-full overflow-y-auto pl-4 pr-4;
 }
 .p-tree .p-tree-container .p-treenode {
-  padding: 0.125rem 0;
+	padding: 0.125rem 0;
 }
 .p-tree .p-tree-container .p-treenode .p-treenode-content {
 	border-radius: 6px;
@@ -34,12 +34,12 @@
 	margin-right: 0.25rem;
 	width: 1rem;
 	height: 1rem;
-	@apply text-klight;
+	@apply text-primary-200;
 }
 
 .p-tree .p-tree-container .p-treenode .p-treenode-content .p-tree-toggler:enabled:hover {
 	background: none;
-	@apply text-kaccent1;
+	@apply text-secondary-400;
 }
 .p-tree .p-tree-container .p-treenode .p-treenode-content .p-tree-toggler:focus {
 	outline: 0 none;
@@ -48,16 +48,16 @@
 }
 
 .p-tree .p-tree-container .p-treenode .p-treenode-content .p-treenode-icon {
-	@apply text-klight mr-[0.25rem];
+	@apply mr-[0.25rem] text-primary-200;
 }
 .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight .p-tree-toggler,
 .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight .p-treenode-icon {
-	@apply text-kaccent1;
+	@apply text-secondary-400;
 }
 
 .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight {
 	background: none;
-	@apply text-kaccent1;
+	@apply text-secondary-400;
 }
 
 .p-tree
@@ -65,7 +65,7 @@
 	.p-treenode
 	.p-treenode-content.p-treenode-selectable:not(.p-highlight):hover {
 	background: none;
-	@apply text-kaccent1;
+	@apply text-secondary-400;
 }
 
 .p-tree .p-tree-container .p-treenode .p-treenode-content:focus {
@@ -76,8 +76,11 @@
 .p-tree .p-tree-filter-container {
 	margin: 0.5rem 0;
 }
+.p-tree .p-tree-filter-container .p-tree-filter-icon {
+	@apply text-primary-200;
+}
 .p-inputtext {
-	@apply border-none bg-kmedium text-klight;
+	@apply border-none bg-primary-800 text-primary-200;
 	font-family: var(--font-family);
 	padding: 0.5rem;
 }
@@ -85,97 +88,230 @@
 .p-tree .p-treenode-children {
 	margin: 0 0 0 0.5rem;
 	padding: 0;
-	@apply border-l-2 border-transparent hover:border-kmedium;
+	@apply border-l-2 border-transparent hover:border-primary-800;
 }
 
 .p-tree .p-tree-toggler-icon {
-  font-size: 0.75rem;
+	font-size: 0.75rem;
 }
 
 .p-dialog {
-	@apply bg-kmedium opacity-100 text-klighter;
+	@apply bg-primary-800 text-primary-100 opacity-100;
 }
 .p-dialog .p-dialog-header {
-	@apply bg-transparent text-klighter pb-0;
+	@apply bg-transparent pb-0 text-primary-100;
 }
 .p-dialog .p-dialog-header .p-dialog-header-icon {
-	@apply text-klighter hover:text-kaccent1 hover:bg-transparent;
+	@apply text-primary-100 hover:bg-transparent hover:text-secondary-400;
 }
 .p-dialog .p-dialog-header .p-dialog-header-icon:enabled:hover {
-	@apply text-kaccent1 hover:bg-transparent;
+	@apply text-secondary-400 hover:bg-transparent;
 }
 .p-dialog .p-dialog-content {
-	@apply bg-transparent text-klighter pt-4 pb-4;
+	@apply bg-transparent pb-4 pt-4 text-primary-100;
 }
-.tree-add-dialog{
-	@apply bg-transparent text-klighter !pt-8 !pb-0;
+.tree-add-dialog {
+	@apply bg-transparent !pb-0 !pt-8 text-primary-100;
 }
 
 .p-delete-dialog .p-dialog-content {
-	@apply bg-transparent text-klighter pt-4 pb-4;
+	@apply bg-transparent pb-4 pt-4 text-primary-100;
 }
 
 .p-dialog .p-dialog-content .p-inputtext {
 	box-shadow: none;
-	@apply bg-kdark text-klight w-full border-kdark border-solid;
+	@apply w-full border-solid border-primary-900 bg-primary-900 text-primary-200;
 }
-.p-dialog .p-dialog-content  .p-invalid {
-	@apply border-red-500 border;
+.p-dialog .p-dialog-content .p-invalid {
+	@apply border border-danger;
 }
 .p-dialog .p-dialog-footer {
-	@apply bg-transparent text-klighter;
+	@apply bg-transparent text-primary-100;
 }
 .p-dialog .p-dialog-footer .p-button {
-	@apply bg-kaccent1 text-kdarker m-0 ml-2 p-2 min-w-[4rem];
+	@apply m-0 ml-2 min-w-[4rem] bg-secondary-400 p-2 text-primary-900;
 }
-.p-button.p-button-text:enabled:hover, .p-button.p-button-text:not(button):not(a):not(.p-disabled):hover{
-	@apply bg-kaccent1 text-klighter;
+.p-button.p-button-text:enabled:hover,
+.p-button.p-button-text:not(button):not(a):not(.p-disabled):hover {
+	@apply bg-secondary-400 text-primary-100;
 }
-.p-button.p-button-danger{
-	@apply !bg-red-500 text-kdarker;
+.p-button.p-button-danger {
+	@apply !bg-danger text-primary-900;
 }
 .p-dialog .p-error-show {
-	@apply text-xs text-red-500 opacity-100 pt-1 h-6;
+	@apply h-6 pt-1 text-xs text-danger opacity-100;
 }
 .p-dialog .p-error-hidden {
-	@apply text-xs opacity-0 h-6;
+	@apply h-6 text-xs opacity-0;
 }
-.p-contextmenu{
-	@apply bg-kmedium w-fit min-w-[8rem];
+.p-contextmenu {
+	@apply w-fit min-w-[8rem] bg-primary-800;
 }
 .p-contextmenu .p-menuitem.p-menuitem-active > .p-menuitem-link {
-	@apply bg-kmedium text-klight hover:text-kaccent2;
+	@apply bg-primary-800 text-primary-200 hover:text-caution;
 }
 .p-contextmenu .p-menuitem-link {
-	@apply text-klight hover:text-kaccent2 p-2 align-middle flex justify-start items-center;
+	@apply flex items-center justify-start p-2 align-middle text-primary-200 hover:text-caution;
 }
 .p-contextmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-text {
-	@apply text-inherit ;
-}
-
-.p-contextmenu .p-menuitem-link .p-menuitem-text{
-	@apply text-inherit text-base leading-4;
-}
-
-.p-contextmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-icon, .p-contextmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon {
 	@apply text-inherit;
 }
 
-.p-contextmenu .p-menuitem-link .p-menuitem-icon{
+.p-contextmenu .p-menuitem-link .p-menuitem-text {
+	@apply text-base leading-4 text-inherit;
+}
+
+.p-contextmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-icon,
+.p-contextmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon {
 	@apply text-inherit;
 }
 
-.p-component{
-	font:var(--font-family);
+.p-contextmenu .p-menuitem-link .p-menuitem-icon {
+	@apply text-inherit;
 }
-.p-splitter{
-	@apply border-0 bg-kdark;
+
+.p-component {
+	font: var(--font-family);
+}
+.p-splitter {
+	@apply border-0 bg-primary-900;
 }
 
 .p-splitter .p-splitter-gutter {
-	@apply border-0 bg-kmedium !w-0.5;
+	@apply !w-0.5 border-0 bg-primary-800;
 }
 
 .p-splitter .p-splitter-gutter .p-splitter-gutter-handle {
-	@apply border-0 bg-klight;
+	@apply border-0 bg-primary-200;
+}
+
+.p-toast {
+	@apply w-fit;
+}
+.p-toast-top-right {
+	@apply right-5 top-12;
+}
+.p-toast .p-toast-message.p-toast-message-success {
+	@apply border-secondary-400 bg-primary-800 text-secondary-400;
+}
+
+.p-toast .p-toast-message .p-toast-message-content {
+	@apply flex items-center justify-between border-0;
+}
+.p-toast .p-toast-message.p-toast-message-success .p-toast-message-icon {
+	@apply !text-[1.5rem] !text-secondary-400;
+}
+.p-toast .p-toast-message .p-toast-message-content .p-toast-message-text {
+	@apply mr-4 h-full align-middle;
+}
+
+.p-toast .p-toast-message.p-toast-message-success .p-toast-message-icon,
+.p-toast .p-toast-message.p-toast-message-success .p-toast-icon-close {
+	@apply text-primary-200;
+}
+
+.p-dropdown {
+	@apply border-none bg-primary-800 text-primary-200;
+	font-family: var(--font-family);
+	/* padding: 0.5rem; */
+}
+
+.p-dropdown .p-dropdown-trigger {
+	@apply border-none bg-primary-800 text-primary-200;
+}
+
+.p-dropdown-panel {
+	@apply border-none bg-primary-800 text-primary-200;
+}
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+	@apply bg-primary-800 text-primary-200;
+}
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover {
+	@apply bg-primary-900 text-primary-200;
+}
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+	@apply bg-primary-800 text-secondary-400;
+}
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item .theme-item {
+	@apply flex flex-row items-center justify-between;
+}
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item .theme-circle-container {
+	@apply flex h-4  flex-row gap-1;
+}
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item .theme-circle {
+	@apply h-4 w-4 rounded-full;
+}
+
+.p-button.p-button-icon-only {
+	@apply h-8 w-8 border-0 bg-primary-200 text-primary-900;
+}
+
+.add-task-label {
+	@apply w-full border-none bg-primary-800 p-2 text-sm font-medium text-primary-200;
+}
+
+.add-task-label::placeholder {
+	@apply text-primary-600;
+}
+
+.p-calendar-w-btn-right .p-inputtext {
+	@apply w-28 border-none bg-primary-800 p-1 px-2 text-sm text-primary-200;
+}
+
+.p-button:enabled:hover,
+.p-button:not(button):not(a):not(.p-disabled):hover {
+	@apply bg-secondary-400 text-primary-900;
+}
+
+.p-calendar-w-btn-right .p-inputtext::placeholder {
+	@apply text-primary-600;
+}
+
+.p-inputtext:enabled:focus {
+	box-shadow: 0 0 0 0.2rem rgba(var(--color-primary-200), 0.2);
+	@apply border-primary-200;
+}
+
+.p-datepicker:not(.p-datepicker-inline) {
+	@apply bg-primary-800 text-primary-200;
+}
+
+.p-datepicker:not(.p-datepicker-inline) .p-datepicker-header {
+	@apply border-primary-200 bg-primary-800 p-0 text-primary-200;
+}
+
+.p-datepicker .p-datepicker-header .p-datepicker-prev,
+.p-datepicker .p-datepicker-header .p-datepicker-next {
+	@apply text-primary-200;
+}
+
+.p-datepicker .p-datepicker-header .p-datepicker-prev:enabled:hover,
+.p-datepicker .p-datepicker-header .p-datepicker-next:enabled:hover {
+	@apply bg-transparent text-secondary-400;
+}
+
+.p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-year:enabled:hover,
+.p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-month:enabled:hover {
+	@apply text-secondary-400;
+}
+
+.p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-year,
+.p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-month {
+	@apply text-primary-200;
+}
+
+.p-datepicker table td {
+	@apply p-0;
+}
+
+.p-datepicker table td > span {
+	@apply h-8 w-8;
+}
+
+.p-datepicker table td > span.p-highlight {
+	@apply bg-secondary-400 text-primary-900;
+}
+
+.p-datepicker:not(.p-disabled) table td span:not(.p-highlight):not(.p-disabled):hover {
+	@apply bg-primary-900 text-primary-200;
 }

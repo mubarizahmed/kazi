@@ -24,13 +24,12 @@
 	outline: none;
 }
 
-.milkdown .editor h1,
-h2,
+.milkdown .editor h2,
 h3,
 h4,
 h5,
 h6 {
-	color: var(--color-base-contrast);
+	@apply text-primary-200;
 }
 .milkdown .editor .milkdown-placeholder {
 	opacity: 0.5;
@@ -51,30 +50,30 @@ h6 {
 	margin: 0;
 }
 .milkdown .editor li p::marker {
-	color: var(--color-base);
+	@apply text-primary-200
 }
 
 .milkdown .editor a {
-	@apply text-kaccent1;
+	@apply text-secondary-400;
 }
 .milkdown .editor a:hover {
-	color: var(--color-base-contrast);
+	@apply text-caution;
 }
 .milkdown .editor code {
 	padding: 0.2em 0.4em;
 	border-radius: 0.2em;
 	font-size: 0.9em;
-	background: var(--color-bg-contrast);
+
 }
-.milkdown .editor hr{
+.milkdown .editor hr {
 	margin-top: 1em;
 	margin-bottom: 1em;
-	@apply border-0 border-t-2 border-color-base;
+	@apply border-0 border-t-2 border-primary-200;
 }
 .milkdown .editor pre {
 	padding: 0.2em 0.4em;
 	border-radius: 0.2em;
-	border: 1px solid var(--color-bg-contrast);
+
 	min-height: 3em;
 	/* overflow: auto; */
 }
@@ -86,27 +85,9 @@ h6 {
 
 .milkdown .editor pre hr {
 	border: 0;
-	border-top: 1px solid var(--color-base);
+	@apply border-0 border-t-2 border-primary-200;
 }
 .milkdown .editor pre em {
 	font-style: italic;
-	color: var(--color-base);
-}
-
-/* Works on Firefox */
-* {
-	scrollbar-width: thin;
-	scrollbar-color: white #201e3cff;
-}
-/* Works on Chrome, Edge, and Safari */
-*::-webkit-scrollbar {
-	width: 12px;
-}
-*::-webkit-scrollbar-track {
-	background: #0d0c1eff;
-}
-*::-webkit-scrollbar-thumb {
-	background-color: white;
-	border-radius: 20px;
-	border: 3px solid #201e3cff;
+	color: var(--primary-200);
 }

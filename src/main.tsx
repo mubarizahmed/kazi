@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { HashRouter, BrowserRouter, Routes, Route } from "react-router-dom";
 import App from './App'
 import './index.css'
-import { Home, Tasks, Notes, Settings } from './pages';
+import { Home, Tasks, Notes, Settings, Journal, Calendar } from './pages';
 
 declare global {
   interface Window {
@@ -20,6 +20,8 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
           <Route path="tasks" element={<Tasks />} />
           <Route path="notes" element={<Notes />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="journal" element={<Journal />} />
+          <Route path="calendar" element={<Calendar />} />
         </Route>
       </Routes>
   </HashRouter>

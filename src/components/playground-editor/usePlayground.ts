@@ -1,5 +1,6 @@
 import { useSetInspector } from "../../components/playground-editor/InspectorProvider";
 import {
+  commandsCtx,
   defaultValueCtx,
   Editor,
   editorViewOptionsCtx,
@@ -31,7 +32,7 @@ import {
 } from "@milkdown/preset-gfm";
 import { useEditor } from "@milkdown/react";
 import { nord } from "@milkdown/theme-nord";
-import { $view, getMarkdown } from "@milkdown/utils";
+import { $command, $useKeymap, $view, getMarkdown } from "@milkdown/utils";
 import {
   useNodeViewFactory,
   usePluginViewFactory,
@@ -68,12 +69,14 @@ import { useToast } from "../toast";
 import { useFeatureToggle } from "./FeatureToggleProvider";
 import { useSetProseState } from "./ProseStateProvider";
 import { kaziTheme } from "../kaziTheme";
-
+import { blockquoteKeymap } from '@milkdown/preset-commonmark';
+import { Command } from "@milkdown/prose/state";
 const slash = slashFactory("MILKDOWN");
 
 export const usePlayground = (
   defaultValue: string,
-  onChange: (markdown: string) => void
+  onChange: (markdown: string) => void,
+  onSave: () => void
 ) => {
   const pluginViewFactory = usePluginViewFactory();
   const nodeViewFactory = useNodeViewFactory();
@@ -163,6 +166,26 @@ export const usePlayground = (
     ].flat();
   }, []);
 
+  
+  function saveCmd() : Command {
+    return () => {
+      onSave()
+      return true;
+    }
+  }
+  const saveCommand = $command('save', (ctx) => {
+    return () => saveCmd();
+  })
+  const saveKeymap = $useKeymap('saveKeymap', {
+    save: {
+      shortcuts: "Mod-s",
+      command: (ctx) => {
+        const commands = ctx.get(commandsCtx)
+        return () => commands.call(saveCommand.key)
+      } 
+    }
+  })
+
   const editorInfo = useEditor(
     (root) => {
       return Editor.make()
@@ -199,6 +222,9 @@ export const usePlayground = (
               component: Slash,
             }),
           });
+          ctx.set(saveKeymap.key,{
+            save: 'Mod-s'
+          } )
         })
         .config(kaziTheme)
         .use(commonmark)
@@ -222,9 +248,11 @@ export const usePlayground = (
           $view(codeBlockSchema.node, () =>
             nodeViewFactory({ component: CodeBlock })
           )
-        );
+        )
+        .use(saveCommand)
+        .use(saveKeymap);
     },
-    [onChange, defaultValue]
+    [onChange, onSave, defaultValue]
   );
 
   const { get, loading } = editorInfo;

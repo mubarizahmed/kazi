@@ -26,8 +26,9 @@ import { DomHandler } from 'primereact/utils';
 
 const Notes = () => {
 	const [fileTree, setFileTree] = useState<TreeNode>();
-
 	const [editorFilePath, setEditorFilePath] = useState('');
+	const [editorFilePathHistory, setEditorFilePathHistory] = useState<string[]>([]);
+	const [editorFilePathHistoryPos, setEditorFilePathHistoryPos] = useState<number>(0);
 
 	const [fileCreate, setFileCreate] = useState<TreeNode>();
 	const [newFileName, setNewFileName] = useState('');
@@ -48,19 +49,19 @@ const Notes = () => {
 					icon: 'pi pi-info-circle',
 					acceptClassName: 'p-button-danger',
 					accept: () => {
-						window.electronAPI.deleteFile(treeMenuSelectedKey.key).then(() => {
+						window.electronAPI.deleteFile(treeMenuSelectedKey.path).then(() => {
 							// delete from the tree
-							let paths = treeMenuSelectedKey.key.slice(fileTree.key.length + 1).split('/');
+							let paths = treeMenuSelectedKey.path.slice(fileTree.path.length + 1).split('/');
 
-							let searchPath = fileTree.key;
+							let searchPath = fileTree.path;
 							let searchObject = fileTree;
-
+							console.log(paths);
 							for (let i = 0; i < paths.length - 1; i++) {
 								searchPath = searchPath + '/' + paths[i];
 								console.log(searchPath);
 								for (let node of searchObject.children) {
-									console.log(node.key);
-									if (node.key === searchPath) {
+									console.log(node.path);
+									if (node.path === searchPath) {
 										searchObject = node;
 										break;
 									}
@@ -147,7 +148,11 @@ const Notes = () => {
 
 	const selectFile = (path: string) => {
 		console.log(path);
+		if (path === editorFilePath) return;
 		setEditorFilePath(path);
+		// add to history
+		setEditorFilePathHistoryPos(editorFilePathHistory.length);
+		setEditorFilePathHistory([...editorFilePathHistory, path]);
 	};
 
 	const nodeTemplate = (node: TreeNode, options: TreeNodeTemplateOptions) => {
@@ -164,7 +169,7 @@ const Notes = () => {
 					>
 						<div className={options.className + ' cursor-default'}>{node.label}</div>
 						<div
-							className="pi pi-plus h-fit cursor-pointer opacity-0 hover:text-kaccent1 group-hover:opacity-100 "
+							className="pi pi-plus h-fit cursor-pointer opacity-0 hover:text-secondary-400 group-hover:opacity-100 "
 							onClick={() => {
 								console.log(node.key);
 								setFileCreate(node);
@@ -191,7 +196,7 @@ const Notes = () => {
 	const treeFooter = (
 		<div className="flex h-8 w-full items-center justify-center">
 			<div
-				className="pi pi-plus h-fit cursor-pointer hover:text-kaccent1 "
+				className="pi pi-plus h-fit cursor-pointer hover:text-secondary-400 "
 				onClick={() => {
 					console.log(fileTree.key);
 					setFileCreate(fileTree);
@@ -202,9 +207,22 @@ const Notes = () => {
 
 	const load = async () => {
 		console.log('loaded');
-		setFileTree(await window.electronAPI.loadFileTree());
+		let tree = await window.electronAPI.loadFileTree();
+		console.log(tree);
+		setFileTree(tree);
 	};
 
+	const historyBack = () => {
+		setEditorFilePath(editorFilePathHistory[editorFilePathHistoryPos-1]);
+		setEditorFilePathHistoryPos(editorFilePathHistoryPos-1);
+	}
+
+	const historyForward = () => {
+		setEditorFilePath(editorFilePathHistory[editorFilePathHistoryPos+1]);
+		setEditorFilePathHistoryPos(editorFilePathHistoryPos+1);
+	}
+
+	// session storage functions
 	useEffect(() => {
 		let fp = sessionStorage.getItem('kazi-editor-file-path');
 		if (fp !== null && fp !== '') setEditorFilePath(fp);
@@ -212,6 +230,18 @@ const Notes = () => {
 		let ft = sessionStorage.getItem('kazi-file-tree');
 		if (ft !== null && ft !== 'undefined') {
 			setFileTree(JSON.parse(ft));
+		}
+
+		let fh = sessionStorage.getItem('kazi-editor-file-path-history');
+		if (fh !== null && fh !== 'undefined') {
+			console.log('get session storage path history', fh);
+			setEditorFilePathHistory(JSON.parse(fh));
+		}
+
+		let fhp = sessionStorage.getItem('kazi-editor-file-path-history-pos');
+		if (fhp !== null && fhp !== '') {
+			console.log('get session storage path history', fh);
+			setEditorFilePathHistoryPos(parseInt(fhp));
 		}
 
 		console.log('loaded');
@@ -225,44 +255,64 @@ const Notes = () => {
 	}, [fileTree]);
 
 	useEffect(() => {
-		sessionStorage.setItem('kazi-editor-file-path', editorFilePath);
+		if (editorFilePath !== null && editorFilePath !== 'undefined'){
+			sessionStorage.setItem('kazi-editor-file-path', editorFilePath);
+		}
 	}, [editorFilePath]);
 
+	useEffect(() => {
+		if (editorFilePathHistory.length > 0){
+			console.log('set session editor file path history',editorFilePathHistory)
+			sessionStorage.setItem('kazi-editor-file-path-history', JSON.stringify(editorFilePathHistory));
+		}
+	}, [editorFilePathHistory]);
+
+	useEffect(() => {
+		if (editorFilePathHistoryPos !== 0){
+			console.log('pos',editorFilePathHistoryPos,editorFilePathHistoryPos > 0);
+			sessionStorage.setItem('kazi-editor-file-path-history-pos', editorFilePathHistoryPos.toString());
+		}
+	}, [editorFilePathHistoryPos]);
+
 	return (
-		<div className="h-screen w-[calc(100vw-4rem)] bg-kdark">
+		<div className="h-screen w-[calc(100vw-4rem)] overflow-hidden bg-primary-900">
 			<Splitter
 				style={{ width: '100%', height: '100%' }}
-				className="bg-kdark"
+				className="bg-primary-900"
 				stateStorage="session"
 				stateKey="kazi-notes-splitter"
 			>
-				{/* <div className="col-span-2 flex h-screen flex-col items-center justify-start gap-2 border-r-2 border-kmedium  bg-kdark p-0 pt-4"> */}
+				{/* <div className="col-span-2 flex h-screen flex-col items-center justify-start gap-2 border-r-2 border-primary-800  bg-primary-900 p-0 pt-4"> */}
 				<SplitterPanel
 					size={200 / 7}
 					minSize={15}
-					className="flex h-full flex-col items-center justify-start gap-2  overflow-clip  border-kmedium bg-kdark p-0 pt-4"
+					className="flex h-full flex-col items-center justify-start gap-2  overflow-clip  border-primary-800 bg-primary-900 p-0 pt-5"
 				>
 					<div className="flex w-full items-center justify-between pl-4 pr-6">
-						<span className=" text-2xl tracking-wider text-klight">NOTES</span>
+						<span className=" text-3xl font-light uppercase tracking-widest text-primary-200">
+						Notes
+					</span>
 						<div className="flex h-full items-center gap-2">
 							<button
-								className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-kaccent1"
+								className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-secondary-400"
 								onClick={() => {
 									console.log(fileTree.key);
 									setFileCreate(fileTree);
 								}}
 							>
-								<span className="pi pi-plus text-base text-klight hover:text-white">
+								<span className="pi pi-plus text-base text-primary-200 hover:text-primary-900">
 									
 								</span>
 							</button>
 							<button
-								className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-kaccent1"
-								onClick={() => {
-									load();
+								className="flex h-6 w-6 items-center justify-center rounded-full bg-transparent p-0 hover:bg-secondary-400"
+								onClick={async () => {
+									let tree = await window.electronAPI.updateFileTree();
+									console.log(tree);
+									setFileTree(tree);
 								}}
 							>
-								<span className="pi pi-refresh text-base text-klight hover:text-white">
+								<span className="pi pi-refresh text-base text-primary-200 hover:text-primary-900">
 
 								</span>
 							</button>
@@ -294,21 +344,23 @@ const Notes = () => {
 					{/* refresh button */}
 				</SplitterPanel>
 				{/* </div> */}
-				{/* <div className="col-span-5 flex h-screen flex-col items-center justify-start border-kmedium bg-kdark"> */}
+				{/* <div className="col-span-5 flex h-screen flex-col items-center justify-start border-primary-800 bg-primary-900"> */}
 				<SplitterPanel
 					size={500 / 7}
 					minSize={15}
-					className="flex h-full w-full min-w-0 flex-col items-center justify-start overflow-clip border-kmedium bg-kdark"
+					className="flex h-full w-full min-w-0 flex-col pt-4 items-center justify-start overflow-clip border-primary-800 bg-primary-900"
 				>
 					{editorFilePath ? (
 						<Editor
 							path={editorFilePath}
 							relativePath={editorFilePath.slice(fileTree.key.length)}
 							template=""
+							forward={(editorFilePathHistoryPos < editorFilePathHistory.length - 1) ? historyForward: undefined}
+							backward={(editorFilePathHistoryPos > 0) ? historyBack: undefined}
 						/>
 					) : (
 						<div className="flex h-full w-full flex-col items-center justify-center">
-							<h1 className="text-3xl text-color-base">Select a file to edit</h1>
+							<h1 className="text-3xl text-primary-200">Select a file to edit</h1>
 						</div>
 					)}
 				</SplitterPanel>
