@@ -40,13 +40,15 @@ interface MilkdownProps {
 	milkdownRef: RefObject<MilkdownRef>;
 	path: string;
 	onSave: () => void;
+	forward?: () => void;
+	backward?: () => void;
 }
 
 export interface MilkdownRef {
 	update: (markdown: string) => void;
 }
 
-const PM: FC<MilkdownProps> = ({ path, content, onChange, onSave, milkdownRef }) => {
+const PM: FC<MilkdownProps> = ({ path, content, onChange, onSave, milkdownRef, forward, backward }) => {
 	const { loading, get } = usePlayground(content, onChange, onSave);
 
 	useImperativeHandle(milkdownRef, () => ({
@@ -89,12 +91,13 @@ const PM: FC<MilkdownProps> = ({ path, content, onChange, onSave, milkdownRef })
 		<div className="flex h-full w-full flex-col ">
 			<div className="z-50 flex h-12 items-center justify-between text-primary-200 bg-primary-900 p-4 pt-4 ">
 				<div className="flex gap-1">
-					<Button icon="arrow_back" onClick={() => call(undoCommand.key)} />
-					<Button icon="arrow_forward" onClick={() => call(redoCommand.key)} />
+					{backward ? <Button icon="arrow_back" onClick={backward} /> : <span className="h-6 w-6"></span>}
+					{forward ? <Button icon="arrow_forward" onClick={forward} /> : <span className="h-6 w-6"></span>}
 				</div>
 				<p className="font-mono text-xs tracking-wider ">{path}</p>
 				<div className="flex gap-1">
-
+					<Button icon="undo" onClick={() => call(undoCommand.key)} />
+					<Button icon="redo" onClick={() => call(redoCommand.key)} />
 					<Button icon="table" onClick={() => call(insertTableCommand.key)} />
 					<Button icon="format_list_bulleted" onClick={() => call(wrapInBulletListCommand.key)} />
 					<Button icon="format_list_numbered" onClick={() => call(wrapInOrderedListCommand.key)} />

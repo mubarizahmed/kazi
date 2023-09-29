@@ -48,11 +48,15 @@ export async function getStaticProps() {
 export default function Editor({
 	path,
 	relativePath,
-	template
+	template,
+	forward,
+	backward
 }: {
 	path: string;
 	relativePath: string;
 	template: string;
+	forward?: ()=>void;
+	backward?: ()=>void;
 }) {
 	const [content, setContent] = useState('');
 	// const [editorContent, setEditorContent] = useState('');
@@ -82,13 +86,13 @@ export default function Editor({
 		(markdown: string) => {
 			const lock = lockCodemirror.current;
 			if (lock) return;
-			console.log('milkdown change 1', markdown);
+			// console.log('milkdown change 1', markdown);
 
 			if (path === filePath) {
 				editorContent.current = markdown;
 				// setEditorContent(markdown);
 			}
-			console.log('milkdown change 2', markdown);
+			// console.log('milkdown change 2', markdown);
 			const codemirror = codemirrorRef.current;
 			if (!codemirror) return;
 			codemirror.update(markdown);
@@ -110,13 +114,13 @@ export default function Editor({
 		setContent('');
 		window.electronAPI.loadFile(p).then((file: string) => {
 			setContent(file);
-			console.log('loaded file', file);
+			console.log('loaded file');
 			setLoaded(true);
 		});
 	};
 
 	const saveFile = async () => {
-		console.log('saving file', filePath, editorContent);
+		console.log('saving file', filePath);
 		await window.electronAPI.saveFile(filePath, editorContent.current).then(() => {
 			toast.current?.show({ severity: 'success', detail: 'File saved', life: 1000 });
 		});
@@ -128,7 +132,7 @@ export default function Editor({
 		console.log('editor path changed', path, filePath);
 		if (path !== '') {
 			if (filePath !== path && filePath !== '') {
-				console.log(content);
+				// console.log(content);
 				saveFile().then(() => {
 					setFilePath(path);
 					loadFile(path);
@@ -147,7 +151,7 @@ export default function Editor({
 	useEffect(() => {
 		return () => {
 			if (filePath !== '') {
-				console.log(content);
+				// console.log(content);
 				saveFile();
 			}
 		};
@@ -167,6 +171,8 @@ export default function Editor({
 						onChange={onMilkdownChange}
 						path={relativePath}
 						onSave={saveFile}
+						forward={forward}
+						backward={backward}
 					/>
 				</div>
 			</Provider>

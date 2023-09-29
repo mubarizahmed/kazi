@@ -26,8 +26,9 @@ import { DomHandler } from 'primereact/utils';
 
 const Notes = () => {
 	const [fileTree, setFileTree] = useState<TreeNode>();
-
 	const [editorFilePath, setEditorFilePath] = useState('');
+	const [editorFilePathHistory, setEditorFilePathHistory] = useState<string[]>([]);
+	const [editorFilePathHistoryPos, setEditorFilePathHistoryPos] = useState<number>(0);
 
 	const [fileCreate, setFileCreate] = useState<TreeNode>();
 	const [newFileName, setNewFileName] = useState('');
@@ -147,7 +148,11 @@ const Notes = () => {
 
 	const selectFile = (path: string) => {
 		console.log(path);
+		if (path === editorFilePath) return;
 		setEditorFilePath(path);
+		// add to history
+		setEditorFilePathHistoryPos(editorFilePathHistory.length);
+		setEditorFilePathHistory([...editorFilePathHistory, path]);
 	};
 
 	const nodeTemplate = (node: TreeNode, options: TreeNodeTemplateOptions) => {
@@ -207,6 +212,17 @@ const Notes = () => {
 		setFileTree(tree);
 	};
 
+	const historyBack = () => {
+		setEditorFilePath(editorFilePathHistory[editorFilePathHistoryPos-1]);
+		setEditorFilePathHistoryPos(editorFilePathHistoryPos-1);
+	}
+
+	const historyForward = () => {
+		setEditorFilePath(editorFilePathHistory[editorFilePathHistoryPos+1]);
+		setEditorFilePathHistoryPos(editorFilePathHistoryPos+1);
+	}
+
+	// session storage functions
 	useEffect(() => {
 		let fp = sessionStorage.getItem('kazi-editor-file-path');
 		if (fp !== null && fp !== '') setEditorFilePath(fp);
@@ -214,6 +230,18 @@ const Notes = () => {
 		let ft = sessionStorage.getItem('kazi-file-tree');
 		if (ft !== null && ft !== 'undefined') {
 			setFileTree(JSON.parse(ft));
+		}
+
+		let fh = sessionStorage.getItem('kazi-editor-file-path-history');
+		if (fh !== null && fh !== 'undefined') {
+			console.log('get session storage path history', fh);
+			setEditorFilePathHistory(JSON.parse(fh));
+		}
+
+		let fhp = sessionStorage.getItem('kazi-editor-file-path-history-pos');
+		if (fhp !== null && fhp !== '') {
+			console.log('get session storage path history', fh);
+			setEditorFilePathHistoryPos(parseInt(fhp));
 		}
 
 		console.log('loaded');
@@ -227,8 +255,24 @@ const Notes = () => {
 	}, [fileTree]);
 
 	useEffect(() => {
-		sessionStorage.setItem('kazi-editor-file-path', editorFilePath);
+		if (editorFilePath !== null && editorFilePath !== 'undefined'){
+			sessionStorage.setItem('kazi-editor-file-path', editorFilePath);
+		}
 	}, [editorFilePath]);
+
+	useEffect(() => {
+		if (editorFilePathHistory.length > 0){
+			console.log('set session editor file path history',editorFilePathHistory)
+			sessionStorage.setItem('kazi-editor-file-path-history', JSON.stringify(editorFilePathHistory));
+		}
+	}, [editorFilePathHistory]);
+
+	useEffect(() => {
+		if (editorFilePathHistoryPos !== 0){
+			console.log('pos',editorFilePathHistoryPos,editorFilePathHistoryPos > 0);
+			sessionStorage.setItem('kazi-editor-file-path-history-pos', editorFilePathHistoryPos.toString());
+		}
+	}, [editorFilePathHistoryPos]);
 
 	return (
 		<div className="h-screen w-[calc(100vw-4rem)] overflow-hidden bg-primary-900">
@@ -304,13 +348,15 @@ const Notes = () => {
 				<SplitterPanel
 					size={500 / 7}
 					minSize={15}
-					className="flex h-full w-full min-w-0 flex-col items-center justify-start overflow-clip border-primary-800 bg-primary-900"
+					className="flex h-full w-full min-w-0 flex-col pt-4 items-center justify-start overflow-clip border-primary-800 bg-primary-900"
 				>
 					{editorFilePath ? (
 						<Editor
 							path={editorFilePath}
 							relativePath={editorFilePath.slice(fileTree.key.length)}
 							template=""
+							forward={(editorFilePathHistoryPos < editorFilePathHistory.length - 1) ? historyForward: undefined}
+							backward={(editorFilePathHistoryPos > 0) ? historyBack: undefined}
 						/>
 					) : (
 						<div className="flex h-full w-full flex-col items-center justify-center">
